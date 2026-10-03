@@ -4,13 +4,24 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "deploy": "convex deploy --yes && static-hosting deploy --skip-convex",
+    "verify:scheduling": "node scripts/verify-scheduling.mjs",
+    "typecheck": "tsc --noEmit -p convex/tsconfig.json"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@convex-dev/static-hosting": "^0.2.1",
     "convex": "^1.46.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.2"
   }
 }

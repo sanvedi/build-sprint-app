@@ -38,3 +38,17 @@ The user's fixed-stack rule requires approval before adding this outside email s
 Update after this audit: the builder approved Resend for email delivery on 3 October 2026, starting on the free plan. No paid plan is authorized. This resolves the service-approval requirement, not the missing account, sending key, verified domain or actual delivery test. The audit results above describe the state when checked.
 
 Next: configure Resend access securely and select authorized AI access before claiming extraction or delivery tests can run. Scheduling and the empty hosted app can be implemented and checked using the existing Convex stack. Keep test commitments separate from genuine usage evidence.
+
+## Follow-up work — email key intentionally pending
+
+- The builder asked to leave the Resend key pending and continue other tasks. No email credentials were added and no email was sent.
+- Created a local main-branch git repository and saved the product/design baseline.
+- Installed Convex Static-Hosting and Vite. Added a clearly labelled setup-only HTML page; it does not expose capture, sign-in or reminders as working features.
+- Added internal CLI-only scheduling checks under convex/m0Checks.ts and a marked-test-only m0Checks table. No public function can create or read these records.
+- Ran `npm run verify:scheduling` against the development deployment: a 20-second test started Waiting and became Needs You at its scheduled time with no browser open. The final completion timestamp was 7 ms after check time. This proves one background state transition, not email delivery, cancellation/rescheduling, user access or a complete reminder implementation. Raw evidence is locally saved in artifacts/scheduling-proof.json and excluded from git.
+- `npm run typecheck` and `npm run build` passed. The design detector found no issues in the setup HTML; this is not browser verification of product screens.
+- Uploaded and checked the development setup page at https://trustworthy-warthog-680.convex.site (HTTP 200).
+- Ran `npm run deploy` for production. Its initial non-interactive confirmation failure was fixed by explicitly confirming the authorized Convex deployment in the script, then using the static-hosting deploy command with the backend already deployed.
+- Production setup URL: https://combative-jaguar-50.convex.site. The first HTTP probe ran before upload publication completed; verification was rerun after successful publication. See the final command evidence for status.
+
+M0 remains incomplete: selected and tested AI extraction, real email delivery and the reminder-value/repeat-use trial are still outstanding. User-facing auth/private-loop tests belong to the complete product flow and remain unimplemented.
