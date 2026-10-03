@@ -49,6 +49,7 @@ Next: configure Resend access securely and select authorized AI access before cl
 - `npm run typecheck` and `npm run build` passed. The design detector found no issues in the setup HTML; this is not browser verification of product screens.
 - Uploaded and checked the development setup page at https://trustworthy-warthog-680.convex.site (HTTP 200).
 - Ran `npm run deploy` for production. Its initial non-interactive confirmation failure was fixed by explicitly confirming the authorized Convex deployment in the script, then using the static-hosting deploy command with the backend already deployed.
-- Production setup URL: https://combative-jaguar-50.convex.site. The first HTTP probe ran before upload publication completed; verification was rerun after successful publication. See the final command evidence for status.
+- Production setup URL: https://combative-jaguar-50.convex.site. The first HTTP probe ran before upload publication completed; verification was rerun after successful publication. Both the root and /hosting-check returned HTTP 200 with the expected setup page. A separate web-reader tool could not access the Convex site; no visual phone/browser check is claimed.
+- Created and pushed https://github.com/sanvedi/build-sprint-app as a public repository. The unauthenticated web reader opened it and listed the project files. Environment files, node_modules, builds and raw local test artifacts are excluded.
 
 M0 remains incomplete: selected and tested AI extraction, real email delivery and the reminder-value/repeat-use trial are still outstanding. User-facing auth/private-loop tests belong to the complete product flow and remain unimplemented.

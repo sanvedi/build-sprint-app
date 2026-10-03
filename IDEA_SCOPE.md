@@ -897,3 +897,13 @@ The builder approved Check time as the single user-facing date-and-time field: w
 ## 20. Email service approval — 3 October 2026
 
 The builder approved Resend for email delivery from the Convex backend, starting with the free plan. No paid plan, account upgrade or domain purchase is authorized. This supersedes earlier statements that no email provider is approved. Convex remains the database, backend, authentication and host. Use the official Convex Resend integration where suitable. Account access and a secret sending key still need configuration; sending to real users requires a verified domain. Provider approval is not evidence of delivery, and M0 remains incomplete until its real checks pass. Never put the secret key in chat, GitHub or product documents.
+
+## 21. M0 partial verification — 3 October 2026
+
+The builder asked to leave the Resend key pending and continue other tasks. No email was sent. Active milestone remains M0.
+
+- Live setup-only URL: https://combative-jaguar-50.convex.site. Root and fallback route returned HTTP 200 after `npm run deploy`. This page explicitly says the product is not available yet; no full product or visual browser verification is claimed.
+- Public repository: https://github.com/sanvedi/build-sprint-app, pushed and opened without sign-in by the web reader.
+- Scheduling proof: a clearly marked development test record changed from Waiting to Needs You at its 20-second check time with no browser open. This is not user usage, email delivery or proof of cancellation/rescheduling.
+- Build and TypeScript checks passed. Details and test boundaries are in M0_VERIFICATION.md.
+- Still open: AI extraction access/tests, real email delivery, reminder-value and voluntary repeat-use evidence. Auth and user-facing screens have not been built. These newer results supersede earlier blanket statements that nothing is implemented or live.
