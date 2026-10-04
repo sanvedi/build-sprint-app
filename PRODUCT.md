@@ -162,16 +162,17 @@ Progressing to harder challenges is the proposed reason to return. Observe volun
 
 ## 10. Checkable milestones
 
-These are acceptance checkpoints, not claims of completed work:
+These describe what I must demonstrate, not work already completed. Start with the riskiest dependency: whether AI can give useful feedback and recognise understanding.
 
-1. I can verify approved AI access, service restrictions and cost using current documentation, run sample requests from Convex, and set a bounded test allowance before classroom access. Choosing a new outside service requires the builder's approval; no paid plan is implied.
-2. I can demonstrate trustworthy automated feedback on the 12 teacher-reviewed submissions, including lucky and poor answers, under the criteria in section 6. If it fails, I follow the stated fallback before building automated rewards or progression. This small test is a release gate, not proof of universal AI reliability.
-3. I can complete one Beginner practice journey: edit, receive an answer, judge it, compare answers, get feedback, correct a gap, explain the correction, earn a skill point, retry twice and see an example on a separate unsuccessful run. First-attempt success also earns a point; replaying does not add another. Failed requests preserve edits and do not use attempts.
-4. I can complete Beginner's two practices and independent final, see a justified pass or not-yet result, and recover after failure through practice and a different final variant.
-5. I can complete all three levels with nine primary challenges and three reviewed alternate final variants, with progression and no hints during independent checks.
-6. I can sign in after first value, close and reopen the app without losing confirmed drafts, attempts, skill points, badges or level results, and verify another account cannot read them.
-7. I can deploy with npm run deploy to Convex static hosting, then complete the journey on a phone at the live URL, including failure recovery and reopening. Code presence or local success alone is not live verification.
-8. I can observe real students using the game and record independent performance, where they get stuck and whether they return voluntarily. Separately measure retention and attempts on their own work before claiming the wider benefit.
+1. I can test one prepared Beginner challenge without building the app: use approved AI access to assess a weak prompt, a student's answer judgment, then their correction and explanation. A teacher can check whether the feedback is accurate and whether the skill-point decision is justified. I can record access and cost before running it; no new service or paid plan is assumed approved.
+2. I can repeat that assessment on the 12 teacher-reviewed submissions in section 6, including a weak prompt with a lucky answer and a sensible prompt with a poor answer. Both runs meet the agreement and zero-critical-error rules. If they fail, I follow the stated fallback rather than build untrusted automatic rewards.
+3. I can finish one practice challenge in the app: edit the supplied prompt, compare answers, judge the result, read feedback, make a relevant correction and explain it. A justified skill point appears once; first-attempt success can also earn it.
+4. I can use two practice retries, see the worked example after the second retry, and recover from a failed AI request without losing my edit or using an attempt. Replaying cannot earn duplicate points.
+5. I can complete Beginner's two practices and pass a fresh final without hints. If I do not pass, I can return to practice and try the alternate reviewed final; viewing a solution does not unlock the next level.
+6. I can sign in after receiving first value, close and reopen the app, and recover my confirmed drafts, attempts, points and badges. My guest attempt survives sign-in, and another account cannot read my progress.
+7. I can complete Beginner, Amateur and Pro using the nine primary challenges and three alternate final variants. Each independent pass earns its badge and unlocks the next level; passing Pro finishes the game.
+8. I can deploy with npm run deploy to Convex static hosting and complete the student journey on a phone at the live URL, including retrying a failure and reopening saved progress.
+9. I can observe students making relevant corrections with sound explanations, then completing fresh challenges without hints. I record where they struggle and whether they return voluntarily; I assess retained learning and fewer wasted attempts on their own work separately.
 
 The fixed stack is Codex, GitHub and Convex for database, backend, authentication and hosting. Use the Convex static-hosting workflow for deployment.
 
