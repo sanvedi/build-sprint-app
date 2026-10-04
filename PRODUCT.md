@@ -6,17 +6,29 @@ The builder asked to complete this brief and move forward. Explicitly agreed cho
 
 ## 1. The job
 
-First student: DP, an alias for a participant in the builder's classroom exercise. The builder reports that DP became disappointed when asked to provide context and did not wish to write a new prompt. DP's original prompt, exact answer and subsequent action are unavailable.
+When AI asks me for more context and I do not want to start again, I want to know the smallest useful change to my request, so I can get a useful answer with less wasted effort.
 
-Draft job in DP's voice, not a student quote: When AI asks me for more context and I do not want to start again, I want to know the smallest useful change to my request, so I can get a useful answer with less wasted effort.
+This is the existing draft job sentence, not DP's own words or a confirmed student quote.
 
-The audience is students who already use AI but struggle to explain their needs and judge its answers. The builder teaches these students and can test in class. The classroom presentation incident motivates the idea; creating presentations or completing assignments is outside this product.
+Other moments it happens: not yet established.
 
-The outcome to investigate is fewer wasted attempts on students' own work. In-game completion is evidence of an independent performance on prepared material, not proof of that wider outcome.
+Who, by situation: a student using AI for coursework who cannot get the intended result and is reluctant to supply context or write another prompt.
+
+Today they hire: their existing AI tool, including asking it to write a prompt for them. The builder reports that DP became disappointed when asked for context, did not want to write a new prompt, and asked AI to write one instead. That did not produce the wanted answer because the resulting prompt was still incomplete. The original task, missing details and exact outputs have not been supplied.
+
+The one we serve first: the student in DP's situation. DP is an alias for a participant in the classroom exercise. There is no separate teacher-facing product in the first release.
+
+What needs doing: identify the information needed for the task, express it in the request, and judge whether the answer meets the requirements. This is the product's proposed response, not a reported statement from DP.
+
+How they want to feel and look to others: not established. No institutional buyer or payer is confirmed.
+
+Why this builder: access to students in class and direct observation of difficulty getting useful AI results. The presentation assignment motivates the idea; creating presentations or completing assignments is outside the product.
+
+The outcome to investigate is fewer wasted attempts on students' own work. In-game completion does not establish that wider outcome.
 
 ## 2. The switch
 
-Known path for DP: asked to provide context -> disappointed -> unwilling to write a new prompt. Whether DP copied an answer, retried or abandoned the task is unknown.
+Known path for DP: asked to provide context -> disappointed -> unwilling to write a new prompt -> asked AI to write the prompt -> still did not get the intended answer because that prompt was incomplete. The exact missing information is unknown.
 
 Broader builder observation: students enter brief questions or irrelevant detail, then sometimes copy the first answer without checking it. This is not a recorded individual journey for DP.
 
