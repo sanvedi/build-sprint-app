@@ -26,3 +26,10 @@ Record inputs, teacher labels, model/version, instructions, output, decisions, d
 - npx convex dev --once successfully updated the existing development deployment; production was not deployed. Historical test rows and their schema were preserved.
 - Local Vite setup page returned HTTP 200 with the prompting-game heading and truthful unavailable-feature wording. The UI detector reported no findings.
 - Visual browser check was blocked by automatic approval review; no screenshot or browser verification is claimed. These checks verify the scaffold, not AI feedback, authentication or gameplay.
+
+## Prepared first-implementation materials
+
+- learning/beginner-01.md contains a prepared Beginner challenge and both correction paths; teacher review is pending.
+- learning/feedback-review.md contains 12 synthetic review cases across the three difficulties, with a blank teacher-label table. No AI outputs or passing reliability result are claimed.
+- No model key/provider was found in the local project configuration or relevant process environment. Remote AI access has not been verified. No new service was installed.
+- Full student-flow implementation and browser evidence remain pending the feedback gate and provider access.
