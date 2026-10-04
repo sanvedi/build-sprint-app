@@ -66,6 +66,19 @@ This palette and type scale specify the approved white, dark-text, green-action,
 
 ## 4. Screens
 
+### Approved page structure
+
+The screen descriptions below are stages, not separate pages unless stated otherwise:
+
+- One practice challenge page contains prompt editing, answer comparison and judgment, feedback, both correction paths, practice results and the worked example. Keep the task and student work together as the stage changes.
+- One final challenge page contains final editing, answer generation, judgment, assessment and the badge/result stage. No hints before submission. Beginner/Amateur success offers Start next level; Pro success offers Review my challenges.
+- Account sign-in is separate. Open it only when the student chooses the secondary save-progress offer; return to the exact challenge and stage afterward. Progress attachment, conflict choice and retry remain part of account-saving recovery, with current work retained.
+- The progress strip and recovery messages are shared components, not extra pages. A new challenge replaces the task only after the appropriate onward action; it does not erase saved work.
+
+Each stage has one main action. Before generation it is Generate answer or Generate revised answer. Once an answer is ready, hide the generation action or make it secondary; the main action becomes the appropriate judgment/assessment submission. In a final, Generate answer stops being primary when the answer appears and Submit final becomes primary. Editing a submitted prompt requires a new answer and judgment before assessment.
+
+The optional Save my progress offer is secondary while the challenge is active. It becomes the main action only inside the explicitly opened account-saving flow. A save failure makes Retry saving primary without repeating assessment. Navigation, answer tabs and requirements controls remain secondary.
+
 ### Shared progress strip
 
 Keep it above every challenge, compact and wrapping on phones. The text separates supported completion, demonstrated practice skill and independent level achievement:
@@ -234,7 +247,7 @@ Done: Progress saved to your account, shown only after confirmation.
 
 Closing and reopening restores confirmed device work or account progress. An unsuccessful account save remains clearly unsynced; signing in again offers Retry account save. Retrying an already-assessed result saves that exact result, without reconsidering the student's judgment or consuming an attempt. Another account cannot receive the guest attempt automatically: require the student to choose Save my progress while signed in to that account.
 
-### Level result and game completion
+### Level result and game completion: final-page stage
 
 For: celebrating earned progression and showing the next action.
 
