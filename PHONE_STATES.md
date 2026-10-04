@@ -75,3 +75,10 @@ Recovery preserves the same request ID across reload and stores a pending checke
 Open final first, edit the supplied prompt, tap Generate answer, write a judgment and tap Submit final. The prepared response demonstrates the badge without spending credits; it is not an AI evaluation of your work. Open final not yet and tap Return to practice to inspect supported practice. Use final alternate for the fresh task, final save pending for save-only recovery and final exhausted for the locked message.
 
 These phone previews are independent from real saved progress. Real final access is enabled in development only; production retains the published two-practice milestone until confirmation and feedback-gate evidence permit final awards.
+
+
+## Published main-flow check, 4 October 2026
+
+The two-practice journey now passes real live-browser checks with Gemini 3.5 Flash-Lite. Earlier quota failures above are historical. On your phone, open https://combative-jaguar-50.convex.site, edit the prompt to meet the task, generate, judge the answer and submit. If feedback flags the prompt, tap Try again, edit it, explain the change, generate the revised answer and judge that new answer. If feedback flags only your judgment, correct it and explain why; keep the existing answer. On a justified success, check the point and tap Next challenge. Complete practice 2, then close and reopen in the same browser: both outcomes should remain. Use a private browser only if you want a fresh device session; do not clear existing progress.
+
+Verified recovery includes an identical assessment retry, save-only retry without another AI call and one Challenge recheck without another attempt or duplicate point. These failures were deliberately introduced in the test browser; do not exhaust credits or alter your phone settings to reproduce them. Account backup, finals and the other levels are not live. Physical-phone/mobile-data and keyboard checks remain for the builder.

@@ -10,7 +10,7 @@ Interface: a web page designed for a phone. Students edit a supplied weak prompt
 
 Business logic: Convex generates the answer and assesses the student's prompt, answer judgment and correction explanation against prepared requirements. It records attempts and justified points, handles retries without duplicates, and permits one completed Challenge recheck of the same assessment without consuming an attempt. If AI still disagrees, the student continues normally.
 
-Current build: Beginner final and alternate are also implemented in development, with seen-variant tracking, badge results and supported-practice return. They are not published. The current published build contains both Beginner practices, Next challenge from either completion route, separate points and initial-plus-two-retry allowances, both correction paths, worked examples, anonymous device saving, assessment recheck and recovery. The three-level game and account saving remain planned v1 work. Development second-practice generation passed; its automated assessment check hit Gemini's daily quota. Both practices are published, and the builder subsequently reported the live game works. No detailed live assessment/replay observations were supplied.
+Current build: Beginner final and alternate are also implemented in development, with seen-variant tracking, badge results and supported-practice return. They are not published. The current published build contains both Beginner practices, Next challenge from either completion route, separate points and initial-plus-two-retry allowances, both correction paths, worked examples, anonymous device saving, assessment recheck and recovery. The three-level game and account saving remain planned v1 work. Both practices now have a verified live browser journey at 390px: generation, judgment, feedback, prompt correction, judgment-only correction, justified points, Next challenge, assessment retry, save-only recovery, Challenge recheck and reopening. This proves working mechanics, not AI teaching reliability or physical-phone usability.
 
 Database:
 
@@ -26,7 +26,7 @@ Drafts, the current practice and recovery requests are also stored in the studen
 
 Third party:
 
-- Google Gemini generates answers and feedback. GEMINI_API_KEY belongs in Convex environment variables. Development is configured and verified; production variable presence and model/enabled settings are verified. The automated live check hit the provider quota; the builder later reported the game works. Never ask for the key in chat.
+- Google Gemini generates answers and feedback. GEMINI_API_KEY belongs in Convex environment variables. Development is configured and verified. Production generation, assessment and recheck now use gemini-3.5-flash-lite and passed the live journey. Gemini 3.8 Flash hit its free quota during testing; no paid upgrade or usage increase was made. Never ask for the key in chat.
 - Convex supplies the database, backend and static hosting. Convex Auth is the approved future sign-in system. Local deployment configuration stays in ignored .env.local and CLI-managed credentials; no credentials are committed.
 - GitHub stores the public code repository. Authentication stays in the local Git/GitHub credential tools, never source files.
 - Fonts are bundled locally; no external font service or key is needed.
@@ -60,13 +60,13 @@ When I report a bug, I'll name the part. Look there first, find the cause, and t
 
 ## 3. Shipping
 
-Live address: https://combative-jaguar-50.convex.site . Both Beginner practices are published there. The page, production connection and failure recovery passed 390px browser checks; the automated AI check hit a quota limit, and the builder subsequently confirmed the live game works.
+Live address: https://combative-jaguar-50.convex.site . Both Beginner practices are published there. The complete published two-practice journey, both correction paths, assessment/save recovery, recheck and reopening passed real 390px Edge browser checks. Physical-phone/mobile-data checks and the full three-level game remain separate pending work.
 
 Repo: https://github.com/sanvedi/build-sprint-app , public (verified with GitHub CLI).
 
 Deploy: npm run deploy. A push does not deploy. After I confirm a milestone works: record progress, commit, push, then deploy. Follow the Convex static-hosting skill for release work and check the live flow afterward.
 
-Keys: GEMINI_API_KEY must be in Convex environment variables for development and production separately. Required settings are PROMPT_GAME_MODEL and PROMPT_GAME_AI_ENABLED; PROMPT_GAME_DAILY_CALL_LIMIT controls the current app allowance. Development uses trustworthy-warthog-680. Production variable presence and model/enabled settings are verified; the last automated generation check hit the provider quota, followed by the builder's report that the live game works. Never copy secrets into files or assume development settings carry over.
+Keys: GEMINI_API_KEY must be in Convex environment variables for development and production separately. Required settings are PROMPT_GAME_MODEL and PROMPT_GAME_AI_ENABLED; optional PROMPT_GAME_GENERATION_MODEL overrides only answer generation; PROMPT_GAME_DAILY_CALL_LIMIT controls the current app allowance. Development uses trustworthy-warthog-680. Production settings and successful generation, assessment and recheck are verified. The current published code is the two-practice release plus generation-model configuration (30d6190); local main also contains unpublished final screens. Do not publish those final screens while doing a practice-only fix. Never copy secrets into files or assume development settings carry over.
 
 .gitignore covers .env.local, .env and .env.*. Do not change that to track secrets.
 
@@ -78,13 +78,13 @@ Final release gate: PROMPT_GAME_FINALS_ENABLED is true in development only. It d
 
 ## 4. The AI call
 
-Model: gemini-3.8-flash, selected through PROMPT_GAME_MODEL. Thinking: provider default; low/off has not been explicitly configured or approved as a change.
+Model: production uses gemini-3.5-flash-lite for assessment/recheck through PROMPT_GAME_MODEL and for generation through PROMPT_GAME_GENERATION_MODEL. Development retains gemini-3.8-flash unless explicitly updated. Thinking: provider default; low/off has not been explicitly configured or approved as a change.
 
 What goes in: prepared task facts, the edited prompt and, for assessment, the exact generated answer, student judgment and correction explanation. Each student text field is limited to 6,000 characters in Convex. Serialized stored request input is limited to 20,000 characters. No personal PDFs, chats, photos or assignment uploads.
 
 Where it runs: Convex actions in convex/practice.ts using the Convex agent component and the Google AI SDK provider. Never call Gemini from the browser or expose its key there.
 
-Key: GEMINI_API_KEY in Convex environment variables, separately for dev and prod. Both environments have the required settings; automated successful AI-call evidence is from development, while live success is reported by the builder.
+Key: GEMINI_API_KEY in Convex environment variables, separately for dev and prod. Both environments have the required settings. Real production generation, assessment and recheck passed automated live-browser checks.
 
 Reply cap: maxOutputTokens 1,600 for generation; 2,000 for assessment and recheck. Tokens are small pieces of text. These are the implemented limits; the template's 500 was not adopted.
 

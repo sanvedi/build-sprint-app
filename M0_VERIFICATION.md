@@ -106,3 +106,21 @@ The builder authorized the next milestone with Lets build it. Implemented a hint
 40 automated checks passed. Backend checks execute registered Convex functions and indexes in a local test database. UI checks use prepared responses and cover hidden examples, independent point totals, practice return/alternate, pending badge saving and exact final retry after failure. Edge walks at 390 by 844 and 1280 by 844 exercised passing, failing, supported practice, the alternate, exhaustion, draft reopening and saved badge reopening. All 34 development previews passed 390px font/target/overflow checks with no backend calls. Build, typecheck and the design detector passed.
 
 Development functions/schema were pushed cleanly, and the real openFinal endpoint rejected an incomplete anonymous session before reserving an AI request. PROMPT_GAME_FINALS_ENABLED=true is set only on development. Production and its published two-practice release are unchanged. No Gemini final-generation/assessment success, teacher material approval, quantitative feedback-gate result or physical-phone observation is claimed. See learning/beginner-final.md and PHONE_STATES.md.
+
+
+## Published practice journey verified, 4 October 2026
+
+The builder authorized completing the live main flow. Real Edge browser checks at 390 by 844 used the public URL and synthetic submissions; no AI response was replaced with a prepared response. Production generation used gemini-3.5-flash-lite. The first assessment worked on gemini-3.8-flash, but correction assessment exhausted that model's free-tier request quota. Changed only production PROMPT_GAME_MODEL to gemini-3.5-flash-lite; assessment instructions, game rules, screens and the 20-reserved-request daily cap are unchanged. Development settings and production final availability are unchanged. No API key was printed, copied into a file or committed; no paid upgrade was enabled.
+
+Verified on the live site:
+
+- A vague initial prompt with a useful answer received prompt-gap feedback rather than a lucky-answer point.
+- Editing that prompt and explaining the change generated a new answer, required a new judgment, and earned exactly one point on attempt two.
+- Next challenge opened practice 2. A complete request generated three PDF-submission steps; accurate judgment earned its own point on attempt one. The displayed total was 2 / 6.
+- Reload retained practice 2, both points and both attempt counts without another AI action. No horizontal overflow was detected.
+- A separate complete prompt with an incorrect judgment received judgment-route feedback. Correcting the judgment and explanation kept the same generated answer and earned one point; no second generation occurred.
+- A deliberately blocked browser assessment request showed the real failure state, held the submitted judgment read-only and used zero learning attempts. Retry sent the identical payload and request ID to the real service and succeeded.
+- A deliberately failed browser-storage write held the real successful assessment pending with no displayed point or Next challenge. Retry saving retained the existing result and made no AI action.
+- Challenge rechecked the real corrected submission once, retained two attempts and one point, removed the completed Challenge action, and survived reload.
+
+Network and storage faults were deliberately introduced in the browser to exercise recovery; the successful generation, assessment and recheck responses were real Gemini responses. Screenshot is a local temporary artifact. These checks establish the published practice mechanics, not a teacher reliability gate, lasting learning, physical-phone keyboard/mobile-data observations, account backup or a complete three-level game. Final screens remain unpublished.

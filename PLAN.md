@@ -4,11 +4,11 @@ PRODUCT.md owns product rules; DESIGN.md owns screens and approved words. This f
 
 ## Current position
 
-Both Beginner practices and their recovery/recheck states are implemented and published. The builder confirmed phone navigation and subsequently reported that the live game works; the exact live steps were not supplied. The full three-level game is not built. Feedback testing was reported complete, but the teacher labels and quantitative gate results remain unavailable; do not claim verified gate acceptance. See M0_VERIFICATION.md.
+Both Beginner practices and their recovery/recheck states are implemented, published and verified in a real live browser at 390px. Both correction paths, Next challenge, two independent points, exact assessment retry, save-only recovery, Challenge recheck and reopening passed. The full three-level game is not built. Feedback testing was reported complete, but the teacher labels and quantitative gate results remain unavailable; do not claim verified gate acceptance. See M0_VERIFICATION.md.
 
 ## Completed implementation milestone: Beginner practice 2 and onward navigation
 
-Status: implemented and published after the builder's Go ahead. The builder subsequently reported the live game works; this is a builder report, not a new automated AI/replay verification. Builder confirmed Next challenge opened practice 2 on their phone. Successful live second-practice assessment still awaits Gemini's quota reset. Production settings are now present and the game is published at https://combative-jaguar-50.convex.site. The live page and recovery passed phone-width checks, but live generation is quota-blocked, so the live core flow is not yet verified.
+Status: implemented and published after the builder's Go ahead. The builder subsequently reported the live game works; this is a builder report, not a new automated AI/replay verification. Builder confirmed Next challenge opened practice 2 on their phone. Successful live generation, correction and second-practice assessment are now verified at https://combative-jaguar-50.convex.site using Gemini 3.5 Flash-Lite. Production keeps the two-practice release; final screens are not published.
 
 I can finish practice 1, choose Next challenge and complete a second prepared Beginner practice with its own task, requirements, supplied prompt and reviewed example.
 
@@ -40,7 +40,7 @@ After each builder-confirmed milestone: update PROGRESS.md, commit, push and dep
 ## Release decisions still open
 
 - Teacher-label/evaluator evidence for the reported feedback test and its relationship to the Gemini evaluator.
-- Production Gemini key/settings are present; live requests reach the production backend, but successful live AI use awaits the provider quota reset.
+- Production Gemini key/settings and successful live AI use are verified. Generation, assessment and recheck now use gemini-3.5-flash-lite; the existing 20-request daily app cap remains unchanged.
 - Monthly AI budget and provider spend-cap setting: not chosen or verified.
 - Thinking setting: currently provider default; no approved low/off change.
 - Daily/hourly usage policy for public use: current development allowance is 20 reserved app requests per UTC day. An hourly limiter and exact provider-call accounting are not implemented.
