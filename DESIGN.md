@@ -75,20 +75,58 @@ Do not reveal feedback or final hints before the student submits their judgment.
 
 ### Feedback and correction
 
-For: demonstrating that the student understood feedback, rather than just read it.
+For: demonstrating understanding through a correction and explanation. Keep prompt correction and judgment-only correction as separate paths, determined by the feedback gap. Do not require prompt changes when only judgment is wrong.
 
-Top to bottom: progress strip and attempt count; specific feedback gap with its reason; editable prompt; correction explanation field labelled What did you change, and why?; answer judgment; main action; optional sign-in offer after first useful feedback.
+#### Path A: prompt correction
 
-Main action when the prompt needs correction: Try my correction -> generate a new answer, collect the student's updated judgment, then assess the correction and explanation.
-Main action when only judgment needs correction: Check my correction -> reassess the existing answer and corrected judgment without another generation.
+Stage 1 ? edit before generating:
 
-Empty: Make a correction and explain how it addresses the feedback.
-Loading: Checking your correction.
-Error: Your correction could not be checked. Your work is still here. Try again.
-Done when earned: Skill point earned. You addressed the gap and explained why.
-Done when not yet earned: Not yet. followed by the specific remaining gap and next action.
+- Visible: progress strip, attempts remaining, task requirements, feedback gap, the previously assessed prompt and its answer. Label that answer Previous answer; it is context, not the answer being judged for the next attempt.
+- Editable: the prompt and What did you change, and why? No new-answer judgment field is shown yet.
+- Submitted: the revised prompt and correction explanation.
+- One main action: Generate revised answer -> stage 2 after generation succeeds.
+- Loading: Generating an answer to your revised prompt. Keep the edit and explanation visible.
+- Failure: preserve both fields and retry generation; do not assess a judgment or consume a learning attempt.
 
-A successful first attempt can also earn its point. Show rewards only after assessment and save confirmation. No duplicate point for replaying the challenge. After the second retry, show a worked example and why it works. Viewing it can complete supported practice but cannot earn an independent point. The main action then becomes Next challenge.
+Stage 2 ? judge the new answer:
+
+- Visible: task requirements, submitted revised prompt and explanation, the new generated answer labelled Revised answer, and the previous answer for comparison.
+- Editable: a fresh field labelled Does this revised answer meet the task? Explain why. Do not prefill it with the previous judgment.
+- Submitted: the revised prompt, its explanation, this exact revised answer and the student's judgment of it.
+- One main action: Check my correction -> stage 3 after assessment succeeds.
+- The judgment belongs only to this revised answer. If the prompt is edited again, retain the draft but require regeneration and a new judgment before assessment; never pair it with the older answer.
+
+Stage 3 ? correction result:
+
+- Visible: assessed revised prompt, revised answer, student explanation and judgment, feedback and confirmed point/not-yet result. Inputs are read-only in this result stage.
+- Submitted: no new assessment on the onward action.
+- One main action: use the practice-outcome destinations below.
+
+#### Path B: judgment-only correction
+
+Stage 1 ? reassess the existing answer:
+
+- Visible: progress strip, attempts remaining, task requirements, unchanged prompt, the exact previously generated answer, previous judgment and feedback explaining the judgment gap.
+- Editable: the corrected answer judgment and What did you change in your judgment, and why? The prompt is read-only in this path.
+- Submitted: the unchanged prompt and existing answer, corrected judgment and explanation. No generation request is made.
+- One main action: Check my corrected judgment -> stage 2 after assessment succeeds.
+- The judgment refers to the same existing answer throughout. Keep that answer visible and identified; do not replace it while the student writes.
+
+Stage 2 ? correction result:
+
+- Visible: unchanged prompt and answer, corrected judgment, explanation, feedback and confirmed point/not-yet result. Inputs are read-only in this result stage.
+- Submitted: no new assessment on the onward action.
+- One main action: use the practice-outcome destinations below.
+
+#### Shared practice outcomes
+
+- Point earned, including a successful first attempt: show Skill point earned. Next challenge opens practice 2 after practice 1; Start final challenge opens the independent final after practice 2. No unused retry is required.
+- Not yet, retries remaining: show the specific remaining gap. Try again returns to the appropriate correction path. A judgment-only assessment counts as an evaluated practice retry, like a prompt correction; each practice allows two retries after the initial attempt.
+- Not yet, second retry used: show the worked example and its reasoning. Next challenge opens practice 2 after practice 1; Start final challenge opens the final after practice 2. Label this practice Completed with help; it earns no independent point.
+- Assessment unavailable: keep the submission and show Retry assessment. No point, failure or attempt is recorded until valid assessment succeeds.
+- Assessed but save failed: keep the assessed result visible as pending. Retry saving saves that same result without regenerating an answer or repeating assessment. Do not unlock onward navigation until the result save succeeds.
+
+Offer optional sign-in after the first useful feedback without hiding the current work. These paths retain the existing learning, retry and achievement rules.
 
 ### Independent final
 
