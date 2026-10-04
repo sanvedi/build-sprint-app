@@ -1,130 +1,118 @@
-﻿# OpenLoops
+﻿# Prompting Game
+
+Working name only. Updated 4 October 2026.
 
 ## 1. The job
 
-When students promise a report by Saturday, I want to save who owes it and when to check, so I can stop keeping it in my head and remember to follow up.
+When a student gets an unhelpful AI answer and does not know what to change, help them practise improving the request and judging the result, so they waste fewer attempts on their own work.
 
-Who, by situation: N is my senior colleague, a higher-education professional coordinating students and colleagues. She has several reports, documents, approvals and confirmations to wait for at once.
+The first audience is students the builder teaches and can test with in class. A particular first student and the broader audience size have not been recorded.
 
-Today they hire: memory, WhatsApp stars and self-messages, unread emails, notebooks, calendar reminders and going back through old conversations.
+The builder has observed students using AI like a search engine: entering a brief question or irrelevant detail, then copying the first answer without checking it. In one assignment, students used AI to design slide content and an interactive presentation from a PDF, but exhausted their credits without getting the expected output. That incident motivates the product; presentation creation is not the product's scope.
 
-What needs doing: remember who owes what, check at the right time, follow up and record when it is finished. The same applies when N owes something to someone else.
+The goal is time: get useful AI results with fewer wasted attempts. Relevant context, clear goals, useful constraints and checking the answer matter. Roles and longer prompts are not automatically helpful.
 
-How they want to feel: I want N to stop carrying these promises in her head. I still need to check whether OpenLoops gives her that relief.
-
-How they want to look to others: I haven't asked N this yet.
-
-The bench: I'm starting with individuals, not selling to an institution. Who would pay is still undecided.
-
-The one we serve first: N. Her students promised a report by Saturday. The deadline passed without submission, and she forgot to follow up.
+Why this builder: access to a classroom and direct experience of students struggling to use AI effectively.
 
 ## 2. The switch
 
-What they'd fire: relying on memory and scattered saved messages to remember when to check. N can keep using WhatsApp and email for the conversations.
+Today: write a weak request, receive a disappointing answer, guess what to change, and spend more attempts without understanding why. Some students copy the answer or abandon the tool.
 
-Push: the report deadline passes, but N forgets to ask for it. Saving the message doesn't make sure she follows up.
+With the game: attempt a short challenge, compare answers, receive specific feedback and practise with a clearer understanding.
 
-Pull: save the promise once and get an email when it is time to check.
+The product must help students apply what they learn to a fresh task. Completing challenges or enjoying the game alone is not proof of learning.
 
-Anxiety: I expect she may worry that she will still have to remember, or that the reminder will use the wrong date. I need to ask her what actually worries her.
-
-Habit: starring a message or writing a note is familiar. OpenLoops asks her to put the commitment into one more place.
-
-The one worry onboarding must remove: whether the commitment was saved with the right reminder time and email address.
-
-How I know: N's missed report follow-up is the real example I'm starting from. In the manual trial, N and Ni each entered two real commitments and updated one without help. I haven't yet shown that they will keep coming back or rely on automated emails.
+The main risk is teaching students to satisfy scoring rules rather than get useful results. Evaluate whether the prompt and answer meet the task, not whether the student included a checklist of prompt ingredients.
 
 ## 3. The core flow
 
-The story: N saves a promise, gets reminded when it needs attention, then checks, follows up or finishes what she owes.
+Approved choices:
 
-Check time means when OpenLoops should remind N to act, not a new promise about when the other person will deliver. Start by suggesting the promised deadline, but N confirms the exact reminder date, time and timezone. For a report promised on Saturday, she may choose Saturday to check or Monday to follow up. That choice changes the reminder, not what the students promised. Keep the original promised deadline in the context and history when she changes the check time.
+- A game where students fix weak prompts, rather than a guide that builds their own prompts.
+- Short challenges at Beginner, Amateur and Pro levels.
+- Feedback plus a comparison showing how the student's rewrite changed the AI's answer.
 
-Use Check time as the date-and-time field label. Use Set next check time, Save check time and Check time updated for rescheduling. History says Check time set, Check time reached or Check time changed from [old time] to [new time], keeping both exact timestamps and the timezone. A confirmed past check time, rather than an old promised deadline on its own, triggers immediate Needs You and one email after saving.
+The core story:
 
-1. Students promise N a report by Saturday. She needs to remember to check while handling her other work.
-2. N opens OpenLoops, signs in and types or pastes the commitment.
-3. OpenLoops suggests who owes what, the check time and the context. Anything unclear is shown for her to check.
-4. N corrects and confirms the details, including the exact date, time, timezone and reminder email address.
-5. The commitment is saved with its original context under Waiting. If the confirmed check time has passed, it goes straight to Needs You and sends one immediate email after saving succeeds.
-6. For a future check time, it moves to Needs You at that time and sends one email, even if N has closed the app.
-7. N opens the email link. For the report, she is asked whether it arrived and can edit or copy a follow-up. For her own promise, the reminder tells her what she owes.
-8. N checks or does the work outside OpenLoops. She marks it Closed when finished, or sets the next check time if it is still outstanding.
+1. A student opens a short challenge with a clear task, a weak prompt and its answer.
+2. They rewrite the prompt to achieve the task.
+3. AI produces an answer to their actual rewrite.
+4. The student compares the original and new answers.
+5. They receive feedback explaining what improved, what still falls short and why it matters for the task.
 
-Following up or setting a new check time keeps the commitment moving. It is finished when the outcome is complete and N closes it. OpenLoops cannot see whether a report arrived or outside work was done; N records that herself.
+Feedback should connect the student's choices to the resulting answer. It should identify when a better prompt cannot overcome a tool's limitations or when an answer needs verification.
 
-Capture and review are two stages on one page: Review details reveals the suggestions beside the original text, then Save loop saves the confirmed details and opens the loop's own page. Checking, following up and closing remain different actions. Opening a loop or copying a follow-up does not finish it. Loop saved means the record is stored, not that an email was delivered.
+Level names are approved. Their exact content, difficulty boundaries, pass rules and progression remain undecided. A proposed direction is clarity at Beginner, relevant context and constraints at Amateur, and harder tasks and answer evaluation at Pro; this is not yet approved.
 
-Things they do today: I haven't measured the number of checks or steps.
-
-Things they do with my product: five main actions—capture, confirm and save, open the reminder, act, and record the result. First-time sign-in and email setup add steps. I haven't measured whether this takes less effort yet.
-
-What can go wrong:
-
-- Step 2: N pastes several promises together. Keep the original text and ask her to choose one before reviewing its details. She can instead edit the text or enter one commitment herself. Don't select a promise automatically or save several loops at once.
-- Step 3–4: an old message says Saturday, or the person responsible is unclear. Show what is uncertain and require confirmation of the person, actual date and time. Don't invent them.
-- Step 3: AI fails or finds no commitment. Keep the text and let N retry or enter the details herself.
-- Step 4: N corrects the suggestions. Keep her edits and confirm the check time, timezone and email before setting a reminder.
-- Step 5: saving fails. Keep her entry, show Not saved and let her retry. Don't show success before the save is confirmed; retrying shouldn't create duplicate commitments.
-- Step 6: email fails. Keep Needs You, show the delivery problem and retry safely without repeated alerts for the same check time. Sending an email doesn't prove N read it.
-- Step 7: N is signed out. After sign-in, return her to the right commitment. Nobody else should be able to read or change it. Keep any follow-up edits she saves.
-- Step 7: N edits a follow-up. She presses Save follow-up to keep those edits across visits; copying doesn't save or send them. Show Unsaved changes, saving progress, confirmed success or a retryable failure. Before she leaves or closes the loop with unsaved edits, let her save, keep editing or explicitly discard them. Only confirmed saves are guaranteed after reopening.
-- Step 8: N closes the commitment or changes the check time. Cancel or replace the old reminder so it doesn't arrive after the change.
-- Step 8: an update fails or N reopens the app. Keep confirmed changes and history; don't show closure or a new date as saved until it succeeds.
-
-Next story: N returns over the next few days and adds another real commitment without me prompting her. I'll also observe Ni and Vi and fix where they get stuck before adding features.
+Retry behavior and when to reveal a suggested solution remain undecided. The assistant's earlier retry-first suggestion was not confirmed.
 
 ## 4. Onboarding
 
-First value: N receives her first reminder email, opens the saved commitment and has the context she needs to act. Seeing it saved is early reassurance; the email proves she doesn't have to remember to open the app.
+The fastest proposed route to value is one short challenge: see the weak prompt and answer, rewrite it, then compare the new answer and read feedback.
 
-The worry it removes: whether OpenLoops will remember the commitment and remind her at the right time.
+First value is understanding how a specific change helped or failed to help. The student should not have to finish a course before experiencing this.
 
-From opening the link to the first value:
+Account requirements, saved progress and the initial level-selection flow remain undecided.
 
-1. N opens a link I send her and sees what OpenLoops does. Removes: uncertainty about whether it helps with something she is waiting for.
-2. She signs in, pastes one real commitment and checks the suggested details, check time and email address. Removes: uncertainty about whether it understood the promise correctly.
-3. She sees the saved commitment and receives an email when attention is due. A past check time means Needs You and one immediate email after saving. Removes: uncertainty about whether it was saved and whether the reminder will reach her.
+## 5. First version
 
-Login: before saving, so her commitments stay private and she can return from an email or another device.
+The agreed direction is a small prompting game with short challenges, three difficulty levels, answer comparisons and specific feedback.
 
-What we don't ask on day one: a profile biography, institution details, a tour, contact access or connections to WhatsApp and email accounts.
+It does not need to create presentations, read messages, monitor email or continue OpenLoops. Payments, leaderboards, streaks, certificates and teacher dashboards are not approved features.
 
-What we ask later, and when: after her first reminder, I'll ask whether it helped her check, follow up or finish. Over the following days, I'll watch whether she adds another commitment without prompting.
+The challenge count, scoring system and minimum release requirements must be agreed before implementation. No prompting-game feature is claimed implemented, working or live by this document.
 
-## 5. v1
+Success means students improve on a fresh task without coaching. Whether they return voluntarily, retain the learning and would pay remains untested.
 
-Does: lets N type or paste one commitment, confirm who owes what and when, save it privately and get an email when attention is due. Supports Waiting on others and Others waiting on me, with Waiting, Needs You and Closed. She can see original context and history, edit or copy a follow-up for someone else's promise, close a commitment or set the next check time. A confirmed past check time immediately becomes Needs You and sends one email after saving. Saved changes survive reopening the app.
+## 6. The AI-first part
 
-Doesn't: screenshots, automatic WhatsApp or email monitoring, finding promises N hasn't entered, detecting replies, sending follow-ups automatically, teams, general task management or money-recovery calculations. Watching is parked too.
+AI answers the student's actual rewritten prompt and provides feedback tied to the task, prompt and resulting answer. A fixed quiz or static prompt checklist would not deliver the same personalized comparison.
 
-Nice to have, only after the must-haves work: clearer wording and visual polish based on where N, Ni and Vi struggle. Extra features can wait.
+A general AI assistant can also offer practice and feedback. The proposed distinction is a consistent sequence of short challenges, calibrated difficulty and evidence that students transfer learning to new tasks. This advantage has not been established against a general assistant.
 
-How I'll know it worked: people come back without prompting to add another real commitment. At least one reminder leads to a check, follow-up, completion or new check time. My first user-test target is N, Ni and Vi with at least nine real commitments between them and a real reminder email. These are goals, not results yet.
+Model access, cost, response time and automated feedback reliability remain unverified. Check AI judgments against teacher assessment before trusting scores.
 
-## 6. The riskiest guess
+## 7. Classroom evidence
 
-If this is false, the product is pointless: getting a timely reminder about a real outstanding promise is useful enough that N will choose to put her next promise into OpenLoops without me asking. The benefit has to outweigh the effort of entering it.
+The builder reported a classroom exercise with 10 students:
 
-How I tested it, and what happened: N and Ni each entered two real commitments and updated one without help in the manual trial. That tested whether they could capture and update a promise. I haven't yet tested whether a reminder helps them act or whether that value brings them back on their own.
+- All started at a score of 0.
+- Eight students (80%) reached a final score of 2.
+- Two students (20%) reached a final score of 1.
+- The builder confirmed the final task was completed without coaching.
 
-The next test: with N's agreement, use a real commitment with a near-term check time and manually provide the reminder at that time. Record whether she checks, follows up or finishes the work. Then watch over the following days for her to supply another real commitment without a request from me. Repeat with Ni. Manual reminders test the value before automation; they don't prove the app or email delivery works.
+The suggested exercise used an initial task, practice with answer comparison and feedback, and a fresh final task. The builder confirmed final scores and independent completion; exact prompts, individual work, scoring details and whether every proposed exercise step was followed have not been recorded.
 
-What changed in the plan: the first test is now the full promise-to-reminder-to-action cycle, followed by voluntary capture of another promise. Entering two commitments is not enough to call the risky guess supported. If the reminder helps but neither person returns, I'll find out whether capture is too much work, the reminder is poorly timed or the problem happens too rarely before expanding the build. Technical checks can continue alongside this test, but they cannot answer whether people want the product.
+Evidence source: the builder's report, not independent observation by the coding agent. The exercise date was not supplied; this result was recorded on 4 October 2026.
 
-## 7. Milestones
+What this supports: practice and feedback can help these students perform better independently on a subsequent task. This promising initial signal supports testing a small product.
 
-I'm at M0. The first manual trial is recorded, but the value and repeat-use test is still open. The steps below keep the M0–M6 build order from IDEA_SCOPE.md and make the user evidence explicit.
+What it does not establish: that automated feedback matches teacher feedback, that the game caused all improvement, that learning lasts, that students return or pay, or that the app works. No comparison group was reported. These students are classroom participants, not product signups.
 
-1. **M0 — Test the reason to use it:** I can take a real promise N is waiting on, remind her at the agreed check time and record what she does next. I can run the same test with Ni and start watching for an unprompted next commitment. Separately, I can verify text extraction in both directions, unclear-date handling and a real scheduled email with the app closed, and publish the empty Convex app and GitHub repository.
-2. **M1 — Make that useful cycle work in the app:** I can sign in on a phone, save a real commitment, receive its reminder, open the right context and record closure or the next check time. Both directions must work. I'll distinguish test walkthroughs from a reminder that actually helped N or Ni act.
-3. **M2 — Check whether the value brings people back:** I can observe N, Ni and Vi using real commitments and record whether they add another without prompting after receiving a reminder. I'll aim for at least nine real commitments and one real-user due email, but invited entries alone won't count as evidence of repeat use. If they don't return, I'll record why and fix the biggest obstacle before adding features.
-4. **M3:** I can let a stranger finish on a phone without my help, keep each person's commitments private and record a real visit for review, with read-only access to those numbers.
-5. **M4:** I can show the working flow in a video, invite relevant people and record their feedback and use.
-6. **M5:** I can share updates, fix problems real users encounter and test a payment offer after people receive value. The price is undecided; payment attempts aren't revenue.
-7. **M6:** I can complete two live walkthroughs, including one on another person's device, and submit evidence before 17 October 2026, 11 AM IST. My target is 9 AM.
+## 8. Failure handling to settle before building
 
-Last: I can close it, reopen it, and my data is still there—including corrections, history and whether a commitment is closed. I'll check this during the first complete flow and again before submission.
+- A longer prompt produces a worse answer: reward task fit rather than length or mandatory roles.
+- AI gives incorrect or inconsistent feedback: compare its judgments with teacher judgments.
+- AI cannot complete the task with its available tools: identify the capability limit instead of blaming the student.
+- Answer generation fails or credits run out: preserve the student's rewrite and explain what happened. Recovery and usage limits need design.
+- A student submits sensitive assignment material: prepared challenge material is the proposed first-version approach; personal uploads are not approved.
 
-I still need to verify AI access and cost, scheduled reminders and email delivery. I've approved Resend for email delivery from Convex, starting with the free plan; no paid plan is authorized. Account access, a secret sending key and a verified sending domain for real users are still needed. Analytics and any later payment service also need to fit the agreed stack and get approval before being added. The build uses Codex, GitHub and Convex; IDEA_SCOPE.md remains the source for scope decisions.
+These are proposed safeguards and open decisions, not implemented features.
 
+## 9. Market and return use
+
+The classroom is the first reachable testing audience. Ten students participated in the learning exercise; the number of suitable people in the builder's extended network is unknown.
+
+Competitors, paid alternatives, funding trends and search demand have not been researched. Paying for an AI tool does not prove willingness to pay for this game.
+
+Progress through harder challenges may encourage return use. This is a hypothesis, not an observed result. Price and buyer are undecided.
+
+## 10. Current state and next test
+
+OpenLoops has been abandoned as the product direction. The prompting game's initial classroom learning test has a positive reported result. This documentation update does not implement the game.
+
+Next proposed test: compare automated feedback with teacher assessment on one challenge, then check performance on a fresh task without coaching. Record actual prompts, answers, scoring criteria and disagreements. Repeat-use and delayed learning checks follow separately.
+
+The fixed stack remains Codex, GitHub and Convex for the database, backend, authentication and hosting. An outside AI service requires checking access, cost and the builder's service restrictions.
+
+IDEA_SCOPE.md, V1_BUILD.md and other existing project documents still describe OpenLoops. They need a separate approved update before governing the new build. This request updates PRODUCT.md only.
