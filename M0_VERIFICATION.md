@@ -124,3 +124,20 @@ Verified on the live site:
 - Challenge rechecked the real corrected submission once, retained two attempts and one point, removed the completed Challenge action, and survived reload.
 
 Network and storage faults were deliberately introduced in the browser to exercise recovery; the successful generation, assessment and recheck responses were real Gemini responses. Screenshot is a local temporary artifact. These checks establish the published practice mechanics, not a teacher reliability gate, lasting learning, physical-phone keyboard/mobile-data observations, account backup or a complete three-level game. Final screens remain unpublished.
+
+
+## Requested live fixes, 4 October 2026
+
+Production assessment logs showed:
+
+~~~text
+10/4/2026, 11:11:59 PM [CONVEX A(practice:assess)] Uncaught ConvexError: Uncaught ConvexError: DAILY_ALLOWANCE_REACHED
+~~~
+
+The app's existing 20-request daily cap had been reached. The UI checked only error.message, while Convex returned the actionable code in error.data. A regression test first reproduced the generic assessment message, then passed after both error handlers read the structured code. No quota, point, attempt or assessment rule changed; all backend/gameplay files match the prior released two-practice version.
+
+Current main was restored to that production version, preserving the unpublished final draft at local git tag unpublished-beginner-final. No final screen or final function was deployed. Added a factual two-practice meta description and compacted locked phone levels. Generate answer remains visible at the bottom while editing, without adding a second generation button.
+
+34 automated tests, typecheck, build and the UI detector passed. npm run deploy succeeded. On the real public URL at 390 by 844, the progress strip was 133px rather than 252px, the task heading ended at 545px, Generate answer ended at 828px, and no horizontal overflow occurred. The real served HTML exactly matched dist/index.html. A real capped request displayed the approved daily-allowance/reset message and kept work. The actual cap remained 20/20.
+
+After deployment, a recovery test replayed the original successful synthetic practice-2 assessment using its original request ID. Convex returned the real stored assessment, the screen showed Skill point earned and two total points, and no new model call or duplicate award was made. This is cached-result recovery, not a fresh assessment. A fresh practice-2 assessment cannot be verified before midnight UTC (5:30 AM IST on 5 October) without changing the cap, which the builder explicitly forbade.
