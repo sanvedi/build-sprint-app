@@ -94,3 +94,6 @@ npm run deploy published the backend and nine static assets at https://combative
 A fresh Edge session at 390 by 844 loaded the first practice, sent its real generation request to combative-jaguar-50.convex.cloud, showed the approved failure state, retained the edited prompt on reload and had no horizontal overflow. Production logs confirmed Google's free-tier daily generate-content quota of 20 was exhausted after SDK retries. No learning attempt or successful live AI answer is claimed. Screenshot is a local temporary artifact, not committed student data.
 
 Publication is complete; a working live core journey remains unverified until provider quota resets. Physical-phone testing logged out on mobile data, teacher material review, recorded feedback-gate evidence, finals, other levels and account saving remain pending. No paid upgrade or usage increase occurred.
+
+
+Builder follow-up: the builder reported Works after receiving the published link. Record this as confirmation from the builder; no specific AI output, assessment/replay, phone network or observed steps were provided. The earlier automated quota-failure result is retained as historical evidence, not treated as proof that calls are still failing.

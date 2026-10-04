@@ -4,11 +4,11 @@ PRODUCT.md owns product rules; DESIGN.md owns screens and approved words. This f
 
 ## Current position
 
-The first Beginner practice and its recovery/recheck states are implemented and verified in development. The builder reported completing the phone check. The full game is not built or published. Feedback testing was reported complete, but the teacher labels and quantitative gate results remain unavailable; do not claim verified gate acceptance. See M0_VERIFICATION.md.
+Both Beginner practices and their recovery/recheck states are implemented and published. The builder confirmed phone navigation and subsequently reported that the live game works; the exact live steps were not supplied. The full three-level game is not built. Feedback testing was reported complete, but the teacher labels and quantitative gate results remain unavailable; do not claim verified gate acceptance. See M0_VERIFICATION.md.
 
-## Next milestone: Beginner practice 2 and onward navigation
+## Completed implementation milestone: Beginner practice 2 and onward navigation
 
-Status: implemented in development after the builder's Go ahead. Builder confirmed Next challenge opened practice 2 on their phone. Successful live second-practice assessment still awaits Gemini's quota reset. Production settings are now present and the game is published at https://combative-jaguar-50.convex.site. The live page and recovery passed phone-width checks, but live generation is quota-blocked, so the live core flow is not yet verified.
+Status: implemented and published after the builder's Go ahead. The builder subsequently reported the live game works; this is a builder report, not a new automated AI/replay verification. Builder confirmed Next challenge opened practice 2 on their phone. Successful live second-practice assessment still awaits Gemini's quota reset. Production settings are now present and the game is published at https://combative-jaguar-50.convex.site. The live page and recovery passed phone-width checks, but live generation is quota-blocked, so the live core flow is not yet verified.
 
 I can finish practice 1, choose Next challenge and complete a second prepared Beginner practice with its own task, requirements, supplied prompt and reviewed example.
 
@@ -22,7 +22,11 @@ Proof: focused checks for per-challenge attempt/point isolation, navigation with
 
 Evidence: 31 automated checks passed, including actual Convex mutations in a local test database. Edge walks at 390px and 1280px reached practice 2 from both completion routes, retained drafts/results after reload and retained separate points. All 24 development previews passed phone-width text/target/overflow checks without backend calls. Live Gemini generated the second task correctly; assessment was blocked by the provider's free-tier quota, with zero second-practice attempts consumed and the first point retained. See M0_VERIFICATION.md and PHONE_STATES.md.
 
-## Later milestones, in order
+## Next milestone: Beginner final and badge
+
+Awaiting approval before code. Build the hint-free final and its alternate, independent pass/not-yet result, return-to-practice route and badge. Record feedback-gate evidence before enabling public automatic level awards.
+
+## Remaining milestones, in order
 
 1. I can complete Beginner's fresh final without hints, earn its badge on a justified pass, or return to practice and take the unseen reviewed alternate after failure. Feedback-gate evidence must be recorded before public automatic level awards.
 2. I can choose optional Convex sign-in after first value and recover guest plus account progress safely, including conflicts, failed saves and reopening on another device.
