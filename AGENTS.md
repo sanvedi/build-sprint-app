@@ -23,7 +23,7 @@ Drafts, the current practice and recovery requests are also stored in the studen
 
 Third party:
 
-- Google Gemini generates answers and feedback. GEMINI_API_KEY belongs in Convex environment variables. Development is configured and verified; production configuration has not been verified. Never ask for the key in chat.
+- Google Gemini generates answers and feedback. GEMINI_API_KEY belongs in Convex environment variables. Development is configured and verified; production variable presence and model/enabled settings are verified, but live generation is quota-blocked. Never ask for the key in chat.
 - Convex supplies the database, backend and static hosting. Convex Auth is the approved future sign-in system. Local deployment configuration stays in ignored .env.local and CLI-managed credentials; no credentials are committed.
 - GitHub stores the public code repository. Authentication stays in the local Git/GitHub credential tools, never source files.
 - Fonts are bundled locally; no external font service or key is needed.
@@ -51,13 +51,13 @@ When I report a bug, I'll name the part. Look there first, find the cause, and t
 
 ## 3. Shipping
 
-Live address: https://combative-jaguar-50.convex.site . This is the existing hosting address; the current game has not been published or verified there.
+Live address: https://combative-jaguar-50.convex.site . Both Beginner practices are published there. The page, production connection and failure recovery passed 390px browser checks; live AI success is still quota-blocked.
 
 Repo: https://github.com/sanvedi/build-sprint-app , public (verified with GitHub CLI).
 
 Deploy: npm run deploy. A push does not deploy. After I confirm a milestone works: record progress, commit, push, then deploy. Follow the Convex static-hosting skill for release work and check the live flow afterward.
 
-Keys: GEMINI_API_KEY must be in Convex environment variables for development and production separately. Required settings are PROMPT_GAME_MODEL and PROMPT_GAME_AI_ENABLED; PROMPT_GAME_DAILY_CALL_LIMIT controls the current app allowance. Development uses trustworthy-warthog-680. Production key/settings are unverified; do not copy secrets into files or assume development settings carry over.
+Keys: GEMINI_API_KEY must be in Convex environment variables for development and production separately. Required settings are PROMPT_GAME_MODEL and PROMPT_GAME_AI_ENABLED; PROMPT_GAME_DAILY_CALL_LIMIT controls the current app allowance. Development uses trustworthy-warthog-680. Production variable presence and model/enabled settings are verified; generation is currently provider-quota-blocked. Never copy secrets into files or assume development settings carry over.
 
 .gitignore covers .env.local, .env and .env.*. Do not change that to track secrets.
 
@@ -73,7 +73,7 @@ What goes in: prepared task facts, the edited prompt and, for assessment, the ex
 
 Where it runs: Convex actions in convex/practice.ts using the Convex agent component and the Google AI SDK provider. Never call Gemini from the browser or expose its key there.
 
-Key: GEMINI_API_KEY in Convex environment variables, separately for dev and prod. Only dev is currently verified.
+Key: GEMINI_API_KEY in Convex environment variables, separately for dev and prod. Both environments have the required settings; only development has successful AI-call evidence so far.
 
 Reply cap: maxOutputTokens 1,600 for generation; 2,000 for assessment and recheck. Tokens are small pieces of text. These are the implemented limits; the template's 500 was not adopted.
 

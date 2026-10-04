@@ -8,7 +8,7 @@ The first Beginner practice and its recovery/recheck states are implemented and 
 
 ## Next milestone: Beginner practice 2 and onward navigation
 
-Status: implemented in development after the builder's Go ahead. Builder confirmed Next challenge opened practice 2 on their phone. Successful live second-practice assessment still awaits Gemini's quota reset. Production has no environment variables, so publishing a working game remains blocked. Not published.
+Status: implemented in development after the builder's Go ahead. Builder confirmed Next challenge opened practice 2 on their phone. Successful live second-practice assessment still awaits Gemini's quota reset. Production settings are now present and the game is published at https://combative-jaguar-50.convex.site. The live page and recovery passed phone-width checks, but live generation is quota-blocked, so the live core flow is not yet verified.
 
 I can finish practice 1, choose Next challenge and complete a second prepared Beginner practice with its own task, requirements, supplied prompt and reviewed example.
 
@@ -34,7 +34,7 @@ After each builder-confirmed milestone: update PROGRESS.md, commit, push and dep
 ## Release decisions still open
 
 - Teacher-label/evaluator evidence for the reported feedback test and its relationship to the Gemini evaluator.
-- Production Gemini key and settings: not verified.
+- Production Gemini key/settings are present; live requests reach the production backend, but successful live AI use awaits the provider quota reset.
 - Monthly AI budget and provider spend-cap setting: not chosen or verified.
 - Thinking setting: currently provider default; no approved low/off change.
 - Daily/hourly usage policy for public use: current development allowance is 20 reserved app requests per UTC day. An hourly limiter and exact provider-call accounting are not implemented.

@@ -1,6 +1,6 @@
 # Prompting Game
 
-Students edit weak prompts, compare AI answers, explain corrections and complete fresh challenges without hints. Both Beginner practices are implemented with separate progress, device recovery and phone-width browser checks. Live Gemini generation passed for practice 2; its live assessment check was blocked by the free daily quota. The full game, account backup and public release remain incomplete.
+Students edit weak prompts, compare AI answers, explain corrections and complete fresh challenges without hints. Both Beginner practices are implemented with separate progress, device recovery and phone-width browser checks. Live Gemini generation passed for practice 2; its live assessment check was blocked by the free daily quota. Both practices are published; the live page and production connection are checked, but live AI use is blocked by Gemini's exhausted free daily quota. The full game and account backup remain incomplete.
 
 - PRODUCT.md: learning flow and game rules.
 - IDEA_SCOPE.md: active scope, milestones and proof.
@@ -16,9 +16,9 @@ Students edit weak prompts, compare AI answers, explain corrections and complete
 
 npm install installs dependencies. npm run dev starts the practice page. npm run build builds it. npm run typecheck checks Convex code.
 
-npm run deploy publishes backend and static files through Convex static hosting. Git push does not deploy. Existing hosting address: https://combative-jaguar-50.convex.site; no game is verified there. Local changes do not update that site until deployed.
+npm run deploy publishes backend and static files through Convex static hosting. Git push does not deploy. Existing hosting address: https://combative-jaguar-50.convex.site; the game page and production connection are verified there; successful live AI use is still quota-blocked. Local changes do not update that site until deployed.
 
-Convex CLI sign-in and local deployment configuration are required. Credentials stay outside Git. The builder reports running the feedback test, but its tested service/model and results are not yet recorded. The generation adapter uses the Convex agent component and Google provider, with GEMINI_API_KEY stored in development Convex settings. Live generation, assessment and recheck passed. The numerical teacher-feedback gate and production configuration are not verified. No paid upgrade is assumed.
+Convex CLI sign-in and local deployment configuration are required. Credentials stay outside Git. The builder reports running the feedback test, but its tested service/model and results are not yet recorded. The generation adapter uses the Convex agent component and Google provider, with GEMINI_API_KEY stored in development Convex settings. Live generation, assessment and recheck passed. The numerical teacher-feedback gate remains unverified. Production settings are present; successful live AI use remains quota-blocked. No paid upgrade is assumed.
 
 The retired scheduling command is removed. Existing historical test rows are preserved but never count as game usage.
 

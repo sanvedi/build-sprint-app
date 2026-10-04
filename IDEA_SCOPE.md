@@ -10,9 +10,9 @@ This is the active build scope for the prompting game. PRODUCT.md owns the produ
 | Product | Prompting Game, working name |
 | Last updated | 4 October 2026 |
 | Submission deadline | 17 October 2026, 11 AM IST; target 9 AM |
-| Current milestone | First-practice implementation verified in development; next implementation milestone proposed in PLAN.md |
-| Product state | Beginner practice 1 implemented with live Gemini and browser checks; full game and public deployment pending |
-| Existing hosting address | https://combative-jaguar-50.convex.site; historical setup address, not a verified game |
+| Current milestone | Both Beginner practices implemented; phone navigation confirmed, published core-flow verification pending quota reset |
+| Product state | Both Beginner practices published; live page checked, live AI quota-blocked; full game pending |
+| Existing hosting address | https://combative-jaguar-50.convex.site; published Beginner practice page; live AI success not yet verified |
 | Repository | https://github.com/sanvedi/build-sprint-app |
 
 Specified means described; implemented means code exists; working locally means the journey was exercised locally; live means exercised at the public URL; verified means the required checks passed. Do not claim game usage from old setup checks.

@@ -83,3 +83,14 @@ Evidence:
 - Live Gemini generated the second task's three-step PDF submission instructions using the correct requirements. Its assessment then failed because Google's free-tier generate-content daily limit of 20 was exhausted; the SDK reported three automatic attempts. Database inspection confirmed second practice stayed at zero learning attempts and no point, while practice 1 retained its one attempt and earned point. No second-practice live assessment success or replay result is claimed. No billing change, quota increase or production publish occurred.
 
 Remaining for this milestone: successful live second-practice assessment/replay after provider quota resets, builder phone confirmation, and teacher review of prepared material before release. The local/browser checks prove mechanics, not AI teaching reliability or lasting student learning.
+
+
+## First game publication, 4 October 2026
+
+The builder saved Gemini settings in production after correcting an initial Development-only setup. All four required variable names are present; the nonsecret model is gemini-3.8-flash and AI is enabled. The key was not printed or copied into files.
+
+npm run deploy published the backend and nine static assets at https://combative-jaguar-50.convex.site. The hosting build injected the production backend address; Vite now prioritizes that public address over local development configuration.
+
+A fresh Edge session at 390 by 844 loaded the first practice, sent its real generation request to combative-jaguar-50.convex.cloud, showed the approved failure state, retained the edited prompt on reload and had no horizontal overflow. Production logs confirmed Google's free-tier daily generate-content quota of 20 was exhausted after SDK retries. No learning attempt or successful live AI answer is claimed. Screenshot is a local temporary artifact, not committed student data.
+
+Publication is complete; a working live core journey remains unverified until provider quota resets. Physical-phone testing logged out on mobile data, teacher material review, recorded feedback-gate evidence, finals, other levels and account saving remain pending. No paid upgrade or usage increase occurred.
