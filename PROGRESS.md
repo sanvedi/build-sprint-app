@@ -12,3 +12,5 @@ Keep one factual line per completed or builder-confirmed step. Distinguish devel
 - 2026-10-04: Published both Beginner practices at combative-jaguar-50.convex.site. Production settings and 390px page/connection/reopening checks passed; live generation remains blocked by Gemini's free daily quota, so the live core flow is not yet verified.
 
 - 2026-10-04: Builder reported the published game works. No detailed generation, assessment, replay or mobile-data observations were supplied; previous automated quota-failure evidence remains historical.
+
+- 2026-10-04: Final AGENTS.md updated with current published-build facts, the builder's live confirmation, working rules, secret handling and AI limits; live page returned HTTP 200.

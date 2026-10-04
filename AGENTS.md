@@ -2,13 +2,15 @@
 
 Project folder: C:\Users\LENOVO\build-sprint-app.
 
+Final project instructions, updated 4 October 2026. This file describes the current build and the rules for further work; it does not claim the full three-level game is complete.
+
 ## 1. How the product works
 
 Interface: a web page designed for a phone. Students edit a supplied weak prompt, inspect the AI answer and judge it against the task before receiving feedback.
 
 Business logic: Convex generates the answer and assesses the student's prompt, answer judgment and correction explanation against prepared requirements. It records attempts and justified points, handles retries without duplicates, and permits one completed Challenge recheck of the same assessment without consuming an attempt. If AI still disagrees, the student continues normally.
 
-Current build: both Beginner practices, Next challenge from either completion route, separate points and initial-plus-two-retry allowances, both correction paths, worked examples, anonymous device saving, assessment recheck and recovery. The three-level game and account saving remain planned v1 work. Live second-practice generation passed; its assessment remains unverified because Gemini's free daily quota was exhausted.
+Current build: both Beginner practices, Next challenge from either completion route, separate points and initial-plus-two-retry allowances, both correction paths, worked examples, anonymous device saving, assessment recheck and recovery. The three-level game and account saving remain planned v1 work. Development second-practice generation passed; its automated assessment check hit Gemini's daily quota. Both practices are published, and the builder subsequently reported the live game works. No detailed live assessment/replay observations were supplied.
 
 Database:
 
@@ -23,7 +25,7 @@ Drafts, the current practice and recovery requests are also stored in the studen
 
 Third party:
 
-- Google Gemini generates answers and feedback. GEMINI_API_KEY belongs in Convex environment variables. Development is configured and verified; production variable presence and model/enabled settings are verified, but live generation is quota-blocked. Never ask for the key in chat.
+- Google Gemini generates answers and feedback. GEMINI_API_KEY belongs in Convex environment variables. Development is configured and verified; production variable presence and model/enabled settings are verified. The automated live check hit the provider quota; the builder later reported the game works. Never ask for the key in chat.
 - Convex supplies the database, backend and static hosting. Convex Auth is the approved future sign-in system. Local deployment configuration stays in ignored .env.local and CLI-managed credentials; no credentials are committed.
 - GitHub stores the public code repository. Authentication stays in the local Git/GitHub credential tools, never source files.
 - Fonts are bundled locally; no external font service or key is needed.
@@ -35,7 +37,7 @@ When I report a bug, I'll name the part. Look there first, find the cause, and t
 ## 2. How we work
 
 - Read IDEA_SCOPE.md, PRODUCT.md, PLAN.md and PROGRESS.md before anything else. Read DESIGN.md before screen work. Read M0_VERIFICATION.md when deciding what has actually been proved.
-- Before writing application code, explain in two or three plain sentences what I want and your plan. Wait for my yes. Do not interpret a pasted template as approval to change the app.
+- Before building a new milestone or feature, explain in two or three plain sentences what I want and your plan. Wait for my yes. For an authorized bug fix, find the cause, fix it and check it without asking whether to start. Do not interpret a pasted template as approval to change the app.
 - Work on one milestone at a time: the next one in PLAN.md, end to end. Nothing outside it.
 - If I ask for something new mid-milestone, add it to the parked list in PLAN.md and carry on, unless I explicitly stop or replace the milestone.
 - Never say done until you have seen it work through a relevant test or phone-width browser check and explained how I can check it on my phone. Distinguish my reported check from your own verification.
@@ -48,16 +50,22 @@ When I report a bug, I'll name the part. Look there first, find the cause, and t
 - Use Codex, GitHub and Convex for code, database, backend, sign-in and hosting. Do not introduce another host, database or authentication service.
 - Real people's chats, names and phone numbers must never enter the public repo, including tests. Use made-up examples and synthetic submissions.
 - Keep reported classroom evidence separate from proven learning, model reliability and app usage.
+- Match my energy and use plain words. If a technical term is needed, explain it in the same sentence. Never talk down to me.
+- Ask one question at a time, with concrete choices. Say what you are about to do in one line; explain a new skill, command or agent on first use.
+- Complete authorized work end to end and check the result. Choose routine technical details yourself; ask about product choices, costs and deletion.
+- When a command fails, read the error, correct the cause and retry. If the same failure repeats twice, explain the blocker instead of repeating it indefinitely.
+- If I type explain that like I have only used ChatGPT, rewrite the explanation in everyday words.
+- End with one useful next step. Do not start another milestone without its required approval.
 
 ## 3. Shipping
 
-Live address: https://combative-jaguar-50.convex.site . Both Beginner practices are published there. The page, production connection and failure recovery passed 390px browser checks; live AI success is still quota-blocked.
+Live address: https://combative-jaguar-50.convex.site . Both Beginner practices are published there. The page, production connection and failure recovery passed 390px browser checks; the automated AI check hit a quota limit, and the builder subsequently confirmed the live game works.
 
 Repo: https://github.com/sanvedi/build-sprint-app , public (verified with GitHub CLI).
 
 Deploy: npm run deploy. A push does not deploy. After I confirm a milestone works: record progress, commit, push, then deploy. Follow the Convex static-hosting skill for release work and check the live flow afterward.
 
-Keys: GEMINI_API_KEY must be in Convex environment variables for development and production separately. Required settings are PROMPT_GAME_MODEL and PROMPT_GAME_AI_ENABLED; PROMPT_GAME_DAILY_CALL_LIMIT controls the current app allowance. Development uses trustworthy-warthog-680. Production variable presence and model/enabled settings are verified; generation is currently provider-quota-blocked. Never copy secrets into files or assume development settings carry over.
+Keys: GEMINI_API_KEY must be in Convex environment variables for development and production separately. Required settings are PROMPT_GAME_MODEL and PROMPT_GAME_AI_ENABLED; PROMPT_GAME_DAILY_CALL_LIMIT controls the current app allowance. Development uses trustworthy-warthog-680. Production variable presence and model/enabled settings are verified; the last automated generation check hit the provider quota, followed by the builder's report that the live game works. Never copy secrets into files or assume development settings carry over.
 
 .gitignore covers .env.local, .env and .env.*. Do not change that to track secrets.
 
@@ -73,7 +81,7 @@ What goes in: prepared task facts, the edited prompt and, for assessment, the ex
 
 Where it runs: Convex actions in convex/practice.ts using the Convex agent component and the Google AI SDK provider. Never call Gemini from the browser or expose its key there.
 
-Key: GEMINI_API_KEY in Convex environment variables, separately for dev and prod. Both environments have the required settings; only development has successful AI-call evidence so far.
+Key: GEMINI_API_KEY in Convex environment variables, separately for dev and prod. Both environments have the required settings; automated successful AI-call evidence is from development, while live success is reported by the builder.
 
 Reply cap: maxOutputTokens 1,600 for generation; 2,000 for assessment and recheck. Tokens are small pieces of text. These are the implemented limits; the template's 500 was not adopted.
 
