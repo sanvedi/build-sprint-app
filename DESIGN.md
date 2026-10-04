@@ -62,7 +62,15 @@ For: deciding whether the answer meets the task before seeing feedback.
 
 Top to bottom: progress strip; task requirements; original and new answer with distinct headings; student's submitted prompt; field labelled Does this answer meet the task? Explain why; main action.
 
-On wide screens answers sit side by side; on phones they stack, original then new. Keep text readable without horizontal page scrolling.
+On wide screens answers sit side by side. On phones, use labelled Original answer and Your answer tabs showing one full answer at a time; start on Your answer after generation. For a prompt correction, the labels are Previous answer and Revised answer, starting on Revised answer. These tabs change the comparison view, not the answer being assessed.
+
+Keep a compact Task requirements control and the two answer tabs available above the answer while reading. Task requirements expands the criteria in place and collapses again; it does not navigate away. Avoid a large fixed header that hides the text on a small screen.
+
+Keep the judgment editor below the answer viewer. Provide a neutral Write my judgment link near the tabs to jump to that field and a Back to answer link beside the field to return to the selected answer. Switching tabs, expanding requirements and moving between answer and judgment must preserve the draft judgment and each answer's reading position.
+
+Explicitly label the judgment field with its target: Does your answer meet the task? or Does this revised answer meet the task? Viewing the original/previous answer never retargets the field. In judgment-only correction, show the unchanged existing answer without generating or substituting another.
+
+Use full readable answers without horizontal page scrolling or default truncation. Before calling the comparison usable, verify it on a narrow phone with realistically long answers, an expanded requirements list and a multi-line draft judgment. Check switching, return links, keyboard visibility and draft preservation.
 
 Main action: Check my judgment -> feedback after assessment succeeds.
 
