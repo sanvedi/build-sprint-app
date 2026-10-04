@@ -9,7 +9,7 @@ const compiled=await build({entryPoints:["src/main.jsx"],bundle:true,write:false
 const script=compiled.outputFiles[0].text;
 const KEY="prompt-game:beginner-01:v1";
 async function waitFor(fn){for(let i=0;i<100;i++){if(fn())return;await new Promise(r=>setTimeout(r,10));}assert.fail("Screen did not reach expected state");}
-function fixture(responses){const calls=[];const dom=new JSDOM('<div id="root"></div>',{url:"http://localhost",runScripts:"dangerously",pretendToBeVisual:true});const w=dom.window;Object.defineProperty(w.crypto,"randomUUID",{value:randomUUID});w.HTMLElement.prototype.scrollIntoView=function(){};w.fetch=async(url,options)=>{const body=JSON.parse(options.body);calls.push(body);const value=responses.shift();if(value instanceof Error)throw value;return new Response(JSON.stringify({status:"success",value}),{status:200,headers:{"Content-Type":"application/json"}});};w.eval(script);return {dom,w,calls};}
+function fixture(responses,seed={}){const calls=[];const dom=new JSDOM('<div id="root"></div>',{url:"http://localhost",runScripts:"dangerously",pretendToBeVisual:true});const w=dom.window;for(const [key,value] of Object.entries(seed))w.localStorage.setItem(key,JSON.stringify(value));Object.defineProperty(w.crypto,"randomUUID",{value:randomUUID});w.HTMLElement.prototype.scrollIntoView=function(){};w.fetch=async(url,options)=>{const body=JSON.parse(options.body);calls.push(body);const value=responses.shift();if(value instanceof Error)throw value;return new Response(JSON.stringify({status:"success",value}),{status:200,headers:{"Content-Type":"application/json"}});};w.eval(script);return {dom,w,calls};}
 function button(w,text){const b=[...w.document.querySelectorAll("button")].find(x=>x.textContent===text);assert.ok(b,`Missing button ${text}`);assert.equal(b.disabled,false);b.click();}
 function type(w,id,value){const el=w.document.getElementById(id);assert.ok(el,`Missing field ${id}`);Object.getOwnPropertyDescriptor(w.HTMLTextAreaElement.prototype,"value").set.call(el,value);el.dispatchEvent(new w.Event("input",{bubbles:true}));}
 const notYet={id:"assessment1",earned:false,route:"prompt",gap:"Add the event facts",why:"Students need the time",evidence:"Your request omits time"};
@@ -35,4 +35,33 @@ test("switching long answers retains the draft judgment and its answer target",a
 test("generation failure preserves the prompt and consumes no attempt",async()=>{
  const f=fixture([new Error("Connection failed")]);
  try{await waitFor(()=>f.w.document.getElementById("prompt"));type(f.w,"prompt","My edited prompt");button(f.w,"Generate answer");await waitFor(()=>f.w.document.querySelector('[role="alert"]'));assert.equal(f.w.document.getElementById("prompt").value,"My edited prompt");assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,0);}finally{f.dom.window.close();}
+});
+
+
+test("challenging a decision rechecks the same assessment once and continues without an extra attempt",async()=>{
+ const f=fixture([{id:"answer1",text:"Answer"},notYet,{...notYet,rechecked:true}]);
+ try{await waitFor(()=>f.w.document.getElementById("prompt"));button(f.w,"Generate answer");await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","The time is missing");button(f.w,"Check my judgment");await waitFor(()=>f.w.document.body.textContent.includes("One change to try"));button(f.w,"Challenge");await waitFor(()=>JSON.parse(f.w.localStorage.getItem(KEY)).feedback.rechecked);await waitFor(()=>![...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Challenge"));assert.equal(f.calls[2].path,"practice:recheck");assert.equal(f.calls[2].args[0].assessmentId,"assessment1");assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,1);assert.equal([...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Challenge"),false);button(f.w,"Try again");await waitFor(()=>f.w.document.getElementById("explanation"));assert.equal(f.calls.length,3);}finally{f.dom.window.close();}
+});
+test("failed recheck keeps the original result and retries the same request",async()=>{
+ const f=fixture([{id:"answer1",text:"Answer"},notYet,new Error("Network failed"),{...passed,id:"assessment1",rechecked:true}]);
+ try{await waitFor(()=>f.w.document.getElementById("prompt"));button(f.w,"Generate answer");await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","Checked answer");button(f.w,"Check my judgment");await waitFor(()=>f.w.document.body.textContent.includes("One change to try"));button(f.w,"Challenge");await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Retry assessment"));assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,1);button(f.w,"Retry assessment");await waitFor(()=>f.w.document.body.textContent.includes("Skill point earned"));assert.equal(f.calls[2].args[0].requestId,f.calls[3].args[0].requestId);assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,1);}finally{f.dom.window.close();}
+});
+test("reopening an interrupted assessment resumes its request only once",async()=>{
+ const before={version:1,stage:"judge",prompt:"Prompt",judgment:"Judgment",explanation:"",answer:{id:"answer1",text:"Answer"},previousAnswer:null,feedback:null,attempts:0,point:false,correcting:false};
+ const token="a".repeat(64);const payload={token,answerId:"answer1",judgment:"Judgment",explanation:""};
+ const f=fixture([notYet],{[KEY]:before,"prompt-game:session:v1":token,"prompt-game:request-recovery:v1":{action:"assess",before,request:{fingerprint:JSON.stringify(payload),id:"original-request"}}});
+ // session token is a raw string in actual storage.
+ f.w.localStorage.setItem("prompt-game:session:v1",token);
+ try{await waitFor(()=>f.w.document.body.textContent.includes("One change to try"));assert.equal(f.calls.length,1);assert.equal(f.calls[0].args[0].requestId,"original-request");assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,1);}finally{f.dom.window.close();}
+});
+test("reopening a pending save restores the checked result without another AI request",async()=>{
+ const next={version:1,stage:"complete",prompt:"Prompt",judgment:"Judgment",explanation:"",answer:{id:"answer1",text:"Answer"},previousAnswer:null,feedback:passed,attempts:1,point:true,correcting:false};
+ const f=fixture([],{"prompt-game:request-recovery:v1":{next}});
+ try{await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Retry saving"));button(f.w,"Retry saving");await waitFor(()=>!f.w.document.body.textContent.includes("Save pending"));assert.equal(f.calls.length,0);assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,1);}finally{f.dom.window.close();}
+});
+
+
+test("assessment failure holds the exact judgment read-only until its same-request retry completes",async()=>{
+ const f=fixture([{id:"answer1",text:"Answer"},new Error("Response lost"),passed]);
+ try{await waitFor(()=>f.w.document.getElementById("prompt"));button(f.w,"Generate answer");await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","My exact judgment");button(f.w,"Check my judgment");await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Retry assessment"));assert.equal(f.w.document.getElementById("judgment").disabled,true);button(f.w,"Retry assessment");await waitFor(()=>f.w.document.body.textContent.includes("Skill point earned"));assert.deepEqual(f.calls[1].args,f.calls[2].args);assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,1);}finally{f.dom.window.close();}
 });

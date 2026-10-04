@@ -14,8 +14,11 @@ export function assessed(s, feedback) {
   const attempts=s.attempts+1;
   return {...s,feedback,attempts,point:Boolean(feedback.earned),stage:feedback.earned?"complete":attempts>=3?"example":"feedback"};
 }
+export function rechecked(s, feedback) {
+ return {...s,feedback,point:Boolean(feedback.earned),stage:feedback.earned?"complete":s.attempts>=3?"example":"feedback"};
+}
 export function correction(s) {
-  return {...s,correcting:true,previousAnswer:s.feedback.route==="judgment"?null:s.previousAnswer,explanation:"",judgment:"",stage:s.feedback.route==="judgment"?"judgeCorrection":"editCorrection"};
+  return {...s,previousJudgment:s.judgment,correcting:true,previousAnswer:s.feedback.route==="judgment"?null:s.previousAnswer,explanation:"",judgment:"",stage:s.feedback.route==="judgment"?"judgeCorrection":"editCorrection"};
 }
 export function saveResult(s, write) {
   try { write(JSON.stringify(s));return {saved:true,state:s,pending:null}; }

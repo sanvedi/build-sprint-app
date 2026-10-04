@@ -61,3 +61,10 @@ After the builder saved the Gemini key in development settings, real generation 
 ## 390px accessibility fixes
 
 Raised supporting text from 14px to 16px and expanded the seven short links/disclosure targets to at least 44 by 44 CSS pixels. Edge browser emulation at 390 by 844 covered 28 state captures using prepared responses: no text below 16px, no tappable targets below 44 by 44, and no horizontal overflow. Text contrast pairs are unchanged; the lowest ratio is 6.56:1. Build and 15 automated tests passed; the design detector returned no findings. No production publish or physical-phone/keyboard verification.
+
+
+## Challenge and state coverage
+
+The builder selected Challenge ? AI recheck ? continue if AI still disagrees. Implemented one completed recheck per assessment, retained original plus reviewed decisions, immutable submission binding, latest-assessment checks, shared usage limits, and no extra learning attempt. Live Gemini generation, assessment, recheck and replay passed in development: database inspection confirmed one learning attempt, one point and one recheck job. An additional recheck request returned the existing review without a model call.
+
+Expanded existing practice state messages using approved DESIGN.md copy; added durable request IDs, checked-result recovery and read-only submitted work. 22 automated tests cover both correction paths, unchanged/changed rechecks, failed-recheck retry, mount recovery without duplicate requests, and reopening a pending save without another AI request. 20 development-only phone previews passed Edge checks at 390 ? 844 with no AI requests, undersized text/targets or overflow. The phone guide explains each state. Physical-phone keyboard verification, the full teacher feedback gate, extra practices/finals and account saving remain pending. No production publish.

@@ -311,3 +311,12 @@ Implementation status: the first Beginner practice page now has an implementatio
 
 
 Phone accessibility requirement: all tappable controls, including links and disclosure toggles, have a target at least 44 by 44 CSS pixels. Verified in Edge at 390 by 844 pixels across 28 first-practice state captures, including correction, completion, loading, error and save-pending states. This is browser emulation, not a physical-phone check.
+
+
+## Approved assessment challenge and current implementation states
+
+Builder decision: students may choose Challenge. AI rechecks the same submitted prompt, answer, judgment and correction explanation. If it still disagrees, continue through normal practice; there is no teacher-review step. A successful recheck replaces the decision for that attempt without consuming another attempt or awarding a duplicate point. Keep the original assessment for review. Technical limit: one completed recheck per assessment, with retries for failed requests.
+
+Use the existing approved assessment-loading and unavailable messages during recheck. Keep the submission visible. After success show the rechecked explanation and evidence; remove Challenge for that assessment and retain the normal correction/result path. If recheck fails, keep the original decision and offer Retry assessment. Pending saving uses Retry saving, without another AI call.
+
+The first-practice implementation now includes the approved first-visit and answer-ready instructions, correct assessment loading text, explicit assessment retries, previous judgment during judgment-only correction, read-only submitted work on results, and interrupted-request/pending-save recovery. Phone state previews are development-only, prepared, separate from saved progress and credit-free. See PHONE_STATES.md. Additional practices, finals and account saving remain outside this implemented slice.

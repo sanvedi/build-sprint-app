@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { initialState, generated, correction, judged, assessed, saveResult } from "../src/practice.mjs";
+import { initialState, generated, correction, judged, assessed, rechecked, saveResult } from "../src/practice.mjs";
 
 test("prompt correction requires a judgment of its new answer", () => {
   let s = generated(initialState(), { id: "a1", text: "Old answer" });
@@ -56,4 +56,17 @@ test("judgment-only correction after a prompt revision does not reuse the prompt
  assert.equal(s.answer.id,"a2");
  assert.equal(s.previousAnswer,null);
  assert.equal(s.stage,"judgeCorrection");
+});
+
+
+test("rechecking changes the decision without consuming an attempt or changing the answer",()=>{
+ let s=assessed(generated(initialState(),{id:"a1",text:"Same answer"}),{id:"f1",earned:false,route:"prompt",gap:"gap",why:"why",evidence:"e"});
+ const before=s.attempts;
+ s=rechecked(s,{id:"f1",earned:true,route:"none",gap:"",why:"Reconsidered",evidence:"e",rechecked:true});
+ assert.equal(s.attempts,before);assert.equal(s.answer.id,"a1");assert.equal(s.point,true);assert.equal(s.stage,"complete");
+});
+test("a recheck can correct a mistaken award and a third-attempt failure remains supported completion",()=>{
+ let s={...initialState(),stage:"complete",point:true,attempts:3};
+ s=rechecked(s,{id:"f",earned:false,route:"judgment",gap:"gap",why:"why",evidence:"e",rechecked:true});
+ assert.equal(s.attempts,3);assert.equal(s.point,false);assert.equal(s.stage,"example");
 });
