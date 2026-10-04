@@ -9,7 +9,6 @@
  */
 
 import type * as http from "../http.js";
-import type * as m0Checks from "../m0Checks.js";
 
 import type {
   ApiFromModules,
@@ -19,7 +18,6 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   http: typeof http;
-  m0Checks: typeof m0Checks;
 }>;
 
 /**

@@ -1,8 +1,12 @@
 # Changes
 
-## 3 October 2026
+## 4 October 2026
 
-- Published an honest setup-only OpenLoops page on Convex; capture, sign-in and email are not available yet.
-- Verified a marked test record changes from Waiting to Needs You on the development backend without opening an app page.
-- Added `npm run deploy`, a build/type check and a repeatable scheduling check.
-- Saved local git history. Resend is approved, with its key intentionally pending.
+- Replaced active scope, build, design, verification and setup documentation with the prompting-game direction.
+- Recorded DP's actual workaround and the reported 10-student result without claiming an app or established learning outcome.
+- Updated the local setup page; no game or production deployment is claimed.
+- Build/type checks passed; the updated local setup page returned HTTP 200. Visual browser verification was blocked; no game flow is verified.
+- Updated the development backend only; production remains unchanged.
+- Retired the reminder test functions and scheduling command. Preserved old material in archive/openloops/ and existing historical records.
+
+Earlier product history is preserved in Git and archive/openloops/CHANGELOG.md.txt; it does not govern this build.

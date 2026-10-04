@@ -1,19 +1,20 @@
-# OpenLoops
+# Prompting Game
 
-An early personal follow-through app. The current live page is a setup check, not the working product.
+Students edit weak prompts, compare AI answers, explain corrections and complete fresh challenges without hints. The game is specified, not implemented; index.html is an honest setup page.
 
-- Setup page: https://combative-jaguar-50.convex.site
-- Scope: IDEA_SCOPE.md
-- Product: PRODUCT.md
-- Screens: DESIGN.md
-- Evidence and limitations: M0_VERIFICATION.md
+- PRODUCT.md: learning flow and game rules.
+- IDEA_SCOPE.md: active scope, milestones and proof.
+- V1_BUILD.md: build sequence.
+- DESIGN.md: interface intentions.
+- M0_VERIFICATION.md: feedback tests and evidence boundaries.
+- archive/openloops/: retired material, not active instructions.
 
 ## Commands
 
-`npm install` installs dependencies. `npm run dev` starts the local setup page. `npm run build` builds it. `npm run typecheck` checks the Convex code.
+npm install installs dependencies. npm run dev starts the local setup page. npm run build builds it. npm run typecheck checks Convex code.
 
-`npm run deploy` deploys the backend and static files to the production Convex site. Pushing GitHub does not deploy the site.
+npm run deploy publishes backend and static files through Convex static hosting. Git push does not deploy. Existing hosting address: https://combative-jaguar-50.convex.site; no game is verified there. Local changes do not update that site until deployed.
 
-`npm run verify:scheduling` creates a marked test record on the configured development deployment, waits for its check time, and verifies its background transition. It does not send email or count as real usage. Raw evidence is saved locally under artifacts/ and is not published.
+Convex CLI sign-in and local deployment configuration are required. Credentials stay outside Git. No AI provider is selected or verified. Begin with the smallest teacher-checked feedback test before implementing automatic awards.
 
-Convex CLI sign-in and a local .env.local deployment configuration are required. Credentials stay out of this repository. The Resend key is intentionally pending; no extraction model is configured.
+The retired scheduling command is removed. Existing historical test rows are preserved but never count as game usage.

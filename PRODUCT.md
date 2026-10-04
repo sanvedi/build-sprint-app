@@ -188,4 +188,4 @@ These describe what I must demonstrate, not work already completed. Start with t
 
 The fixed stack is Codex, GitHub and Convex for database, backend, authentication and hosting. Use the Convex static-hosting workflow for deployment.
 
-OpenLoops is abandoned. IDEA_SCOPE.md, V1_BUILD.md and other old product documents must not govern this game. Their replacement is the next documentation task and must reflect these decisions. Repository safety rules and fixed-stack instructions still apply.
+IDEA_SCOPE.md, V1_BUILD.md, DESIGN.md and M0_VERIFICATION.md now describe this game. Retired product snapshots in archive/openloops/ are historical only and must not govern the build. Repository safety rules and fixed-stack instructions still apply.

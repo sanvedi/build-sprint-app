@@ -1,14 +1,13 @@
 {
   "name": "build-sprint-app",
   "version": "1.0.0",
-  "description": "",
+  "description": "A prompting practice game for students; currently a setup-only scaffold.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
     "deploy": "convex deploy --yes && static-hosting deploy --skip-convex",
-    "verify:scheduling": "node scripts/verify-scheduling.mjs",
     "typecheck": "tsc --noEmit -p convex/tsconfig.json"
   },
   "keywords": [],

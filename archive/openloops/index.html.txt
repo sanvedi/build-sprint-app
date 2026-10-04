@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Prompting Game ? setup in progress</title>
+    <title>OpenLoops — setup in progress</title>
     <style>
       body { margin: 0; background: #fff; color: #222; font: 16px/1.5 Georgia, serif; }
       main { max-width: 680px; margin: 64px auto; padding: 0 16px; }
@@ -13,9 +13,9 @@
   </head>
   <body>
     <main>
-      <h1>Prompting Game</h1>
-      <p>Practise improving prompts, compare AI answers, and learn to judge the results.</p>
-      <p>Setup is in progress. Challenges, AI feedback and saved progress are not available yet.</p>
+      <h1>OpenLoops</h1>
+      <p>Setup is in progress. This is the hosting check, not the working product.</p>
+      <p>Commitment capture, sign-in and reminder emails are not available yet.</p>
     </main>
   </body>
 </html>

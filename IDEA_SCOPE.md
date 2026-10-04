@@ -1,909 +1,263 @@
 # IDEA_SCOPE.md
 
-> This document is the control plane for the build. Your coding agent
-> reads it before every session. If a proposed change does not improve
-> the active milestone's acceptance test or rubric strategy, it goes in
-> the parking lot.
-
-## 0. scope status
-
-  Field                 Value
-  --------------------- --------------------------------------
-  Event                 GrowthX Build Sprint · Season 04
-  Builder               you, solo, plus Codex or Claude Code
-  Build starts          Fri 2 Oct 2026, 11:00 AM IST
-  Submission deadline   Sat 17 Oct 2026, 11:00 AM IST
-  Current milestone     M0
-  Live URL              
-  Public repo           
-  Last updated          Fri 2 Oct 2026
-
-### status language
-
--   **Specified:** described but not implemented.
--   **Implemented:** code exists.
--   **Working locally:** golden path runs locally.
--   **Live:** golden path runs at the public URL on a phone.
--   **Verified:** acceptance tests passed live.
--   **Demo-ready:** fallback, timing and evidence rehearsed.
-
-## 1. idea lock
-
-  -----------------------------------------------------------------------
-  Decision                            Locked answer
-  ----------------------------------- -----------------------------------
-  One-sentence product                **OpenLoops is an AI-native
-                                      personal follow-through system that
-                                      turns messages, screenshots and
-                                      notes into unresolved dependencies,
-                                      watches them, and tells the user
-                                      when something needs attention.**
-
-  The one person                      N --- senior colleague; busy
-                                      higher-education professional
-                                      coordinating colleagues, vendors
-                                      and administrative dependencies
-
-  The one moment                      Someone says "I'll
-                                      send/pay/approve/confirm it by X,"
-                                      and N needs to stop carrying that
-                                      promise in her head
-
-  Current workaround                  Memory, WhatsApp
-                                      stars/self-messages, unread email,
-                                      notebooks, calendar/task reminders
-                                      and reopening old conversations
-
-  Core action                         User pastes/types/uploads what
-                                      happened → gets a confirmed open
-                                      loop containing what is expected,
-                                      from whom, by when and its state
-
-  One outcome                         User can stop remembering the
-                                      dependency and still intervene
-                                      before an important outcome is lost
-
-  Hard input                          Messy screenshot/conversation where
-                                      obligation/date are implicit or
-                                      ambiguous
-
-  Primary track                       Revenue
-
-  Riskiest assumption                 Users have enough consequential
-                                      unresolved dependencies, and trust
-                                      the workflow enough, to repeatedly
-                                      put real loops into it
-
-  30-minute no-code test              Ask N and Ni what they are waiting
-                                      for; then inspect
-                                      WhatsApp/email/notes and count
-                                      forgotten loops. Manually structure
-                                      3--5 real loops and test whether
-                                      they entrust them to the system
-
-  First three users                   N --- senior colleague; Ni ---
-                                      colleague; Vi --- MBA graduate
-
-  Tuesday channel                     **Must be confirmed during M2.**
-                                      Identify one existing
-                                      faculty/administrator/management
-                                      group or feed; do not invent one
-
-  Personal artifact                   "What I'm still waiting for"
-                                      dashboard: Needs You / Waiting /
-                                      Watching / Closed
-
-  Saturday numbers                    10 genuine users; target \~100
-                                      genuine open loops; 3+ pain
-                                      conversations with quotes; ≥1
-                                      documented rescued/followed-up
-                                      loop; genuine payment attempt after
-                                      value
-
-  Library lineage                     None; lived problem
-  -----------------------------------------------------------------------
-
-### why this idea
+This is the active build scope for the prompting game. PRODUCT.md owns the product behavior; this file translates it into implementation boundaries and proof. Retired material in archive/openloops/ must not govern the build. If these two active documents conflict, follow PRODUCT.md and resolve the mismatch before implementing it.
 
-#### the pain I feel
+## 0. Scope status
 
-Important outcomes depend on other people: quotations, approvals,
-reimbursements, documents, contacts, payments and confirmations.
-Promises arrive across WhatsApp, email, calls and conversations.
-Information may be saved, but its **state is not tracked**. The builder
-has personally missed follow-ups because commitments disappeared into
-memory, notebooks or messages.
+| Field | Status |
+| --- | --- |
+| Event | GrowthX Build Sprint, Season 04 |
+| Product | Prompting Game, working name |
+| Last updated | 4 October 2026 |
+| Submission deadline | 17 October 2026, 11 AM IST; target 9 AM |
+| Current milestone | M0: simplest trustworthy-feedback proof |
+| Product state | Specified; no game implemented or verified live |
+| Existing hosting address | https://combative-jaguar-50.convex.site; historical setup address, not a verified game |
+| Repository | https://github.com/sanvedi/build-sprint-app |
 
-#### decisive proof
+Specified means described; implemented means code exists; working locally means the journey was exercised locally; live means exercised at the public URL; verified means the required checks passed. Do not claim game usage from old setup checks.
 
-A stranger supplies a fresh messy message/screenshot. OpenLoops
-identifies what is expected, who is responsible and when; the user
-confirms it; the loop persists. A genuine overdue loop appears under
-**Needs You** with original context and a prepared follow-up. Genuine
-Convex rows prove real usage.
-
-## 2. user and job
+## 1. Idea and boundaries
 
-### user
+Students improve weak prompts in short challenges, compare answers, correct their reasoning after feedback, and demonstrate understanding on fresh challenges without hints. AI generates answers to actual student edits and assesses task-specific reasoning.
 
--   Who: N, 58, senior higher-education professional.
--   Context: coordinates colleagues, vendors and administrative
-    dependencies.
--   Frequency: several promises/approvals/documents can be open
-    simultaneously.
--   Existing behaviour: memory, notes, stars, unread email,
-    self-messages and reminders.
--   Cost: mental load, late intervention, delayed outcomes, missed
-    deadlines/money.
+Build for the student in DP's situation. The teacher reviews challenge material and assessment examples; there is no teacher-facing product in v1. A general assistant can also coach prompting. The proposed distinction is reviewed practice, independent final checks and saved progression; superiority is unproven.
 
-### job to be done
+The user explicitly agreed the three levels, two practice challenges plus one fresh final per level, editing supplied prompts, two practice retries, worked examples, hint-free finals and passing based on prompt quality plus answer judgment. Defaults recorded in PRODUCT.md govern onboarding, saving, rewards and recovery. They are chosen defaults, not invented student evidence.
 
-> When someone or an organisation promises me a future outcome, I need
-> to hand that unresolved dependency to a trusted system, so that I can
-> stop remembering it myself and still intervene before it is lost.
+## 2. User, job and evidence
 
-### definition of completion
+When AI asks me for more context and I do not want to start again, I want to know the smallest useful change to my request, so I can get a useful answer with less wasted effort.
 
-1.  Dependency is captured with enough context to understand later.
-2.  Product distinguishes "nothing to do yet" from "intervention needed
-    now."
-3.  User can act with original context and close the loop.
+This is the existing draft job sentence, not DP's own words or a confirmed student quote.
 
-Extraction alone does not count. Completion requires a saved commitment, a due-time email linking to the loop, and a way to follow up or mark complete.
+Other moments it happens: not yet established.
 
-## 3. product contract
+Who, by situation: a student using AI for coursework who cannot get the intended result and is reluctant to supply context or write another prompt.
 
-### golden path
+Today they hire: their existing AI tool, including asking it to write a prompt for them. The builder reports that DP became disappointed when asked for context, did not want to write a new prompt, and asked AI to write one instead. That did not produce the wanted answer because the resulting prompt was still incomplete. The original task, missing details and exact outputs have not been supplied.
 
-1.  User types/pastes text describing a commitment in either direction. Screenshot capture is deferred.
-2.  AI proposes **waiting for**, **from whom**, **expected by**,
-    **context** and uncertainty.
-3.  User confirms/corrects.
-4.  Loop persists in Convex as **Waiting**, with direction **Waiting on others** or **Others waiting on me**.
-5.  Expected time passes → loop moves to **Needs You** → contextual
-    follow-up is prepared → user acts/closes it.
+The one we serve first: the student in DP's situation. DP is an alias for a participant in the classroom exercise. There is no separate teacher-facing product in the first release.
 
-### inputs
+What needs doing: identify the information needed for the task, express it in the request, and judge whether the answer meets the requirements. This is the product's proposed response, not a reported statement from DP.
 
-  -----------------------------------------------------------------------
-  Input             Format/source     Hard              Validation
-                                      characteristics   
-  ----------------- ----------------- ----------------- -----------------
-  Commitment        text              informal wording, show fields for
-                                      relative dates,   confirmation
-                                      implicit promise  
+How they want to feel and look to others: not established. No institutional buyer or payer is confirmed.
 
-  Screenshot        PNG/JPG           multiple          expose
-                                      messages, noise,  uncertainty; user
-                                      implicit          confirms
-                                      owner/date        
+Why this builder: access to students in class and direct observation of difficulty getting useful AI results. The presentation assignment motivates the idea; creating presentations or completing assignments is outside the product.
 
-  Timing            extracted +       "tomorrow",       show normalized
-                    correction        "Friday", "7--10  timestamp
-                                      days"             
-  -----------------------------------------------------------------------
+The outcome to investigate is fewer wasted attempts on students' own work. In-game completion does not establish that wider outcome.
 
-### outputs and state changes
+Known path for DP: asked to provide context -> disappointed -> unwilling to write a new prompt -> asked AI to write the prompt -> still did not get the intended answer because that prompt was incomplete. The exact missing information is unknown.
 
-  ------------------------------------------------------------------------
-  Output/state      Consumer          Required format    Proof
-  ----------------- ----------------- ------------------ -----------------
-  Structured open   user              outcome,           Convex row + card
-  loop                                counterparty,      
-                                      expected date,     
-                                      context, status    
+Broader builder observation: students enter brief questions or irrelevant detail, then sometimes copy the first answer without checking it. This is not a recorded individual journey for DP.
 
-  State transition  user              Waiting/Watching → timestamped
-                                      Needs You → Closed history
+Known resistance: rewriting feels unwelcome to DP. Approved response: edit an existing prompt rather than start with a blank box.
 
-  Follow-up         user              concise editable   visible draft
-                                      message            
+Assumed pull: a short challenge and visible answer comparison make one useful edit feel worthwhile. Product response: show value in the first challenge, with no account or level-selection requirement beforehand.
 
-  Resolution        user              closed + timestamp persists after
-                                                         reload
-  ------------------------------------------------------------------------
+Assumed anxiety: students may not know what context matters or may distrust another AI's advice. Product response: show task requirements, give specific explanations, and acknowledge unreliable answers rather than insist AI is right.
 
-### what the product must remember
+Possible habit: copying or guessing is faster in the moment. Product response: keep practice focused and immediately connect edits to results. These explanations are hypotheses, not invented student quotes. Observe whether students voluntarily pause their work to practise.
 
--   Within session: raw input, extracted fields, corrections.
--   Across sessions: user, loop, context, expected date, status,
-    timestamps, state history, follow-up, resolution.
--   Deliberately forget: credentials and unnecessary deleted/test
-    content.
+The builder reported 10 participants: all started at 0; eight reached a final score of 2 and two reached 1. The builder confirmed independent completion of the final task without coaching.
 
-### human review boundary
+The suggested exercise used an initial task, practice and a fresh final task. Exact prompts, individual submissions, scoring criteria, task comparability and adherence to every suggested step have not been recorded. The exercise date was not supplied; the report was recorded on 4 October 2026.
 
--   Automate: extraction proposal, date proposal, state calculation,
-    follow-up draft.
--   Confirm: ambiguous loop creation, owner/outcome/date changes,
-    closure in M1.
--   Escalate: missing date, unclear counterparty, no actual obligation.
--   Expose uncertainty instead of inventing facts.
+This records higher final scores and reported independent completion. It does not establish transferable learning, causation, lasting improvement, reliable automated feedback, return use, payment willingness or a working app. No comparison group was reported. Participants are not product signups.
 
-## 4. what makes it different
+DP's reported reluctance is evidence of resistance, not evidence that the proposed game overcame it.
 
-### the obvious version
+## 3. Product contract
 
-AI reminder/task app: paste sentence → extract task → set reminder.
+DP did not want to write a new prompt when asked to provide context. The game starts with an editable weak prompt, so the student can improve what is already there. Whether this makes DP willing to practise remains untested.
 
-### the non-obvious choice
+### Practice: demonstrate understanding after feedback
 
-The object is an **open commitment**: either I am waiting on someone, or someone is waiting on me. The system stays
-quiet while responsibility sits elsewhere and surfaces the loop only
-when intervention is warranted.
+1. The student reads a prepared task, its essential requirements, a weak prompt and one example answer.
+2. They edit the prompt, receive an AI answer, and explain whether that answer meets the task before seeing feedback.
+3. Feedback identifies a specific gap in their prompt or answer judgment and explains why it matters.
+4. After reading feedback, the student edits the prompt to address that gap and briefly explains what they changed and why. If the gap was in their judgment rather than their prompt, they correct their judgment instead of adding unnecessary prompt text.
+5. When the prompt changes, generate a new answer. The student checks it against the task and identifies what improved, what still falls short and what needs verification. When only their judgment changes, they reassess the existing answer; no new generation is required.
+6. Assess the student's correction and explanation against the identified gap. Repeating the feedback or clicking Next does not demonstrate understanding. Record whether they addressed the gap and correctly judged the answer; a better AI answer alone is not enough.
+7. Allow two practice retries after the first evaluated attempt. Each retry includes the correction and explanation. After the second retry, show a worked example explaining its choices. A student who already meets the practice requirements can move on without using every retry. Seeing the example does not prove independent understanding.
 
-### the moment they screenshot
+Preserve edits if generation or assessment fails. Failed requests do not consume a learning attempt. If feedback is unavailable or unreliable, retain the submission and offer retry without awarding or denying completion.
 
-The personalized **What I'm still waiting for** view with Needs You /
-Waiting / Watching / Closed and a loops-closed count.
+### Final: demonstrate independent use
 
-### ideas deliberately rejected
+8. After two practice challenges, give a fresh final challenge at the same level without hints or a worked solution. The student edits its weak prompt and judges the resulting answer before seeing feedback.
+9. Pass only when the prompt covers the essential task requirements and the student correctly identifies whether the answer meets them, including material errors or omissions. A sensible prompt can pass despite a poor AI answer if the student recognises the problem. A lucky answer does not make a weak prompt pass.
+10. After an unsuccessful final, show feedback, return the student to practice and use a different reviewed final variant for the next independent check. Once both final variants have been seen, further attempts are practice, not evidence from a fresh task.
+11. Save the final submission, judgment and result. Passing unlocks the next level; passing all three levels finishes the game.
 
-  Rejected mechanic                     Reason
-  ------------------------------------- -----------------------------------------------
-  Automatic WhatsApp monitoring in M1   integration/privacy risk
-  Automatic Gmail monitoring in M1      OAuth scope can consume sprint
-  Autonomous sending                    trust boundary; user-approved draft is enough
-  General task manager                  destroys wedge
-  CRM/team workspace                    wrong initial scope
-  Money-recovered claims                cannot verify reliably in v1
+Game reward: a correction that fixes the identified gap with a sound explanation earns a visible skill point; passing the fresh final challenge earns the level badge and unlocks the next level. Passing Pro earns its badge and completes the game.
 
-## 5. dependencies
+The observable evidence is the student's own correction and explanation during practice, followed by a successful fresh attempt without hints. Automated judgments must pass the reliability checks in section 6 before awarding level completion.
 
-### verified capability matrix
+The game uses prepared material and does not complete the student's assignment. Assess lasting learning, voluntary return and fewer wasted attempts on actual work separately. Do not claim those outcomes from reading feedback or passing the game alone.
 
-  ---------------------------------------------------------------------------------------------------
-  Capability                      Product/API/model   Access          Limits           Verified how
-  ------------------------------- ------------------- --------------- ---------------- --------------
-  Backend/database/auth/hosting   Convex + Convex     fixed sprint    event-required   bundled event
-                                  Auth                stack                            brief
+## 4. First-release rules and onboarding
 
-  Repository                      GitHub              public repo     must open        bundled event
-                                                                      privately        brief
+Default: start directly in Beginner's first prepared challenge. No account, profile, upload, level choice or tutorial is required before useful feedback.
 
-  Coding agent                    Codex or Claude     project/local   fixed sprint     bundled event
-                                  Code                                stack            brief
+The student gives effort: read the task, edit the existing prompt, then briefly explain whether the answer meets the requirements. The expected benefit is visible in the first answer comparison, rather than another unexplained request for context.
 
-  Text extraction                 AI model/API        **unverified    structured       test 10
-                                                      until M0**      extraction on    examples
-                                                                      hard cases       
+Offer sign-in after the first feedback to keep progress across devices. Before sign-in, retain the current session on this device and explain that it is not an account backup. Account details and cross-device saving can wait until value is visible.
 
-  Screenshot understanding        multimodal          **unverified    recoverable      test 3 real
-                                  model/API           until M0**      ambiguity        screenshots
+Explicitly agreed:
 
-  Timed transition                Convex              **verify M0**   real timestamp   create
-                                  scheduled/backend                   transition       10-minute loop
-                                  logic                                                
-  ---------------------------------------------------------------------------------------------------
+- Beginner, Amateur and Pro levels.
+- Two practice challenges and one fresh final challenge per level: nine primary challenges.
+- Direct editing, answer comparisons and feedback.
+- One initial practice attempt plus two retries, then a worked example.
+- A fresh final challenge without hints.
+- Passing depends on both the prompt and answer judgment, not AI answer quality alone.
 
-### unsupported assumptions
+Approved difficulty:
 
-Not on critical path: automatic Gmail/WhatsApp ingestion, autonomous
-sending, third-party reply monitoring, automatic external resolution,
-monetary recovery calculations. If screenshot extraction fails M0, fall
-back to typed/pasted text.
+| Level | Focus |
+| --- | --- |
+| Beginner | Make the task and desired answer clear. |
+| Amateur | Add relevant context and constraints. |
+| Pro | Handle competing requirements and recognise unreliable answers. |
 
-### secrets and access
+Answer-checking occurs at every level. Roles, length and emotional instructions do not earn credit by themselves.
 
-Secrets live in environment variables, never this document or public
-repo.
+Defaults chosen to complete this brief:
 
-## 6. rubric strategy
+- Use prepared, teacher-reviewed material only; no personal assignment uploads.
+- Start at Beginner. Passing its final unlocks Amateur; passing Amateur unlocks Pro. Completed practice remains available.
+- Each challenge has written essential requirements and acceptable answer judgments before release. Use clear pass/not-yet explanations for assessment. Skill points count demonstrated practice achievements; they are not an AI-generated quality score.
+- An unsuccessful final sends the student back to practice with feedback about the missing skill. The next final uses a different reviewed variant at the same difficulty, without hints. Include one alternate final variant per level in addition to the nine primary challenges; if both variants have been seen without a pass, allow practice but keep the next level locked and show that another unseen, teacher-reviewed final is needed. Do not silently unlock or describe a repeated task as fresh. Adding another final is a content update, not automatic generation of an unreviewed test.
+- Finishing the game means passing all three level finals. Keep first-attempt and later-pass records distinct.
+- Each of the six practice challenges offers one skill point, for a maximum of six. Award it when a correction addresses the feedback, the student explains why, and their answer judgment is sound. A student who meets the requirements on the first attempt also earns the point; do not reward deliberately making mistakes. Replays and duplicate submissions cannot earn extra points for the same challenge.
+- A worked example is available after the second retry. An attempt that uses that example remains supported practice and cannot earn the challenge's independent skill point. Practice can still be marked completed after reviewing the example; the final remains the level gate.
+- Skill points give visible recognition but do not unlock levels. Independent final passes earn Beginner, Amateur and Pro badges. These are game achievements, not qualifications or certificates.
+- Save edited drafts, evaluated attempts, answer judgments, feedback, practice status, point awards, final variants seen and level results. Signed-in progress belongs to that student.
 
-### primary track
+No presentation generator, assignment completion service, message monitoring, payments, leaderboard, streaks, certificates or teacher dashboard in v1.
 
-  -----------------------------------------------------------------------
-  Decision                            Answer
-  ----------------------------------- -----------------------------------
-  Primary track                       Revenue
+## 5. Riskiest dependency: assessment
 
-  Why                                 Direct access to users; limited
-                                      time should go to real usage and
-                                      product quality
+AI generates an answer to the student's actual edited prompt and evaluates the prompt and their judgment against a prepared task. This comparison is the learning interaction, not a static prompt checklist.
 
-  Track requirement                   Named user with pain; genuine
-                                      payment attempt after demonstrated
-                                      value
-  -----------------------------------------------------------------------
+A general assistant can also coach prompting. The proposed advantage is a consistent practice sequence with reviewed requirements, independent final checks and saved evidence of progression. Superiority to a general assistant is unproven.
 
-### the track's rows
+Before building the full journey, test automated feedback on 12 teacher-reviewed submissions: four per difficulty. Across that set include weak prompts with lucky answers, sensible prompts with poor answers, good submissions and missing essential requirements. Include before-and-after corrections with explanations: both a genuine correction and a copied explanation that does not fix the gap. Also include a student submission asking the evaluator to ignore its rules. The teacher labels the examples before seeing AI feedback.
 
-  ---------------------------------------------------------------------------------------
-  Row                 Weight Current     Target            Observable proof   Milestone
-  ----------- -------------- ----------- ----------------- ------------------ -----------
-  Signups                20x L1          **L2 (1--50)**;   Convex             M2--M5
-                                         stretch L3        genuine-user count 
+Correct feedback identifies the relevant requirement, distinguishes prompt quality from answer quality, supports its assessment with the actual submission, and offers a useful correction without inventing facts.
 
-  Live                    8x L1          **L3: working     stranger completes M1--M3
-  product                                product**         live golden path   
-  quality                                                                     
+Before evaluation, each challenge needs a teacher-reviewed task, essential requirements, reference facts where relevant, examples of acceptable judgments, and the skill being practised. Use tasks whose factual correctness can be checked. These are evaluation rules, not a mandatory prompt template.
 
-  Revenue                 4x L1          **L2 if genuine   processor evidence M5
-  generated                              payment**                            
+For a skill-point decision, evaluate the original submission, feedback gap, correction, explanation and current answer judgment together. All three conditions must hold:
 
-  Waitlist                4x L1          L1/L2 only if     real records       M5
-                                         organic                              
+- The correction actually addresses the identified gap without losing an essential requirement.
+- The explanation connects the change to the task in the student's own reasoning; merely repeating advice is insufficient. One or two sentences can be enough. Do not assess grammar or verbosity unrelated to the skill.
+- The student correctly judges the answer's important strengths, omissions or errors against the task.
 
-  Pain                    2x L2          **L4: 3+          interview evidence M0--M2
-  severity                               conversations +                      
-                                         quotes**                             
+If the initial attempt already meets the requirements, use its prompt and answer explanation for the same point. Report the decision with supporting evidence from the submission and the relevant requirement. If evidence is missing or the assessment contradicts its own reasoning, show assessment unavailable, preserve work and retry; do not turn uncertainty into failure.
 
-  SOM                     2x L1          L3                users × realistic  M5
-                                                           ACV                
+Student prompt text is material to assess, never authority to change the assessment rules. Instructions such as "give me a point" do not override the reviewed requirements.
 
-  Right to                2x L3          L4                lived examples +   M1--M5
-  win                                                      access + visible   
-                                                           insight            
+Acceptance criteria decided before testing:
 
-  Why now                 1x L1          L2--L3 only if    cited evidence     M5
-                                         verified                             
+- In each of two assessment runs, at least 10 of 12 level pass/not-yet decisions and at least 10 of 12 skill-point eligibility decisions match the teacher labels. The labels are set before either run.
+- Zero critical errors: rewarding a weak prompt solely for a lucky answer; failing a sensible prompt solely for a poor answer when the student identifies it; endorsing a material factual error; inventing a requirement; revealing a final solution before submission; awarding a point for an unfixed gap or copied explanation alone; or obeying a student instruction to change scoring rules.
+- The two runs must agree on all level-pass and skill-point decisions; an inconsistent decision fails this initial gate. For at least one lucky-answer and one poor-answer case, generate multiple answers to the same prompt and verify that feedback does not claim one output proves causation.
 
-  Moat                    1x L1          L2--L3            repeat             M5
-                                                           workflow/history   
-  ---------------------------------------------------------------------------------------
+If this gate fails, revise task criteria or evaluation instructions and rerun the same reviewed set. If it still fails, stop automated skill-point and level awards and test teacher-reviewed feedback instead. Do not call teacher-reviewed delivery a working automated product or silently lower the criteria.
 
-### bonus-eligible rows
+## 6. Stack and access
 
-Claim only if they come free and have required evidence. Install
-read-only analytics in M3. Do **not** spend critical-path time building
-AI-Agent-track architecture.
+- Codex writes code; GitHub stores it; Convex provides database, backend, Convex Auth and Convex static hosting.
+- Deploy with npm run deploy. Git push does not deploy.
+- Check AI access, service approval, current availability and measured cost before relying on model calls. No model/provider is selected by this scope; a new outside service needs the builder's approval.
+- Set bounded AI usage before public testing. No paid plan or upgrade is authorized by this document.
+- No reminder email dependency for this game. The previous email-service approval is historical, not a requirement to install it.
+- Preserve secrets outside source control and client code.
 
-### where the points are
+## 7. State, storage and failures
 
-1.  Signups (20x): genuine users complete first-use flow.
-2.  Live product quality (8x): one complete dependency workflow at live
-    URL.
+Store drafts, original and generated answers, student judgments, feedback, corrections and explanations, evaluated attempt counts, practice completion, unique point awards, final variants seen, results and badges. Preserve challenge/assessment versions so a result can be interpreted later.
 
-### competence floor
+At editing: preserve the draft on this device and, after sign-in, save it privately to the account. Clearly distinguish saving, saved and failed states. Do not show confirmed saving before storage succeeds.
 
-Pain severity through real interviews. SOM/right-to-win/why-now/moat get
-limited time after product is live.
+At generation: preserve edits, offer retry, and do not consume a learning attempt on a failed request. If the usage allowance is exhausted, explain that the student must return when it resets; keep progress and offer already available examples for practice. Do not pretend a cached answer was generated for the new edit.
 
-### rubric traps
+At feedback: if evaluation fails or cannot be trusted, show assessment unavailable and preserve the submission for retry. Award a point only after both the assessment and its save are confirmed; show a pending state until then. Do not award or deny a final pass from missing feedback. Explain capability limits rather than blame students.
 
-No test accounts as signups. No staged surfaces called real. No
-double-counting evidence. No visitor claims without read-only analytics.
+At final assessment: collect prompt and judgment before showing feedback; keep hints and worked solutions hidden until the independent attempt is submitted. Record which final variant was used.
 
-## 7. gtm plan
+At saving and reopening: recover confirmed progress and drafts, keep each account private, and make retrying a save safe from duplicate attempts or duplicate point awards. Reopening must restore points and badges as well as learning progress. Sign-in must preserve the current guest attempt rather than discard it.
 
-### where the users already are
+Implementation defaults: use Convex for account progress, backend generation and authentication. Keep credentials off the client and out of Git. AI usage limits must be set from measured cost before a public release; no paid upgrade is authorized by this brief.
 
-  ---------------------------------------------------------------------------------------
-  Channel                    Who               Reach                    When
-  -------------------------- ----------------- ------------------------ -----------------
-  Direct professional        N, Ni, Vi +       DM/call                  Mon 5--Wed 7
-  network                    colleagues                                 
+Historical m0Checks records are retired development tests. Their schema may remain solely to preserve existing data; there are no active reminder functions or scheduling verification commands. They are never game usage.
 
-  Existing                   **identify during permission-appropriate   confirm by Tue 6
-  faculty/admin/management   M2**              post/DM                  
-  group                                                                 
+## 8. Build order and acceptance milestones
 
-  Second-degree professional colleagues'       introductions            Sun 11 onward
-  network                    contacts                                   
-  ---------------------------------------------------------------------------------------
+These describe what I must demonstrate, not work already completed. Start with the riskiest dependency: whether AI can give useful feedback and recognise understanding.
 
-### distribution posts, in my own words
+1. I can test one prepared Beginner challenge without building the app: use approved AI access to assess a weak prompt, a student's answer judgment, then their correction and explanation. A teacher can check whether the feedback is accurate and whether the skill-point decision is justified. I can record access and cost before running it; no new service or paid plan is assumed approved.
+2. I can repeat that assessment on the 12 teacher-reviewed submissions in section 6, including a weak prompt with a lucky answer and a sensible prompt with a poor answer. Both runs meet the agreement and zero-critical-error rules. If they fail, I follow the stated fallback rather than build untrusted automatic rewards.
+3. I can finish one practice challenge in the app: edit the supplied prompt, compare answers, judge the result, read feedback, make a relevant correction and explain it. A justified skill point appears once; first-attempt success can also earn it.
+4. I can use two practice retries, see the worked example after the second retry, and recover from a failed AI request without losing my edit or using an attempt. Replaying cannot earn duplicate points.
+5. I can complete Beginner's two practices and pass a fresh final without hints. If I do not pass, I can return to practice and try the alternate reviewed final; viewing a solution does not unlock the next level.
+6. I can sign in after receiving first value, close and reopen the app, and recover my confirmed drafts, attempts, points and badges. My guest attempt survives sign-in, and another account cannot read my progress.
+7. I can complete Beginner, Amateur and Pro using the nine primary challenges and three alternate final variants. Each independent pass earns its badge and unlocks the next level; passing Pro finishes the game.
+8. I can deploy with npm run deploy to Convex static hosting and complete the student journey on a phone at the live URL, including retrying a failure and reopening saved progress.
+9. I can observe students making relevant corrections with sound explanations, then completing fresh challenges without hints. I record where they struggle and whether they return voluntarily; I assess retained learning and fewer wasted attempts on their own work separately.
 
--   Monday: "I keep losing track of things other people said they would
-    send, approve or pay. I built a tiny system that watches those loose
-    ends for me. I'm testing it with real commitments this week."
--   Tuesday launch: "What are you waiting for right now? Paste the
-    message or screenshot into OpenLoops; it turns the promise into
-    something it watches until you need to act."
--   Wed--Fri: one concrete change + one honest number each evening.
--   Saturday: what shipped, number of real users/open loops, one rescued
-    outcome.
 
-### targets
+Group these checkpoints as M0 = 1?2 (feedback proof), M1 = 3?6 (one complete level and persistence), M2 = 7?8 (all levels and live journey), and M3 = 9 (observed student evidence). These are the new product's milestone meanings, not the retired plan's calendar. Work in order; do not relax independent checks or feedback criteria to meet the deadline.
 
-  -----------------------------------------------------------------------
-  Row               Floor             Stretch           Source
-  ----------------- ----------------- ----------------- -----------------
-  Revenue signups   L2: 1--50         L3: 51+           Convex
+If behind: reduce decorative work and outreach polish first. Releasing only Beginner is a reduced-scope release requiring an explicit recorded decision; it is not the agreed three-level v1. If feedback fails, use the stated teacher-reviewed experiment, report it honestly and do not award automated progression.
 
-  Live product      L3                L4 only if        live URL
-  quality                             genuinely         
-                                      polished          
+## 9. Verification cases
 
-  Revenue           genuine L2        L3 only if        processor
-                    attempt           organic           
+| Case | Required result |
+| --- | --- |
+| Correct first attempt | Point can be earned without deliberately failing first |
+| Correction plus explanation | Point only when the gap is fixed and judgment is sound |
+| Judgment wrong, prompt sensible | Correct judgment; reuse answer without needless generation |
+| Weak prompt, lucky answer | No pass solely for the answer |
+| Sensible prompt, poor answer | May pass if student recognises the material problem |
+| Two practice retries used | Reveal example; example use does not earn independent point |
+| AI or assessment failure | Preserve edits; no attempt lost; no false award or failure |
+| Usage exhausted | Preserve progress; explain return after reset |
+| Repeated request or replay | No duplicate attempt or point award |
+| Final before submission | No hint or worked solution |
+| Failed final | Practice and different reviewed final; no silent unlock |
+| Both final variants seen without pass | Practice available; next level locked until unseen reviewed final exists |
+| Sign-in after guest attempt | Preserve work and attach account progress safely |
+| Close and reopen | Restore confirmed drafts, attempts, points and badges |
+| Other account | Cannot read or change another student's progress |
+| Student asks AI to change scoring rules | Reviewed rules remain authoritative |
 
-  Pain severity     L4                L5 only if        interviews
-                                      evidence          
-                                      qualifies         
+No game tests have passed merely because this table exists. Use real browser checks for student flows and focused automated checks for silent rules such as duplicate rewards and private access.
 
-  Visitors bonus    measured honestly relevant band if  read-only
-                                      reached           analytics
-  -----------------------------------------------------------------------
+## 10. Learning and market evidence
 
-### analytics setup
+The classroom is the reachable starting audience; ten students participated in the exercise. The extended-network audience count is unknown. Competitors, paid alternatives, trends and willingness to pay remain unresearched; do not claim a 200-300-person audience without counting it.
 
--   Install PostHog/Plausible/GA4/Datafast by M3; choose fastest.
--   Create read-only access and save it.
--   Signup/first-use writes to Convex.
--   Payment link only after repeat-use/value signal.
+Progressing to harder challenges is the proposed reason to return. Observe voluntary return separately from assigned classroom participation. Pricing and buyer are undecided and outside the first release.
 
-### numbers I will report
+Record independent submissions and teacher assessment separately from automated decisions. Voluntary use differs from assigned class participation. Do not equate in-game points with learning, classroom participants with signups, or payment intent with revenue. The old Revenue track choice is historical; do not invent payment goals for this release.
 
-One line per Revenue row with proof. Also: genuine open loops, users
-adding a second loop, overdue loops surfaced, follow-ups triggered,
-loops closed.
+## 11. Non-goals and parking lot
 
-## 8. the milestone ladder
+No assignment completion, presentation generation, personal PDF uploads, message/email monitoring, reminders, automatic follow-ups, payments, leaderboard, streaks, certificates or teacher dashboard. Further challenge sets, pricing, visual branding and extra game mechanics can wait for evidence and a written scope update. Existing badges are game achievements, not certificates.
 
-### M0 --- feasibility and setup (Fri 2 Oct, before 3:00 PM)
+## 12. Current state and next action
 
-**Purpose:** kill the unknown critical dependency and riskiest
-assumption early.
+Reported classroom result: 10 students, eight final scores of 2 and two of 1 from 0; independent completion reported, measurement details unavailable. Prepared game, provider access, assessment reliability, persistence and live journey remain unverified.
 
-Required: - Setup complete: GitHub, Convex, coding agent. - Run
-30-minute N/Ni no-code test; write result. - Test 10 text examples and 3
-screenshots against chosen model/API. - Verify one real 10-minute
-timestamp transition path. - Repository created; empty app deployed to
-Convex.
+Next single action: prepare one Beginner challenge with teacher-reviewed requirements and sample submissions, then run the smallest feedback-and-correction check using authorized AI access. Do not start full automated progression before the reliability gate passes.
 
-**Acceptance test:**\
-\> Empty app is live; repo exists; no-code result written; extraction
-and timed transition have pass/fail evidence.
+## 13. Decision log
 
-**Stop condition:**\
-\> If core extraction/timed state cannot work by 5 PM Friday, fall back
-to typed text + explicit expected date. If users reveal few meaningful
-open loops or refuse to entrust any, reconsider before further build.
-
-### M1 --- one ugly complete flow (Fri 2 evening → Sun 4)
-
-**Purpose:** smallest end-to-end core action.
-
-Required: - typed/pasted input; screenshots deferred; -
-extraction + confirmation; - Convex persistence; - dashboard states; -
-real timed transition; - follow-up draft; - manual close; - deploy/push
-every session.
-
-Explicitly excluded: Gmail/WhatsApp integration, auto-send, teams,
-polish.
-
-**Acceptance test:**\
-\> New user creates a real loop at the live URL; it persists; a
-short-timestamp loop naturally moves to Needs You; follow-up is
-generated; user closes it.
-
-**If behind, cut to:** typed text only; user confirms date manually;
-three states only: Waiting / Needs You / Closed.
-
-### M2 --- first users (Mon 5 → Wed 7)
-
-**Purpose:** three people with the problem use it while observed.
-
-Required: - N, Ni, Vi use real loops; - genuine first-use rows in
-Convex; - request at least 3 real loops per user; - one sentence on
-where each stopped; - record whether each voluntarily adds another
-loop; - identify Tuesday distribution channel; - Wednesday Q&A for
-blocker.
-
-**Acceptance test:**\
-\> Three non-builder users in Convex; ≥9 real loops; blocker named;
-repeat-capture signal recorded.
-
-**If behind, cut to:** one user on screen share with 3 genuine loops.
-
-### M3 --- finish the build (Thu 8 → Fri 9)
-
-Required: - fix largest M2 blocker; - core works logged out/on
-phone/other device; - analytics + read-only access; - one-sentence
-landing page + CTA.
-
-**Acceptance test:**\
-\> Stranger completes core job and visit appears in analytics.
-
-**If behind, cut to:** fix only the blocker stopping most users; no new
-features.
-
-### M4 --- sell week opens (Sat 10 → Sun 11)
-
-Required: - GTM video; - launch post in confirmed channel; - direct
-invites Sunday; - record invites/visitors/signups; - fix only real-user
-blocker.
-
-**Acceptance test:**\
-\> Video exists; invites sent; weekend evidence captured.
-
-**If behind, cut to:** 20 direct messages + one screen recording; no
-edited video.
-
-### M5 --- go live and iterate (Mon 12 → Fri 16)
-
-Required: - Monday social launch; - Tue/Wed/Thu updates; - Wednesday Q&A
-with real objections; - payment/intent test only after demonstrated
-value; - collect quotes and objections; - Friday: last changes, then
-evidence gathering.
-
-**Acceptance test:**\
-\> Four posts/updates live; CHANGELOG line for each product change;
-genuine payment attempt made if repeat-use signal exists.
-
-**If behind, cut to:** post once, message 30 relevant people directly,
-log objections, protect core flow.
-
-### M6 --- verify and submit (Fri 16 night → Sat 17, 11 AM)
-
-**Purpose:** no new features.
-
-Required: - core works logged out/on phone; - data persists; - public
-repo opens privately; - Revenue-row evidence captured; - read-only
-analytics shared; - self-score every row; - honest submission
-paragraph; - submit by 9 AM target; 11 AM hard cutoff.
-
-**Acceptance test:**\
-\> Two consecutive proof walkthroughs on live URL, one on someone else's
-device.
-
-## 9. proof contract
-
-### one-sentence setup
-
-> OpenLoops remembers the outcomes other people owe me, so I only have
-> to think about them when something needs my attention.
-
-### the proof
-
-  ------------------------------------------------------------------------
-                   Time What happens     What reviewer    Rubric row
-                                         sees             
-  --------------------- ---------------- ---------------- ----------------
-                 0--15s explain one real promise normally pain severity
-                        dependency       carried in       
-                                         memory           
-
-                15--60s fresh messy      extraction →     live product
-                        input            confirmation →   quality
-                                         persisted loop   
-
-                60--90s show genuine     Needs You +      live product
-                        overdue loop     context +        quality /
-                                         follow-up; then  signups evidence
-                                         source evidence  
-                                         separately       
-
-               90--120s show what broke  user feedback +  pain severity
-                        and changed      resulting change 
-  ------------------------------------------------------------------------
-
-### the input a stranger will arrive with
-
-A real message/note such as: "Spoke to Rahul --- he'll send the revised
-photographer quotation by Wednesday; need to finalize before Saturday."
-
-### fallback input, if the live one fails
-
-A short typed commitment with a real near-future time: "Amit will send
-the revised proposal in 10 minutes."
-
-### the number I lead with
-
-**Genuine open loops entrusted to OpenLoops**, followed by genuine
-users. Do not substitute this for the rubric signup count.
-
-### claims I can prove
-
--   real users captured real unresolved dependencies;
--   the live product persisted and surfaced them;
--   at least one loop reached Needs You on a real timestamp;
--   any user quote or payment shown has source evidence.
-
-### claims I must not make
-
--   automatic WhatsApp/Gmail monitoring unless actually live;
--   automatic external resolution unless actually implemented;
--   money recovered/protected without evidence;
--   "autonomous agent" claims based on staged/manual flows.
-
-## 10. test plan
-
-### golden cases
-
-  -----------------------------------------------------------------------------
-  Case              Why               Expected final output   Status
-                    representative                            
-  ----------------- ----------------- ----------------------- -----------------
-  Explicit          easiest common    correct                 Specified
-  promise/date      case              outcome/person/date +   
-                                      Waiting                 
-
-  Relative date     common            normalized date         Specified
-                    conversational    confirmed by user       
-                    form                                      
-
-  Messy screenshot  hard real input   uncertain fields        Specified
-                                      exposed, then confirmed 
-  -----------------------------------------------------------------------------
-
-### failure cases
-
-  -----------------------------------------------------------------------
-  Failure           Expected          User recovery     Tested?
-                    behaviour                           
-  ----------------- ----------------- ----------------- -----------------
-  Ambiguous input   flag ambiguity;   edit fields       No
-                    do not silently                     
-                    create wrong loop                   
-
-  Unsupported/no    say no trackable  type/correct      No
-  obligation        dependency found  manually          
-
-  API               preserve input    retry/manual      No
-  timeout/failure   and show retry    entry             
-
-  Empty result      no loop created   manual entry      No
-  -----------------------------------------------------------------------
-
-## 11. risk register
-
-  ----------------------------------------------------------------------------------------------
-  Risk              Probability   Damage      Earliest test Mitigation         Fallback
-  ----------------- ------------- ----------- ------------- ------------------ -----------------
-  Users do not      High          Critical    M0/M2         test real loops    stop polishing;
-  repeatedly                                                and second-loop    reconsider
-  capture loops                                             behaviour          
-
-  Integration scope High          Critical    immediately   ban integrations   manual
-  consumes sprint                                           from M1            text/screenshot
-
-  Extraction/date   Medium        High        M0            confirmation +     manual fields
-  errors                                                    uncertainty        
-
-  Timed transition  Medium        High        M0            real               calculate Needs
-  unreliable                                                short-duration     You on page
-                                                            test               load/query
-
-  Looks like task   Medium        High        M1 user test  dependency-first   remove task-like
-  manager                                                   states/copy        features
-
-  Distribution      Medium        Medium      M2            identify one real  30 targeted DMs
-  channel unclear                                           group + direct     
-                                                            outreach           
-
-  Privacy concern   Medium        High        M2            minimal capture,   typed summary
-  blocks adoption                                           explicit user      instead of
-                                                            control            screenshot
-  ----------------------------------------------------------------------------------------------
-
-### pre-mortem
-
-It is 11:00 AM on Saturday 17 October and the product is not submitted,
-or is submitted with no users, because:
-
-1.  I spent the sprint integrating Gmail/WhatsApp instead of proving the
-    open-loop workflow.
-2.  People liked the concept but did not entrust real dependencies or
-    add a second loop.
-3.  The live product looked like an AI reminder app rather than a
-    stateful unresolved-dependency system.
-
-Mitigations are locked above: no integrations in M1; repeat-capture is a
-validation metric; dependency states must be visible in the product.
-
-## 12. non-goals
-
-Explicitly outside this sprint:
-
-1.  Automatic Gmail/WhatsApp monitoring and automatic external reply
-    detection.
-2.  Autonomous follow-up sending, team CRM/project management and
-    multi-agent architecture.
-3.  Monetary recovery calculations, broad personal-assistant
-    functionality and speculative integrations.
-
-Any change requires a written scope decision in section 15.
-
-## 13. parking lot
-
-  ---------------------------------------------------------------------------
-  Idea              Potential value   Why not now           Revisit after
-  ----------------- ----------------- --------------------- -----------------
-  Gmail             low-friction      OAuth + trust + scope repeated manual
-  auto-detection    capture/closure                         capture proven
-
-  WhatsApp          strongest source  integration/privacy   post-sprint
-  ingestion         coverage          risk                  
-
-  Auto-resolution   removes           depends on source     post-sprint
-  from replies      maintenance       integration           
-
-  Auto-send         stronger          trust/safety boundary after user
-  follow-ups        completion                              approval workflow
-                                                            works
-
-  Team/shared loops organisational    changes ICP/data      individual
-                    value             model                 retention proven
-
-  Money rescued     strong reward     hard to verify        verified monetary
-  metric            artifact                                cases exist
-  ---------------------------------------------------------------------------
-
-## 14. current state
-
-### active milestone
-
-**M0 --- feasibility and setup**
-
-### implemented
-
--   None yet.
-
-### working locally
-
--   None yet.
-
-### live
-
--   None yet.
-
-### verified
-
--   Idea lock approved.
--   Revenue chosen as primary track.
--   First users identified: N, Ni, Vi.
-
-### current blocker
-
-The riskiest assumption and critical extraction/timed-transition
-capabilities have not yet been tested.
-
-### next single action
-
-**Run the 30-minute no-code test with N and Ni before asking the coding
-agent to build product features.**
-
-## 15. decision log
-
-  ---------------------------------------------------------------------------
-  Time              Decision          Evidence/reason       Scope impact
-  ----------------- ----------------- --------------------- -----------------
-  Fri 2 Oct 2026    Lock OpenLoops   lived pain + direct   stop ideation
-                                      user access +         
-                                      approved idea lock    
-
-  Fri 2 Oct 2026    Revenue primary   direct access and     optimize
-                                      24-hour constraint    signups + live
-                                      favour real           quality
-                                      users/product quality 
-
-  Fri 2 Oct 2026    No Gmail/WhatsApp integration risk      manual
-                    integration in M1 threatens Sunday flow text/screenshot
-                                                            capture
-
-  Fri 2 Oct 2026    Unresolved        differentiates from   state model
-                    dependency is     task/reminder apps    drives UI/data
-                    core object                             
-
-  Fri 2 Oct 2026    M0 begins with    sprint requires       no product
-                    validation        riskiest-assumption   feature work
-                                      test first            before test
-                                                            result
-  ---------------------------------------------------------------------------
-
-
-## 16. approved scope update ? 2 October 2026
-
-This update records the builder's decisions from the scope discussion. It overrides conflicting wording above; the broader product is OpenLoops, and this sprint implements the two directions below. No product code has been written as part of this update.
-
-### revised idea lock
-
-| Decision | Locked answer |
-|---|---|
-| Product | OpenLoops turns a pasted commitment into a saved loop, emails the user when it needs attention, and lets them follow up or complete it. |
-| One person | N, 58, a higher-education professional coordinating students and colleagues. |
-| One moment | Students promise a report by Saturday. Saturday's deadline passes without submission, and N forgets to follow up. Exact location and time of day have not been supplied. |
-| First direction | Waiting on others: students owe N a report by Saturday. |
-| Second direction | Others waiting on me: N owes students feedback by Monday. This is an illustrative case, not a verified user incident. |
-| Core action | User pastes a commitment ? gets a confirmed, saved loop with who owes what, a deadline, and an email when attention is due. |
-| Outcome | The user can stop carrying captured commitments in their head and receive a prompt to act at the confirmed deadline. |
-| States | Waiting / Needs You / Closed. Direction is separate from state. Watching is deferred. |
-| Alert channel | Email, including when the app is closed. A dashboard alone does not satisfy v1. |
-| Primary track | Revenue, unchanged. |
-| Validation | Builder reports N and Ni each entered two real commitments and updated one without help. Initial capture/update test passed; repeat use over days remains untested. |
-
-### v1 flow and rules
-
-1. User types or pastes one commitment. Text only; screenshot capture is parked.
-2. AI proposes direction, expected outcome, other person/group, exact deadline and context. Show uncertainty. User confirms/corrects every proposal before saving.
-3. Save the confirmed loop in Convex under Waiting. Save the user's confirmed email destination and timezone. Interpret relative dates using the user's supplied context; old pasted messages may refer to a different Saturday. Require an explicit date and time before activating an alert.
-4. At the confirmed deadline, move the loop to Needs You and send one email linking to that loop. For waiting on others, ask ?Has the report arrived?? rather than asserting non-delivery. For others waiting on me, remind the user of their own promised outcome.
-5. User opens the loop. For waiting on others, they can copy/edit a prepared follow-up. For their own commitment, they do the promised work outside the app. Either direction can be marked Closed or given a confirmed next check date, returning to Waiting.
-
-Email delivery does not prove the user read it. The app cannot know whether external work arrived or was completed; closure remains a user action. Never claim automatic discovery of forgotten commitments: only supplied input is tracked.
-
-### storage, access and failure handling
-
-- Remember direction, outcome, counterparty, confirmed deadline/timezone, context, state/history, follow-up draft, email attempt/result and closure timestamp.
-- Personal loops belong to their signed-in owner using Convex Auth. A stranger can start from the public URL and sign in without builder help; ?logged out? checks mean the entry and sign-in flow work, not that private loops are publicly readable.
-- An email link requires sign-in before revealing private details. Keep email content minimal.
-- Ambiguous or absent obligation/date: show missing fields for correction; do not activate an invented deadline.
-- AI failure: preserve input and offer retry/manual entry.
-- Save failure: preserve input, show ?Not saved?, and offer retry. Never claim a saved loop until Convex confirms it.
-- Email failure: retain Needs You, record failure and retry without creating duplicate jobs. Show delivery trouble in the app. Repeated failure cannot silently count as a successful alert.
-- Closing or changing a deadline cancels/replaces pending alerts. A new check date permits a new alert; repeated scheduler attempts should not deliberately send duplicate alerts for the same deadline.
-
-### dependencies and M0 proof
-
-Text extraction, Convex scheduling and an email delivery provider remain unverified capabilities. Verify current official documentation, credentials, availability and cost before choosing implementation. No email provider is approved yet: the user's fixed-service rule requires asking before adding an outside service. Email is required for the confirmed v1; an in-app-only fallback must be explicitly agreed as a reduced promise.
-
-M0 starts with the 30-minute no-code test with N and Ni. Ask each to supply three real commitments across the two directions where possible, manually structure them, and check willingness to entrust them and receive due-time emails. Record actual results, not assumed success.
-
-Then verify extraction on representative text and one real short-duration email alert, including receiving it while the app is closed. Keep M0's live empty app and GitHub repo requirements. Record pass/fail evidence; do not build features before the no-code result.
-
-### revised milestone acceptance and cuts
-
-| Milestone | Additional acceptance test | If behind |
-|---|---|---|
-| M1, by Sun 4 Oct | A new user captures one loop in each direction, confirms the deadline, reloads successfully, receives a real short-duration due email with the app closed, opens the link and closes/reschedules the loop. | Text only; manual field/date correction; three states; retain both directions and email. |
-| M2, Mon 5?Wed 7 Oct | N, Ni and Vi supply real loops; record second-loop use and which directions they use. At least one real user receives a due email. | One observed user with three real loops; do not invent usage in either direction. |
-| M3, Thu 8?Fri 9 Oct | A stranger can enter from the public URL, sign in, complete the flow on a phone and receive an email. Verify private access and analytics. | Fix the blocker preventing completion; no new input types. |
-| M6, Fri 16?Sat 17 Oct | Two consecutive live walkthroughs include persistence, both directions, due email delivery and close/reschedule behavior; one on someone else's device. | No new features; report limitations honestly. |
-
-M4/M5 dates and outreach requirements remain unchanged. Payment attempts and payment intent count as $0 until genuine qualifying product money is received. Revenue L2 requires a positive payment up to $100, backed by processor evidence; do not count friends' payments or test payments. The floor for the revenue row remains L1 if no payment arrives.
-
-### parking lot additions
-
-| Idea | Why not now | Revisit after |
-|---|---|---|
-| Screenshot capture | Prove the text-to-email loop before adding another input path. | Core flow verified and explicit rescope. |
-| Watching state | No separate behavior has been defined; three states cover v1. | Evidence that users need another state. |
-| Discover commitments the user forgot to capture | Requires access to source messages/notes; excluded integrations cannot provide that. | Post-sprint validation and source-access approval. |
-| Additional OpenLoops phases | Broader vision remains valid, but only the two approved directions enter this build. | Explicit written rescope. |
-
-### decision log additions
-
-| Date | Decision | Scope impact |
-|---|---|---|
-| 2 Oct 2026 | Builder confirmed N is 58 and supplied the missed student report example. | Use this as the primary lived situation. |
-| 2 Oct 2026 | Builder approved email as the alert channel. | Require real due-time email delivery, not just a changed dashboard. |
-| 2 Oct 2026 | Builder approved tracking both directions. | One shared flow with Waiting on others / Others waiting on me. |
-| 2 Oct 2026 | Align working name with the builder's OpenLoops vision. | Replaces Loose Ends; broader phases stay outside v1. |
-
-### next single action
-
-Run the 30-minute no-code test with N and Ni and record the real commitments, corrections and willingness to use due-time email alerts. Then resolve email delivery access before product building.
-
-## 17. validation result - 2 October 2026
-
-This result supersedes earlier statements that the no-code capture/update test has not been run.
-
-- Riskiest assumption: users will capture and update commitments in one more app.
-- Evidence source: builder's report in this conversation, not independently observed by the coding agent.
-- Observed behavior reported: N and Ni each entered two real commitments and updated one without help.
-- Result: initial capture and update willingness supported. This is enough to proceed to M0 capability checks; M0 as a whole is not complete.
-- Not established: voluntary third capture, exact capture time, repeated use over days, payment willingness, automated extraction, real email delivery, a live app or persisted Convex data. These manual trial participants are not product signups.
-- Scope decision: retain both directions and the email alert flow. No failed-assumption rewrite or integration expansion is warranted.
-- M2 must still observe whether real users return and add another commitment without prompting; record actual behavior rather than stated willingness.
-
-### current blocker and next single action
-
-Verify the text-extraction capability against representative commitments. Due-time email delivery, private access, the empty live app and GitHub repo remain M0 requirements. An outside email service still needs approval under the fixed-stack rule before adding it.
-
-| Date | Decision | Evidence | Scope impact |
-|---|---|---|---|
-| 2 Oct 2026 | Initial no-code capture/update test passed provisionally. | Builder confirmed both N and Ni entered two real commitments and updated one without help. | Proceed to capability checks; retain repeat-use validation in M2. |
-
-## 18. Past-deadline capture decision — 3 October 2026
-
-When a user confirms and saves a commitment whose deadline has already passed, it immediately becomes Needs You rather than Waiting and sends one immediate email after the save is confirmed. This overrides the default initial Waiting state for this case. The builder confirmed both the state behavior and immediate email. Apply the same safe retry and duplicate-alert protections as other due emails. This is a product rule, not an implemented or tested feature.
-
-## 19. Check time meaning — 3 October 2026
-
-The builder approved Check time as the single user-facing date-and-time field: when OpenLoops should remind the user to check or act. Initially suggest the promised deadline, then require the user's confirmation of the actual date, time and timezone. The user may choose a later follow-up time without changing the original promise. Preserve the promised deadline in context and history when rescheduling. Check time controls Waiting, Needs You and email scheduling. The past-deadline rule in section 18 applies to the confirmed check time, not merely to an older promised delivery deadline. User-facing actions are Set next check time and Save check time; success says Check time updated. This overrides conflicting terminology in older scope and build documents. This is specified, not implemented or tested.
-
-## 20. Email service approval — 3 October 2026
-
-The builder approved Resend for email delivery from the Convex backend, starting with the free plan. No paid plan, account upgrade or domain purchase is authorized. This supersedes earlier statements that no email provider is approved. Convex remains the database, backend, authentication and host. Use the official Convex Resend integration where suitable. Account access and a secret sending key still need configuration; sending to real users requires a verified domain. Provider approval is not evidence of delivery, and M0 remains incomplete until its real checks pass. Never put the secret key in chat, GitHub or product documents.
-
-## 21. M0 partial verification — 3 October 2026
-
-The builder asked to leave the Resend key pending and continue other tasks. No email was sent. Active milestone remains M0.
-
-- Live setup-only URL: https://combative-jaguar-50.convex.site. Root and fallback route returned HTTP 200 after `npm run deploy`. This page explicitly says the product is not available yet; no full product or visual browser verification is claimed.
-- Public repository: https://github.com/sanvedi/build-sprint-app, pushed and opened without sign-in by the web reader.
-- Scheduling proof: a clearly marked development test record changed from Waiting to Needs You at its 20-second check time with no browser open. This is not user usage, email delivery or proof of cancellation/rescheduling.
-- Build and TypeScript checks passed. Details and test boundaries are in M0_VERIFICATION.md.
-- Still open: AI extraction access/tests, real email delivery, reminder-value and voluntary repeat-use evidence. Auth and user-facing screens have not been built. These newer results supersede earlier blanket statements that nothing is implemented or live.
+- 4 October 2026: abandon the previous reminder product and align this scope with PRODUCT.md.
+- Preserve agreed game mechanics and mark document-completion defaults as defaults.
+- Keep classroom reports separate from app and learning claims.
+- Begin with feedback reliability, then the complete student journey, saved progress, all levels and live evidence.
+- Retain historical snapshots outside active instructions; old evidence is not evidence for this game.

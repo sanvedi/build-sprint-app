@@ -1,8 +1,6 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
-// Retired setup-test data only; retained to avoid deleting historical rows.
-// Not game progress. No active scheduling functions use this table.
 export default defineSchema({
   m0Checks: defineTable({
     checkTime: v.number(),
