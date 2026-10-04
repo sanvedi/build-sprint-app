@@ -25,3 +25,8 @@ The retired scheduling command is removed. Existing historical test rows are pre
 ## Verification
 
 npm test runs focused state, assessment-rule, Convex mutation and screen-interaction checks. Backend tests use a local test database; UI tests use prepared responses, not live AI. M0_VERIFICATION.md records the evidence and limitations. Practice 1 opens practice 2 after a point or supported completion. Independent finals, remaining levels and account backup are not represented as available.
+
+
+## Beginner final development milestone
+
+The hint-free Beginner final, alternate, badge and supported-practice return are implemented and checked in development: 40 automated tests, desktop/390px browser journeys and 34 credit-free phone previews passed. No real Gemini final assessment success or teacher reliability approval is claimed. PROMPT_GAME_FINALS_ENABLED is enabled on development only. Public automatic final awards stay disabled until reviewed content and feedback-test evidence are recorded. The published site still contains the confirmed two-practice release. See PHONE_STATES.md for the new preview links.

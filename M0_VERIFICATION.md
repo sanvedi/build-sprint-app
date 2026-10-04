@@ -97,3 +97,12 @@ Publication is complete; a working live core journey remains unverified until pr
 
 
 Builder follow-up: the builder reported Works after receiving the published link. Record this as confirmation from the builder; no specific AI output, assessment/replay, phone network or observed steps were provided. The earlier automated quota-failure result is retained as historical evidence, not treated as proof that calls are still failing.
+
+
+## Beginner final implementation, 4 October 2026
+
+The builder authorized the next milestone with Lets build it. Implemented a hint-free final and alternate, separate badge/pass state, server-recorded seen variants, one evaluated attempt per variant, supported practice after failure, no additional practice points, exhausted-variant lock, recheck without another attempt, and save-only recovery. Supported replay retains all assessed jobs; old rechecks cannot complete a new replay. Amateur remains future work; a Beginner pass shows its availability without a nonworking start button.
+
+40 automated checks passed. Backend checks execute registered Convex functions and indexes in a local test database. UI checks use prepared responses and cover hidden examples, independent point totals, practice return/alternate, pending badge saving and exact final retry after failure. Edge walks at 390 by 844 and 1280 by 844 exercised passing, failing, supported practice, the alternate, exhaustion, draft reopening and saved badge reopening. All 34 development previews passed 390px font/target/overflow checks with no backend calls. Build, typecheck and the design detector passed.
+
+Development functions/schema were pushed cleanly, and the real openFinal endpoint rejected an incomplete anonymous session before reserving an AI request. PROMPT_GAME_FINALS_ENABLED=true is set only on development. Production and its published two-practice release are unchanged. No Gemini final-generation/assessment success, teacher material approval, quantitative feedback-gate result or physical-phone observation is claimed. See learning/beginner-final.md and PHONE_STATES.md.

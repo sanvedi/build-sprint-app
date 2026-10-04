@@ -10,7 +10,7 @@ Interface: a web page designed for a phone. Students edit a supplied weak prompt
 
 Business logic: Convex generates the answer and assesses the student's prompt, answer judgment and correction explanation against prepared requirements. It records attempts and justified points, handles retries without duplicates, and permits one completed Challenge recheck of the same assessment without consuming an attempt. If AI still disagrees, the student continues normally.
 
-Current build: both Beginner practices, Next challenge from either completion route, separate points and initial-plus-two-retry allowances, both correction paths, worked examples, anonymous device saving, assessment recheck and recovery. The three-level game and account saving remain planned v1 work. Development second-practice generation passed; its automated assessment check hit Gemini's daily quota. Both practices are published, and the builder subsequently reported the live game works. No detailed live assessment/replay observations were supplied.
+Current build: Beginner final and alternate are also implemented in development, with seen-variant tracking, badge results and supported-practice return. They are not published. The current published build contains both Beginner practices, Next challenge from either completion route, separate points and initial-plus-two-retry allowances, both correction paths, worked examples, anonymous device saving, assessment recheck and recovery. The three-level game and account saving remain planned v1 work. Development second-practice generation passed; its automated assessment check hit Gemini's daily quota. Both practices are published, and the builder subsequently reported the live game works. No detailed live assessment/replay observations were supplied.
 
 Database:
 
@@ -18,10 +18,11 @@ Database:
 | --- | --- |
 | practiceSessions | Anonymous session token, challenge ID, assessed attempt count, earned point and latest assessment ID, separately per practice. Legacy rows without challenge ID belong to practice 1 and are preserved. |
 | practiceJobs | Generation, assessment and recheck requests; challenge IDs, request IDs, submitted inputs, pending/done/failed state, results, challenged assessment ID and reviewed result. Original assessment remains retained. |
+| finalProgress | Anonymous token, seen final variants, current variant, Beginner badge decision and the supported practice required after failure. |
 | practiceUsage | UTC day and reserved app request count across the deployment. |
 | m0Checks | Historical setup-test records only, retained to avoid deleting existing data. Never product usage. |
 
-Drafts, the current practice and recovery requests are also stored in the student's browser. This is device saving, not an account backup. Prepared challenge material is shared by the screen and backend in shared/practiceTasks.mjs; teacher review is still pending. Account/progression tables will be added only in their milestones. The Convex agent component is installed; automatic chat history and message saving are disabled for these practice calls.
+Drafts, the current practice and recovery requests are also stored in the student's browser. This is device saving, not an account backup. Prepared challenge material is shared by the screen and backend in shared/practiceTasks.mjs; teacher review is still pending. Account tables will be added in their milestone; finalProgress now records the Beginner final journey in development. The Convex agent component is installed; automatic chat history and message saving are disabled for these practice calls.
 
 Third party:
 
@@ -72,6 +73,8 @@ Keys: GEMINI_API_KEY must be in Convex environment variables for development and
 Every usage limit, submission ownership check, attempt limit, point decision and recheck permission must be enforced in Convex, not only in the interface. Before public release, review authentication/privacy and the approved feedback reliability gate.
 
 Before I share the link: I open the published site on my phone, logged out, on mobile data, and complete the core flow once. Development Wi-Fi previews are not proof of the public release.
+
+Final release gate: PROMPT_GAME_FINALS_ENABLED is true in development only. It defaults to disabled when absent. Keep it disabled in production until reviewed task material and the required feedback-test evidence are recorded. Final passes do not add practice points. Seen variants must be recorded in Convex before displaying the task; reopening resumes rather than treating it as unseen.
 
 ## 4. The AI call
 

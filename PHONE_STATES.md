@@ -32,6 +32,16 @@ Choose a state from the list. These are clearly labelled prepared examples; they
 | second done | Both practice points displayed separately; final is not offered yet |
 | second help | Practice 2 completed with help, without a second point |
 | second save pending | Second result held pending; Retry saving does not reassess |
+| final first | Fresh task and weak prompt, without a hint or example |
+| final answer | One exact answer, judgment and Submit final |
+| final loading | Submission retained while final assessment waits |
+| final assessment error | Exact submission retained; Retry assessment |
+| final not yet | Feedback and Return to practice |
+| final pass | Beginner badge; practice points unchanged |
+| final save pending | No confirmed badge until Retry saving succeeds |
+| final alternate | A different task and untouched starting prompt |
+| final review | Supported practice after failure, without another point |
+| final exhausted | Further practice allowed; another unseen reviewed final is required |
 
 The loading and error links intentionally hold that state so you have time to inspect it. Other preview actions use prepared responses.
 
@@ -45,9 +55,9 @@ npm run dev -- --host 0.0.0.0 --port 5175
 
 Use the Wi-Fi Network address printed by the command; the computer's address can change. Append `/state-preview`. Leave that PowerShell window running. If the phone cannot open it, confirm both devices are on the same Wi-Fi and that Windows allows this local server on your private network.
 
-Both Beginner practices are implemented. Account saving and independent finals are not previewed or claimed as built. No production publishing occurred.
+Both practices are published. The Beginner final, alternate, badge and supported return are implemented in development and previewed here; this new milestone is not published. Account saving and Amateur/Pro gameplay remain unbuilt.
 
-Verification: 24 preview states walked in Edge at 390 by 844, with no backend calls, text below 16px, targets below 44 by 44 or horizontal overflow. Challenge, retry after recheck failure, and save retry were exercised. Actual physical-phone keyboard testing is still for the builder to perform.
+Verification: 34 preview states walked in Edge at 390 by 844, with no backend calls, text below 16px, targets below 44 by 44 or horizontal overflow. Challenge, retry after recheck failure, and save retry were exercised. Actual physical-phone keyboard testing is still for the builder to perform.
 
 ## Check the new milestone without spending credits
 
@@ -58,3 +68,10 @@ For real persistence, use Live practice in the same browser: after completing pr
 The live second-practice assessment check on 4 October was blocked by Gemini's free daily limit. Generation succeeded and the failed assessment consumed no learning attempt. Do not repeatedly press Retry assessment while the provider quota is exhausted; check again after it resets. No billing or usage limit was raised.
 
 Recovery preserves the same request ID across reload and stores a pending checked result separately until saving succeeds. If all browser storage is unavailable, device recovery cannot be guaranteed; the page tells the student to keep it open and copy the work.
+
+
+## Check the Beginner final milestone
+
+Open final first, edit the supplied prompt, tap Generate answer, write a judgment and tap Submit final. The prepared response demonstrates the badge without spending credits; it is not an AI evaluation of your work. Open final not yet and tap Return to practice to inspect supported practice. Use final alternate for the fresh task, final save pending for save-only recovery and final exhausted for the locked message.
+
+These phone previews are independent from real saved progress. Real final access is enabled in development only; production retains the published two-practice milestone until confirmation and feedback-gate evidence permit final awards.
