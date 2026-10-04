@@ -14,15 +14,40 @@ The approved direction is a playful challenge app, with visible points and badge
 
 ## 2. References, one per component
 
-Challenge screen: https://brilliant.org/
-Take: focused interactive learning, one challenge at a time, a clear response area and feedback tied to the task.
-Ignore: its subject catalog, tutor character, subscriptions, branding and marketing claims.
+Approved source: Brilliant. The specific public-homepage views below replace a generic homepage reference. The image descriptions were available on its official page, but direct image retrieval failed. Their exact pixel hierarchy, spacing and state colors are unverified. The annotations below are implementation choices for our game, not claims that they were measured in Brilliant's app. No logged-in lessons were tested.
 
-Course progression strip: https://brilliant.org/
-Take: make the current stage, completed stages and locked stages clear. Adapt to our three levels and show points out of six and earned badges above the challenge; no separate level-map screen in v1.
-Ignore: extra courses, streaks, leaderboard and any unlock rule that conflicts with our independent finals.
+### Challenge workspace
 
-These two reference choices are approved. The official page describes interactive learning and progress; exact lesson styling, motion and component appearance have not been visually inspected. Treat the takes as our design interpretation, not a claim of pixel matching. Prompt editing, answer comparison and feedback behavior follow our product rather than an unverified reference interaction.
+Component view: the coding exercise shown under Real-world applications on https://brilliant.org/ . Direct image: https://brilliant.org/cdn-cgi/image/width%3D3840%2Cquality%3D75%2Cformat%3Dauto/loggedOutHomepage/trust-real-world-applications.png
+
+Take: an explicit editable workspace with its action below it. Our hierarchy is task -> requirements -> editable prompt -> Generate answer. Group label/helper/editor at 8 px spacing; separate task, editor and answer groups by 24 px. Show processing and retry inside the same workspace, retaining the student's text.
+Ignore: its code content, Run action, subject matter and branding. Our material is a prompt, not executable code.
+
+### Learning progression
+
+Component view: the lesson-plan image under Mastery assessments on https://brilliant.org/ . Direct image: https://brilliant.org/cdn-cgi/image/width%3D1920%2Cquality%3D75%2Cformat%3Dauto/loggedOutHomepage/trust-mastery-assessments.png
+
+Take: a visible sequence of learning stages. Our hierarchy is current level -> two practice outcomes -> final outcome, with separate points and badge labels. Use an 8 px gap within a stage and 16 px between stages; wrap on phones. State words come from the progress table in section 4, not guessed reference colors.
+Ignore: personalized curriculum, extra subjects and any progression rule that differs from our independent finals. This is a compact strip, not a separate course-map page.
+
+### Feedback
+
+Component view: the lesson-chat image under Lesson interventions on https://brilliant.org/ . Direct image: https://brilliant.org/cdn-cgi/image/width%3D1920%2Cquality%3D75%2Cformat%3Dauto/loggedOutHomepage/trust-lesson-interventions.png
+
+Take: a focused next-step explanation after a learner gets stuck. Our hierarchy is identified gap -> evidence from the student's submission -> correction field -> explanation -> main action. Use 8 px within feedback text and 24 px before the correction form.
+Ignore: tutor character, chat bubbles, voice controls and unrestricted conversational tutoring. Our feedback is a structured challenge stage.
+
+### Our component decisions
+
+Prompt editor: a full-width labelled multiline field, minimum six visible lines, 16 px inner padding, 1 px neutral border and 12 px corners. Keep ordinary readable text; no code-editor decoration. The main action sits below the field with a 16 px gap. Clearly distinguish editable drafts from submitted read-only prompts.
+
+Answer comparison: two equal-width regions with a 24 px gap on desktop, each with a heading and readable full text, maximum 70 characters per line. On phones use the answer tabs and preserved judgment behavior specified in section 4. Neutral backgrounds distinguish answer regions; do not use nested cards or a green good-answer treatment before assessment.
+
+Feedback: one neutral full-width region with 16 px padding. Separate Gap, Why it matters and Next step with short headings, not extra decorative badges. Not yet is instructional, not a red system error. Reserve red for errors that prevent the requested action.
+
+Badges: neutral outlined achievement shapes with the level name and explicit Badge earned wording. Locked badges say Not earned yet. Do not use color alone or imply a qualification. No generated illustrations or copied Brilliant assets in the shipped interface.
+
+Visual-reference verification remains a separate evidence task: inspect these exact views before claiming faithful reference matching. Our own hierarchy, spacing and states are specified above so implementation need not guess while that evidence is unavailable.
 
 ## 3. Type and colour
 
@@ -41,11 +66,32 @@ This palette and type scale specify the approved white, dark-text, green-action,
 
 ## 4. Screens
 
+### Shared progress strip
+
+Keep it above every challenge, compact and wrapping on phones. The text separates supported completion, demonstrated practice skill and independent level achievement:
+
+| State | Visible words and treatment | Meaning/action |
+| --- | --- | --- |
+| Current practice | Practice 1 of 2 - Current; semibold text and neutral outline | Current task; no achievement implied |
+| Available practice | Practice 2 - Ready | Opens when the preceding practice is completed |
+| Completed with help | Practice completed with help - No skill point | Worked example supported completion; can continue to final |
+| Point earned | Practice complete - 1 skill point earned | Criteria met without the worked example; no duplicate reward |
+| Final ready | Final challenge - Ready | Both practices finished, with or without points |
+| Current final | Final challenge - Current | Independent attempt in progress |
+| Final not yet passed | Final - Not yet; Return to practice | No badge or unlock; next attempt needs an unseen reviewed variant |
+| Passed level | Beginner badge earned, or matching level name | Independent pass; next level unlocks regardless of practice point total |
+| Locked level | Amateur - Locked. Pass Beginner's final to unlock, or equivalent | No clickable false start action |
+| Pending save | Result checked - Save pending | No confirmed point, badge or unlock until saving succeeds |
+
+Show Skill points: X of 6 separately from levels and badge completion, with the explanation Points reward independent practice; badges mark final passes. A completed-with-help practice is not displayed as unfinished merely because its point is missing. Six points are not required to finish the game. Once Pro is passed, show All three levels complete even if fewer than six points were earned.
+
+Clicking a completed practice is review/replay, with no additional point. Selecting a locked stage explains its requirement without leaving the current work. Guest points are labelled Saved on this device only until account saving succeeds.
+
 ### First challenge: begin without an account
 
 For: experiencing one useful challenge before committing to sign-in.
 
-Top to bottom: product name; headline and supporting words from section 5; compact progress strip; Beginner practice 1 of 2; task and essential requirements; weak prompt in an editable, labelled text box; original example answer; main action.
+Top to bottom: product name; headline and supporting words from section 5; compact progress strip; Beginner practice 1 of 2; task and essential requirements; weak prompt in a text box labelled Edit this prompt, with helper text Change it to meet the task before generating; original example answer; main action.
 
 Main action: Generate answer -> answer comparison on the same page.
 
@@ -60,7 +106,7 @@ Do not describe a device save as confirmed unless it succeeded. Generation failu
 
 For: deciding whether the answer meets the task before seeing feedback.
 
-Top to bottom: progress strip; task requirements; original and new answer with distinct headings; student's submitted prompt; field labelled Does this answer meet the task? Explain why; main action.
+Top to bottom: progress strip; task requirements; original and new answer with distinct headings; student's submitted prompt; field labelled Does your answer meet the task? Explain why; main action.
 
 On wide screens answers sit side by side. On phones, use labelled Original answer and Your answer tabs showing one full answer at a time; start on Your answer after generation. For a prompt correction, the labels are Previous answer and Revised answer, starting on Revised answer. These tabs change the comparison view, not the answer being assessed.
 
@@ -76,8 +122,8 @@ Main action: Check my judgment -> feedback after assessment succeeds.
 
 Empty: Explain what the answer gets right or misses.
 Loading: Checking your prompt and judgment.
-Error: Assessment is unavailable. Your answer and judgment are still here. Try again.
-Done: Your feedback is ready.
+Error: Assessment is unavailable. Your answer and judgment are still here. Main action: Retry assessment, using the same answer and submission without regenerating.
+Done: Your feedback is ready. If assessment is successful but saving fails, show Result checked - Save pending and Retry saving; save the existing assessment, do not run another one.
 
 Do not reveal feedback or final hints before the student submits their judgment.
 
@@ -87,7 +133,7 @@ For: demonstrating understanding through a correction and explanation. Keep prom
 
 #### Path A: prompt correction
 
-Stage 1 ? edit before generating:
+Stage 1: edit before generating:
 
 - Visible: progress strip, attempts remaining, task requirements, feedback gap, the previously assessed prompt and its answer. Label that answer Previous answer; it is context, not the answer being judged for the next attempt.
 - Editable: the prompt and What did you change, and why? No new-answer judgment field is shown yet.
@@ -96,7 +142,7 @@ Stage 1 ? edit before generating:
 - Loading: Generating an answer to your revised prompt. Keep the edit and explanation visible.
 - Failure: preserve both fields and retry generation; do not assess a judgment or consume a learning attempt.
 
-Stage 2 ? judge the new answer:
+Stage 2: judge the new answer:
 
 - Visible: task requirements, submitted revised prompt and explanation, the new generated answer labelled Revised answer, and the previous answer for comparison.
 - Editable: a fresh field labelled Does this revised answer meet the task? Explain why. Do not prefill it with the previous judgment.
@@ -104,7 +150,7 @@ Stage 2 ? judge the new answer:
 - One main action: Check my correction -> stage 3 after assessment succeeds.
 - The judgment belongs only to this revised answer. If the prompt is edited again, retain the draft but require regeneration and a new judgment before assessment; never pair it with the older answer.
 
-Stage 3 ? correction result:
+Stage 3: correction result:
 
 - Visible: assessed revised prompt, revised answer, student explanation and judgment, feedback and confirmed point/not-yet result. Inputs are read-only in this result stage.
 - Submitted: no new assessment on the onward action.
@@ -112,7 +158,7 @@ Stage 3 ? correction result:
 
 #### Path B: judgment-only correction
 
-Stage 1 ? reassess the existing answer:
+Stage 1: reassess the existing answer:
 
 - Visible: progress strip, attempts remaining, task requirements, unchanged prompt, the exact previously generated answer, previous judgment and feedback explaining the judgment gap.
 - Editable: the corrected answer judgment and What did you change in your judgment, and why? The prompt is read-only in this path.
@@ -120,7 +166,7 @@ Stage 1 ? reassess the existing answer:
 - One main action: Check my corrected judgment -> stage 2 after assessment succeeds.
 - The judgment refers to the same existing answer throughout. Keep that answer visible and identified; do not replace it while the student writes.
 
-Stage 2 ? correction result:
+Stage 2: correction result:
 
 - Visible: unchanged prompt and answer, corrected judgment, explanation, feedback and confirmed point/not-yet result. Inputs are read-only in this result stage.
 - Submitted: no new assessment on the onward action.
@@ -148,7 +194,7 @@ Empty: Complete your prompt and answer judgment before submitting.
 Loading: Checking your final challenge.
 Error: Your final could not be assessed. Your submission is still here. Retry assessment.
 Done on pass: Beginner badge earned, Amateur badge earned or Pro badge earned, matching the completed level.
-Done on an unsuccessful attempt: Not yet. Review the feedback and return to practice.
+Done on an unsuccessful attempt: Not yet. Review the feedback and return to practice. Main action: Return to practice -> the practice challenge for the missing skill. After practice, Start fresh final opens the unseen reviewed variant; if none exists, display the locked-state explanation instead.
 
 Passing unlocks the next level; passing Pro finishes the game. Failure returns to practice, then an unseen reviewed final variant. If both variants were seen without a pass, keep the next level locked and explain: Keep practising. Another fresh final challenge is needed to unlock the next level. Do not offer a nonworking unlock button.
 
@@ -156,14 +202,14 @@ Passing unlocks the next level; passing Pro finishes the game. Failure returns t
 
 For: keeping progress across devices after first value, without losing the current guest attempt or existing account progress.
 
-Stage 1 ? choose saving:
+Stage 1: choose saving:
 
 - Visible: current challenge, answer, judgment, feedback and earned/pending result; Save your progress explains device-only storage versus account backup.
 - Editable: authorized Convex Auth sign-in fields only; do not discard or reset the challenge while signing in.
 - One main action: Save my progress -> sign-in and attach the locally retained guest attempt to the account.
 - Secondary action: Keep practising on this device -> return to the unchanged challenge. This is not a claim of account backup.
 
-Stage 2 ? attach guest progress:
+Stage 2: attach guest progress:
 
 - Visible: the complete guest attempt remains available, with Saving your progress to your account. Do not clear local work before a confirmed successful save.
 - Submitted: the retained guest attempts and already-assessed results. Do not regenerate answers or repeat assessment to save them.
@@ -172,7 +218,7 @@ Stage 2 ? attach guest progress:
 - If both account and guest contain different drafts for the same challenge, keep both and show their saved times and short previews. Main action: Continue account draft. Secondary action: Continue this device's draft. Choosing which to continue does not delete the other or overwrite evaluated attempts.
 - Done: Progress saved to your account. Return to the challenge the student selected, with confirmed account progress visible.
 
-Stage 3 ? recover a failed account save:
+Stage 3: recover a failed account save:
 
 - Visible: Account saving failed. Your work is still on this device. Keep the prompt, answer, judgment, explanation, feedback and already-assessed outcome visible. Mark that outcome Saved on this device only or Not yet saved to your account, according to actual storage state.
 - Existing account progress remains intact. Do not display a guest reward as confirmed account progress or erase local work after a partial attachment.
@@ -199,14 +245,14 @@ Main action after Pro: Review my challenges -> completed practice challenges. Do
 
 Empty: Complete this level's final challenge to earn its badge.
 Loading: Saving your result.
-Error: Your result could not be saved. Try again. Keep the result pending; do not silently unlock.
+Error: Your result could not be saved. Main action: Retry saving -> save the same already-assessed final result without assessment or generation. Keep the result pending; do not silently unlock.
 Done after Pro: All three levels complete. You improved prompts and checked answers on fresh challenges.
 
 This acknowledges in-game performance, not lasting mastery or fewer attempts on actual assignments.
 
 ### Shared usage and recovery states
 
-Usage exhausted: You've reached today's AI allowance. Your progress is kept. Return when it resets. Show the actual reset time once implemented. Already available examples may be reviewed; do not pass off a stored answer as a newly generated one.
+Usage exhausted: You've reached today's AI allowance. Return when it resets. Say Your progress is kept only when saving has actually succeeded. Show the actual reset time once implemented. Already available examples may be reviewed; do not pass off a stored answer as a newly generated one.
 
 Device saving failure: This edit could not be saved on this device. Keep this page open and copy your work before leaving.
 
@@ -220,7 +266,15 @@ Under it: Practise improving a prompt, compare AI answers, and learn what to tru
 
 Button: Generate answer.
 
-The first screen already contains an editable challenge, so this button generates from the student's edit rather than opening a separate introduction. The headline describes an intended benefit, not a measured outcome or a student quote.
+The first screen already contains an editable challenge, so this button generates from the student's edit rather than opening a separate introduction. The headline describes an intended benefit, not a measured outcome or a student quote. The field instruction explicitly tells the student to edit first; the answer stage explicitly asks for judgment before feedback.
+
+### Opening-screen comprehension check, still to run
+
+Show the first challenge as a paper sketch, phone image or implemented screen to three students individually for ten seconds, without explaining it. Hide it and ask, one question at a time: What is this for? What would you do before pressing Generate answer? What would you do after the answer appears?
+
+Record their exact answers. Pass this initial check only if all three understand they should edit the supplied prompt, then judge the resulting answer before receiving feedback. They should not think the game completes their assignment or automatically writes the prompt for them. This small check does not prove general usability.
+
+If a student misunderstands, change only the misunderstood headline, helper, button or stage instruction; preserve the agreed flow and styling. Retest with fresh students. No comprehension result is claimed here, so the current words remain a testable draft rather than validated copy.
 
 ## 6. Principles
 
@@ -235,5 +289,9 @@ The first screen already contains an editable challenge, so this button generate
 - Keep explanations short and useful. Do not reward length, grammar or mandatory role formulas.
 - Use visible field labels, keyboard focus and text explanations for states. Support enlarged text, readable contrast and comfortable tap targets.
 - Ask the builder about screen choices not covered here rather than silently add layouts, screens or features.
+
+Specification review: both correction paths identify visible content, editable fields, submitted material and the target answer. Every practice outcome has an onward action; save retry differs from assessment retry; account conflicts retain both drafts; phone comparison preserves judgment; progress distinguishes supported work from independent rewards.
+
+Implementation checks still required: long-answer desktop/phone comparison, preserved tab reading position and judgment, onscreen keyboard visibility, draft conflict recovery, retry without reassessment, duplicate reward prevention, final hint restrictions, focus order, touch targets and contrast. Capture actual evidence before reporting success.
 
 Implementation status: this brief has not been built or visually tested. The existing setup page remains a truthful placeholder until the feedback gate and first complete flow work.
