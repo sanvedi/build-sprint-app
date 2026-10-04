@@ -10,8 +10,8 @@ This is the active build scope for the prompting game. PRODUCT.md owns the produ
 | Product | Prompting Game, working name |
 | Last updated | 4 October 2026 |
 | Submission deadline | 17 October 2026, 11 AM IST; target 9 AM |
-| Current milestone | M0: simplest trustworthy-feedback proof |
-| Product state | Specified; no game implemented or verified live |
+| Current milestone | First-practice implementation verified in development; next implementation milestone proposed in PLAN.md |
+| Product state | Beginner practice 1 implemented with live Gemini and browser checks; full game and public deployment pending |
 | Existing hosting address | https://combative-jaguar-50.convex.site; historical setup address, not a verified game |
 | Repository | https://github.com/sanvedi/build-sprint-app |
 
@@ -250,9 +250,9 @@ No assignment completion, presentation generation, personal PDF uploads, message
 
 ## 12. Current state and next action
 
-Reported classroom result: 10 students, eight final scores of 2 and two of 1 from 0; independent completion reported, measurement details unavailable. Prepared game, provider access, assessment reliability, persistence and live journey remain unverified.
+Reported classroom result: 10 students, eight final scores of 2 and two of 1 from 0; independent completion reported, measurement details unavailable. Beginner practice 1, Gemini access, device recovery and browser state checks now have development evidence in M0_VERIFICATION.md. The quantitative teacher-feedback gate, account persistence, full game and public journey remain unverified.
 
-Next single action: prepare one Beginner challenge with teacher-reviewed requirements and sample submissions, then run the smallest feedback-and-correction check using authorized AI access. Do not start full automated progression before the reliability gate passes.
+Next single implementation milestone: Beginner practice 2 and onward navigation, as specified in PLAN.md, awaiting the builder's yes before code. Keep the feedback-gate evidence gap visible; do not claim numerical acceptance or public readiness.
 
 ## 13. Decision log
 

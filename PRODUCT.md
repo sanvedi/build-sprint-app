@@ -2,7 +2,7 @@
 
 Product brief completed 4 October 2026. Working name; final branding is undecided.
 
-The builder asked to complete this brief and move forward. Explicitly agreed choices are distinguished below from defaults chosen to finish the first-version specification. This document specifies behavior. A first-practice implementation now exists; real AI access, full gameplay and browser evidence remain pending in M0_VERIFICATION.md.
+The builder asked to complete this brief and move forward. Explicitly agreed choices are distinguished below from defaults chosen to finish the first-version specification. This document specifies behavior. Beginner practice 1 now has real Gemini generation/assessment/recheck and browser evidence recorded in M0_VERIFICATION.md. Full gameplay, account saving, quantitative feedback-gate evidence and public release remain pending. PLAN.md gives the next implementation milestone; PROGRESS.md records completed steps.
 
 ## 1. The job
 
