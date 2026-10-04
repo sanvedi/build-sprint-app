@@ -30,23 +30,32 @@ Possible habit: copying or guessing is faster in the moment. Product response: k
 
 ## 3. The core flow
 
-Start with DP's reluctance to supply context. The game offers a prepared task and an editable weak prompt, so the student can make a small change and see its effect. Whether this persuades DP to try is untested.
+DP did not want to write a new prompt when asked to provide context. The game starts with an editable weak prompt, so the student can improve what is already there. Whether this makes DP willing to practise remains untested.
 
-Inside a practice challenge:
+### Practice: demonstrate understanding after feedback
 
-1. Show the task, its essential requirements, a weak prompt and an example answer. Label the original answer as one example, not the inevitable result of that prompt.
-2. The student edits the prefilled prompt directly. They do not need to write their own assignment or upload a document.
-3. Generate an answer to their actual edit. Preserve the edit if generation fails; offer Retry. A failed request does not consume a learning attempt.
-4. Before feedback, ask whether the answer meets the task and why. Save both their prompt and judgment.
-5. Compare the original and new answers. Give feedback on the prompt and answer judgment separately, tied to the essential requirements. A single better answer does not establish that the edit caused improvement.
-6. Allow two retries after the first evaluated attempt: three attempts total. Each retry permits another edit and answer judgment. After the second retry, show a worked example with explanations. Earlier success allows moving on without using every retry.
-7. After both practice challenges, present a fresh final challenge without hints. Collect the prompt and answer judgment before revealing assessment. Do not show a worked solution during this independent check.
-8. Pass when the prompt covers essential requirements and the student correctly judges the answer, including material errors or omissions. A sensible prompt with a poor AI answer can pass when the student spots the problem. A lucky answer cannot excuse a weak prompt.
-9. Save the completed level and offer the next level. Opening feedback or viewing an example alone does not count as passing.
+1. The student reads a prepared task, its essential requirements, a weak prompt and one example answer.
+2. They edit the prompt, receive an AI answer, and explain whether that answer meets the task before seeing feedback.
+3. Feedback identifies a specific gap in their prompt or answer judgment and explains why it matters.
+4. After reading feedback, the student edits the prompt to address that gap and briefly explains what they changed and why. If the gap was in their judgment rather than their prompt, they correct their judgment instead of adding unnecessary prompt text.
+5. When the prompt changes, generate a new answer. The student checks it against the task and identifies what improved, what still falls short and what needs verification. When only their judgment changes, they reassess the existing answer; no new generation is required.
+6. Assess the student's correction and explanation against the identified gap. Repeating the feedback or clicking Next does not demonstrate understanding. Record whether they addressed the gap and correctly judged the answer; a better AI answer alone is not enough.
+7. Allow two practice retries after the first evaluated attempt. Each retry includes the correction and explanation. After the second retry, show a worked example explaining its choices. A student who already meets the practice requirements can move on without using every retry. Seeing the example does not prove independent understanding.
 
-Observable in-game progress: a saved independent final submission satisfying the prompt and answer-judgment criteria, with an assessment explanation. Automated assessment must pass the reliability checkpoint before it is used to award completion.
+Preserve edits if generation or assessment fails. Failed requests do not consume a learning attempt. If feedback is unavailable or unreliable, retain the submission and offer retry without awarding or denying completion.
 
-Assessed separately: a comparable classroom task before and after practice, delayed retention, voluntary return use, and attempts needed on actual work. The game does not build the student's assignment. Do not claim fewer wasted attempts until that outcome has been measured.
+### Final: demonstrate independent use
+
+8. After two practice challenges, give a fresh final challenge at the same level without hints or a worked solution. The student edits its weak prompt and judges the resulting answer before seeing feedback.
+9. Pass only when the prompt covers the essential task requirements and the student correctly identifies whether the answer meets them, including material errors or omissions. A sensible prompt can pass despite a poor AI answer if the student recognises the problem. A lucky answer does not make a weak prompt pass.
+10. After an unsuccessful final, show feedback, return the student to practice and use a different reviewed final variant for the next independent check. Once both final variants have been seen, further attempts are practice, not evidence from a fresh task.
+11. Save the final submission, judgment and result. Passing unlocks the next level; passing all three levels finishes the game.
+
+Game reward: a correction that fixes the identified gap with a sound explanation earns a visible skill point; passing the fresh final challenge earns the level badge and unlocks the next level.
+
+The observable evidence is the student's own correction and explanation during practice, followed by a successful fresh attempt without hints. Automated judgments must pass the reliability checks in section 6 before awarding level completion.
+
+The game uses prepared material and does not complete the student's assignment. Assess lasting learning, voluntary return and fewer wasted attempts on actual work separately. Do not claim those outcomes from reading feedback or passing the game alone.
 
 ## 4. Onboarding
 
