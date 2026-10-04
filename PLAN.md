@@ -8,7 +8,7 @@ The first Beginner practice and its recovery/recheck states are implemented and 
 
 ## Next milestone: Beginner practice 2 and onward navigation
 
-Status: implemented in development after the builder's Go ahead. Awaiting the builder's phone confirmation and successful live second-practice assessment after Gemini's free daily quota resets. Not published.
+Status: implemented in development after the builder's Go ahead. Builder confirmed Next challenge opened practice 2 on their phone. Successful live second-practice assessment still awaits Gemini's quota reset. Production has no environment variables, so publishing a working game remains blocked. Not published.
 
 I can finish practice 1, choose Next challenge and complete a second prepared Beginner practice with its own task, requirements, supplied prompt and reviewed example.
 

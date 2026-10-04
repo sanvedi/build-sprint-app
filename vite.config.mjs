@@ -3,7 +3,9 @@ import {previewNames} from "./src/statePreview.mjs";
 export default defineConfig(({mode})=>{
  const env=loadEnv(mode,process.cwd(),"");
  return {
-  define:{__CONVEX_URL__:JSON.stringify(env.CONVEX_URL || "")},
+  // Static hosting supplies the production backend address during its build.
+  // This is a public URL, never an AI key. Local development uses CONVEX_URL.
+  define:{__CONVEX_URL__:JSON.stringify(env.VITE_CONVEX_URL || env.CONVEX_URL || "")},
   plugins:[{
    name:"development-state-preview-index",
    configureServer(server){
