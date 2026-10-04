@@ -56,3 +56,8 @@ Remaining: identify the tested service/model, obtain authorized access and verif
 ## Live Gemini connection check
 
 After the builder saved the Gemini key in development settings, real generation and assessment passed through Convex using gemini-3.8-flash. A valid initial attempt earned one point. Repeating the same assessment returned the identical stored result without another model call. Fixed the agent session identity requirement and made success explanations/evidence explicit. Build, typecheck and all 15 automated tests passed. Google intermittently rejected requests because of high demand; this is not a classroom reliability or full feedback-gate pass. No browser/phone check or production publish was performed.
+
+
+## 390px accessibility fixes
+
+Raised supporting text from 14px to 16px and expanded the seven short links/disclosure targets to at least 44 by 44 CSS pixels. Edge browser emulation at 390 by 844 covered 28 state captures using prepared responses: no text below 16px, no tappable targets below 44 by 44, and no horizontal overflow. Text contrast pairs are unchanged; the lowest ratio is 6.56:1. Build and 15 automated tests passed; the design detector returned no findings. No production publish or physical-phone/keyboard verification.

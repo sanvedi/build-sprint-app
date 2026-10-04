@@ -58,7 +58,7 @@ Sizes:
 - 32 px: page headline.
 - 24 px: challenge and result headings.
 - 18 px: body text, prompts, answers and main buttons.
-- 14 px: supporting labels, attempt counts and progress details.
+- 16 px: supporting labels, attempt counts and progress details. All visible text is at least 16 px.
 
 Colours: text #17211B on background #FFFFFF; secondary text #46534B. Accent #176B3A only on the main action. Errors #B42318 with explanatory text. Neutral borders #D8DFDA and secondary surfaces #F4F6F4 separate controls and answers. Points and badges use neutral shapes and explicit earned labels; reserve green for the main action.
 
@@ -308,3 +308,6 @@ Specification review: both correction paths identify visible content, editable f
 Implementation checks still required: long-answer desktop/phone comparison, preserved tab reading position and judgment, onscreen keyboard visibility, draft conflict recovery, retry without reassessment, duplicate reward prevention, final hint restrictions, focus order, touch targets and contrast. Capture actual evidence before reporting success.
 
 Implementation status: the first Beginner practice page now has an implementation and simulated-response interaction checks. Real AI access, account backup, visual browser/phone checks and student comprehension evidence remain pending. The rest of this document still specifies the intended full journey.
+
+
+Phone accessibility requirement: all tappable controls, including links and disclosure toggles, have a target at least 44 by 44 CSS pixels. Verified in Edge at 390 by 844 pixels across 28 first-practice state captures, including correction, completion, loading, error and save-pending states. This is browser emulation, not a physical-phone check.
