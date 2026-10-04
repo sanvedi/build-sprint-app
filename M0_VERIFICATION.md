@@ -51,3 +51,8 @@ Evidence:
 - No production deployment, real AI generation, account sign-in, three-student comprehension result or browser visual verification is claimed.
 
 Remaining: identify the tested service/model, obtain authorized access and verify the evaluator against the teacher-labelled results. Then walk the real flow on desktop and phone, including long answers and keyboard, run the comprehension check, and implement the remaining challenges/account backup.
+
+
+## Live Gemini connection check
+
+After the builder saved the Gemini key in development settings, real generation and assessment passed through Convex using gemini-3.8-flash. A valid initial attempt earned one point. Repeating the same assessment returned the identical stored result without another model call. Fixed the agent session identity requirement and made success explanations/evidence explicit. Build, typecheck and all 15 automated tests passed. Google intermittently rejected requests because of high demand; this is not a classroom reliability or full feedback-gate pass. No browser/phone check or production publish was performed.

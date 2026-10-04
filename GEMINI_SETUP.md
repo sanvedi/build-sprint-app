@@ -17,4 +17,4 @@ Run `npm run dev` and open http://127.0.0.1:5173. Generate an answer, judge it, 
 
 Development and production have separate environment variables. This setup does not publish the site. Configure production separately when ready to deploy.
 
-Verification: typecheck, build, 15 automated tests, and development backend push passed. Live Gemini output has not been tested because the key has not been supplied to the deployment during this change.
+Verification: typecheck, build, 15 automated tests, and development backend push passed. After the key was saved, live Gemini generation and assessment through the development Convex deployment passed. A valid initial attempt earned one point; replay returned the identical saved assessment. Google intermittently returned high-demand errors, so service reliability remains a concern. Browser and phone verification remain pending.
