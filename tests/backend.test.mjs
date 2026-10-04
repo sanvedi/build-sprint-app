@@ -15,8 +15,6 @@ const data=await moduleFor("convex/practiceData.ts");
 const modules={"./_generated/server.ts":async()=>({}),"./practiceData.ts":async()=>data};
 const reserve=makeFunctionReference("practiceData:reserve");
 const finish=makeFunctionReference("practiceData:finish");
-const openFinal=makeFunctionReference("practiceData:openFinal");
-const returnToPractice=makeFunctionReference("practiceData:returnToPractice");
 const token="f".repeat(64);
 const input=previous=>JSON.stringify({answerId:"synthetic-answer",previousAssessmentId:previous||null});
 async function attempt(t,challengeId,requestId,earned,previous){
@@ -58,62 +56,4 @@ test("rechecking practice 1 cannot change practice 2's attempt or point",async()
  const second=await t.run(ctx=>ctx.db.query("practiceSessions").withIndex("by_token_challenge",q=>q.eq("token",token).eq("challengeId","beginner-02")).unique());
  assert.equal(second.attempts,1);assert.equal(second.point,true);
  await assert.rejects(t.mutation(reserve,{token,challengeId:"beginner-02",requestId:"cross-review",kind:"recheck",assessmentId:first,input:"{}"}),/SUBMISSION_UNAVAILABLE/);
-});
-
-async function completedPractices(t){
- await t.run(async ctx=>{for(const challengeId of ["beginner-01","beginner-02"])await ctx.db.insert("practiceSessions",{token,challengeId,attempts:3,point:false});});
-}
-test("final access requires both practices and the release gate, with no AI reservation",async()=>{
- const t=convexTest(schema,modules);process.env.PROMPT_GAME_FINALS_ENABLED="true";
- await assert.rejects(t.mutation(openFinal,{token}),/PRACTICE_LOCKED/);
- await completedPractices(t);process.env.PROMPT_GAME_FINALS_ENABLED="false";
- await assert.rejects(t.mutation(openFinal,{token}),/FINAL_UNAVAILABLE/);
- assert.equal(await t.run(ctx=>ctx.db.query("practiceUsage").first()),null);
- process.env.PROMPT_GAME_FINALS_ENABLED="true";
-});
-test("opening a final marks it seen, reopening resumes it and passing awards no practice point",async()=>{
- const t=convexTest(schema,modules);await completedPractices(t);
- const first=await t.mutation(openFinal,{token});const resumed=await t.mutation(openFinal,{token});
- assert.equal(first.challengeId,"beginner-final-01");assert.deepEqual(resumed.seen,["beginner-final-01"]);
- await attempt(t,first.challengeId,"final",true);
- const progress=await t.run(ctx=>ctx.db.query("finalProgress").withIndex("by_token",q=>q.eq("token",token)).unique());
- assert.equal(progress.badge,true);
- const sessions=await t.run(ctx=>ctx.db.query("practiceSessions").withIndex("by_token",q=>q.eq("token",token)).take(8));
- assert.equal(sessions.some(r=>r.point),false);
- await assert.rejects(attempt(t,first.challengeId,"duplicate-final",true),/PRACTICE_FINISHED/);
-});
-test("a failed final requires supported practice before the unseen alternate and exhausted variants stay locked",async()=>{
- const t=convexTest(schema,modules);await completedPractices(t);
- const first=await t.mutation(openFinal,{token});await attempt(t,first.challengeId,"final-fail",false);
- await assert.rejects(t.mutation(openFinal,{token}),/FINAL_PRACTICE_REQUIRED/);
- await attempt(t,"beginner-review-01","review",true);
- const alternate=await t.mutation(openFinal,{token});assert.equal(alternate.challengeId,"beginner-final-02");
- assert.deepEqual(alternate.seen,["beginner-final-01","beginner-final-02"]);
- await attempt(t,alternate.challengeId,"alternate-fail",false);
- await assert.rejects(t.mutation(openFinal,{token}),/FINAL_VARIANTS_EXHAUSTED/);
- const progress=await t.run(ctx=>ctx.db.query("finalProgress").withIndex("by_token",q=>q.eq("token",token)).unique());
- assert.equal(progress.badge,false);
- const returned=await t.mutation(returnToPractice,{token});assert.equal(returned.attempts,0);
- await attempt(t,returned.challengeId,"supported-again",true);
- await assert.rejects(t.mutation(openFinal,{token}),/FINAL_VARIANTS_EXHAUSTED/);
-});
-
-test("a final recheck can revoke a badge without adding an attempt or practice point",async()=>{
- const t=convexTest(schema,modules);await completedPractices(t);const opened=await t.mutation(openFinal,{token});
- const first=await attempt(t,opened.challengeId,"final-pass",true);
- const id=await t.mutation(reserve,{token,challengeId:opened.challengeId,requestId:"final-review",kind:"recheck",assessmentId:first,input:JSON.stringify({assessmentId:first})});
- await t.mutation(finish,{id,result:JSON.stringify({earned:false,route:"judgment"}),earned:false});
- const progress=await t.run(ctx=>ctx.db.query("finalProgress").withIndex("by_token",q=>q.eq("token",token)).unique());
- assert.equal(progress.badge,false);assert.equal(progress.reviewId,"beginner-review-02");
- const session=await t.run(ctx=>ctx.db.query("practiceSessions").withIndex("by_token_challenge",q=>q.eq("token",token).eq("challengeId",opened.challengeId)).unique());
- assert.equal(session.attempts,1);assert.equal(session.point,false);
-});
-
-test("an old supported-practice recheck cannot complete a new practice replay",async()=>{
- const t=convexTest(schema,modules);await completedPractices(t);await t.mutation(openFinal,{token});
- await attempt(t,"beginner-final-01","first-fail",false);
- const old=await attempt(t,"beginner-review-01","first-review",true);
- await t.mutation(openFinal,{token});await attempt(t,"beginner-final-02","second-fail",false);
- await t.mutation(returnToPractice,{token});
- await assert.rejects(t.mutation(reserve,{token,challengeId:"beginner-review-01",requestId:"old-review",kind:"recheck",assessmentId:old,input:"{}"}),/SUBMISSION_UNAVAILABLE/);
 });

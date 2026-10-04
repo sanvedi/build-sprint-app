@@ -1,5 +1,5 @@
 // Prepared, synthetic learning material. Teacher review is still required before release.
-const practices = {
+export const practiceTasks = {
   "beginner-01": {
     title: "Make the invitation useful",
     brief: "Write a friendly class announcement for first-year students. Give them the details they need to join a voluntary prompt practice session.",
@@ -19,23 +19,4 @@ const practices = {
     exampleAnswer: "1. Save your work as one PDF.\n2. Name the file student-ID_report.pdf, using your student ID.\n3. Submit the PDF through the course portal by Tuesday at 5 PM."
   }
 };
-export const practiceTasks = {
-  ...practices,
-  "beginner-review-01": practices["beginner-01"],
-  "beginner-review-02": practices["beginner-02"],
-  "beginner-final-01": {
-    title: "Explain the library change",
-    brief: "Write a notice that helps students plan their library visit and return books during a closure.",
-    requirements: ["The library is closed on Monday and reopens Tuesday at 9 AM", "The outside book-return box remains available during the closure", "Exactly two bullet points, at most 60 words, in plain words", "Do not invent fees, a closure reason or other arrangements"],
-    startingPrompt: "Write about the library."
-  },
-  "beginner-final-02": {
-    title: "Explain the study group",
-    brief: "Write a short message that gives first-year students the details they need to join an optional study group.",
-    requirements: ["Thursday at 4 PM in Room 108, lasting 45 minutes", "Optional, for first-year students; bring a notebook", "Exactly two sentences, at most 60 words, in a friendly tone", "Do not invent a fee, registration or extra materials"],
-    startingPrompt: "Tell students about studying together."
-  }
-};
-export function isFinal(id) { return id.startsWith("beginner-final-"); }
-export function isReview(id) { return id.startsWith("beginner-review-"); }
-export function practiceFinished(state) { return Boolean(state && (state.completed || state.point || state.attempts >= 3)); }
+export function practiceFinished(state) { return Boolean(state && (state.point || state.attempts >= 3)); }

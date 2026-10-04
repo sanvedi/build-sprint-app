@@ -9,65 +9,11 @@ const compiled=await build({entryPoints:["src/main.jsx"],bundle:true,write:false
 const script=compiled.outputFiles[0].text;
 const KEY="prompt-game:beginner-01:v1";
 async function waitFor(fn){for(let i=0;i<100;i++){if(fn())return;await new Promise(r=>setTimeout(r,10));}assert.fail("Screen did not reach expected state");}
-function fixture(responses,seed={}){const calls=[];const dom=new JSDOM('<div id="root"></div>',{url:"http://localhost",runScripts:"dangerously",pretendToBeVisual:true});const w=dom.window;for(const [key,value] of Object.entries(seed))w.localStorage.setItem(key,JSON.stringify(value));Object.defineProperty(w.crypto,"randomUUID",{value:randomUUID});w.HTMLElement.prototype.scrollIntoView=function(){};w.fetch=async(url,options)=>{const body=JSON.parse(options.body);calls.push(body);const value=responses.shift();if(value instanceof Error)throw value;return new Response(JSON.stringify({status:"success",value}),{status:200,headers:{"Content-Type":"application/json"}});};w.eval(script);return {dom,w,calls};}
+function fixture(responses,seed={}){const calls=[];const dom=new JSDOM('<div id="root"></div>',{url:"http://localhost",runScripts:"dangerously",pretendToBeVisual:true});const w=dom.window;for(const [key,value] of Object.entries(seed))w.localStorage.setItem(key,JSON.stringify(value));Object.defineProperty(w.crypto,"randomUUID",{value:randomUUID});w.HTMLElement.prototype.scrollIntoView=function(){};w.fetch=async(url,options)=>{const body=JSON.parse(options.body);calls.push(body);const value=responses.shift();if(value instanceof Error)throw value;return new Response(JSON.stringify(value?.testErrorData?{status:"error",errorMessage:"Server Error",errorData:value.testErrorData}:{status:"success",value}),{status:200,headers:{"Content-Type":"application/json"}});};w.eval(script);return {dom,w,calls};}
 function button(w,text){const b=[...w.document.querySelectorAll("button")].find(x=>x.textContent===text);assert.ok(b,`Missing button ${text}`);assert.equal(b.disabled,false);b.click();}
 function type(w,id,value){const el=w.document.getElementById(id);assert.ok(el,`Missing field ${id}`);Object.getOwnPropertyDescriptor(w.HTMLTextAreaElement.prototype,"value").set.call(el,value);el.dispatchEvent(new w.Event("input",{bubbles:true}));}
 const notYet={id:"assessment1",earned:false,route:"prompt",gap:"Add the event facts",why:"Students need the time",evidence:"Your request omits time"};
 const passed={id:"assessment2",earned:true,route:"none",gap:"",why:"All requirements checked",evidence:"Facts present"};
-
-const completedPractice={version:1,stage:"complete",prompt:"Prepared prompt",judgment:"Prepared judgment",explanation:"",answer:{id:"practice-answer",text:"Practice answer"},feedback:passed,attempts:1,point:true,correcting:false};
-const finalSeed={"prompt-game:beginner-01:v1":completedPractice,"prompt-game:beginner-02:v1":completedPractice,"prompt-game:active-practice:v1":"beginner-02"};
-test("final hides all examples and awards a badge without changing practice points",async()=>{
- const f=fixture([{challengeId:"beginner-final-01",seen:["beginner-final-01"],badge:false,reviewId:null},{id:"final-answer",text:"Library notice"},{...passed,id:"final-assessment"}],finalSeed);
- try{
-  await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Start final challenge"));button(f.w,"Start final challenge");
-  await waitFor(()=>f.w.document.body.textContent.includes("Explain the library change"));
-  assert.equal(f.w.document.querySelector(".original"),null);assert.equal(f.w.document.body.textContent.includes("Example answer"),false);
-  button(f.w,"Generate answer");await waitFor(()=>f.w.document.getElementById("judgment"));
-  assert.equal(f.w.document.querySelector(".answer-tabs"),null);type(f.w,"judgment","The answer meets the two bullets and library facts");button(f.w,"Submit final");
-  await waitFor(()=>f.w.document.body.textContent.includes("Beginner badge earned"));
-  assert.equal(JSON.parse(f.w.localStorage.getItem("prompt-game:beginner-final-01:v1")).point,false);
-  assert.match(f.w.document.querySelector(".points").textContent,/2.*6/);
- }finally{f.dom.window.close();}
-});
-test("failed final returns to supported practice and opens an unseen alternate after completing it",async()=>{
- const f=fixture([{challengeId:"beginner-final-01",seen:["beginner-final-01"],badge:false,reviewId:null},{id:"final-answer",text:"Library notice"},{...notYet,id:"final-assessment"},{challengeId:"beginner-review-01",attempts:0},{id:"review-answer",text:"Invitation"},passed,{challengeId:"beginner-final-02",seen:["beginner-final-01","beginner-final-02"],badge:false,reviewId:"beginner-review-01"}],finalSeed);
- try{
-  await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Start final challenge"));button(f.w,"Start final challenge");
-  await waitFor(()=>f.w.document.body.textContent.includes("Explain the library change"));button(f.w,"Generate answer");
-  await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","It is fine");button(f.w,"Submit final");
-  await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Return to practice"));button(f.w,"Return to practice");
-  await waitFor(()=>f.w.document.body.textContent.includes("Make the invitation useful"));button(f.w,"Generate answer");
-  await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","Invitation meets the task");button(f.w,"Check my judgment");
-  await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Start fresh final"));
-  assert.match(f.w.document.querySelector(".points").textContent,/2.*6/);button(f.w,"Start fresh final");
-  await waitFor(()=>f.w.document.body.textContent.includes("Explain the study group"));assert.equal(f.w.document.getElementById("prompt").value,"Tell students about studying together.");
- }finally{f.dom.window.close();}
-});
-
-test("a pending final badge reopens without an award or another assessment until save succeeds",async()=>{
- const next={...completedPractice,mode:"final",stage:"finalPass",point:false,passed:true,completed:true,feedback:{...passed,id:"final-assessment"}};
- const f=fixture([],{...finalSeed,"prompt-game:request-recovery:v1":{next,challengeId:"beginner-final-01"}});
- try{
-  await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Retry saving"));assert.equal(f.w.document.querySelector(".badge"),null);
-  assert.equal([...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Review my challenges"),false);
-  button(f.w,"Retry saving");await waitFor(()=>f.w.document.querySelector(".badge"));
-  assert.equal(f.calls.length,0);assert.equal(JSON.parse(f.w.localStorage.getItem("prompt-game:beginner-final-01:v1")).passed,true);
-  assert.match(f.w.document.querySelector(".points").textContent,/2.*6/);
- }finally{f.dom.window.close();}
-});
-
-test("failed final assessment retries the exact submission without consuming the independent attempt",async()=>{
- const f=fixture([{challengeId:"beginner-final-01",seen:["beginner-final-01"],badge:false,reviewId:null},{id:"final-answer",text:"Library notice"},new Error("Response lost"),{...notYet,id:"final-assessment"}],finalSeed);
- try{
-  await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Start final challenge"));button(f.w,"Start final challenge");await waitFor(()=>f.w.document.body.textContent.includes("Explain the library change"));button(f.w,"Generate answer");
-  await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","My exact independent judgment");button(f.w,"Submit final");
-  await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Retry assessment"));
-  assert.equal(JSON.parse(f.w.localStorage.getItem("prompt-game:beginner-final-01:v1")).attempts,0);assert.equal(f.w.document.getElementById("judgment").disabled,true);
-  button(f.w,"Retry assessment");await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Return to practice"));
-  assert.deepEqual(f.calls[2].args,f.calls[3].args);assert.equal(JSON.parse(f.w.localStorage.getItem("prompt-game:beginner-final-01:v1")).attempts,1);
- }finally{f.dom.window.close();}
-});
 
 test("Next challenge keeps the first point and gives practice 2 its own attempts and prompt",async()=>{
  const f=fixture([{id:"answer1",text:"Invitation"},passed,{id:"answer2",text:"Three steps"},{...passed,id:"assessment3"}]);
@@ -186,3 +132,5 @@ test("assessment failure holds the exact judgment read-only until its same-reque
  const f=fixture([{id:"answer1",text:"Answer"},new Error("Response lost"),passed]);
  try{await waitFor(()=>f.w.document.getElementById("prompt"));button(f.w,"Generate answer");await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","My exact judgment");button(f.w,"Check my judgment");await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Retry assessment"));assert.equal(f.w.document.getElementById("judgment").disabled,true);button(f.w,"Retry assessment");await waitFor(()=>f.w.document.body.textContent.includes("Skill point earned"));assert.deepEqual(f.calls[1].args,f.calls[2].args);assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,1);}finally{f.dom.window.close();}
 });
+
+test("a structured Convex daily-cap error shows the allowance message and keeps the assessment retry",async()=>{const f=fixture([{id:"answer-cap",text:"Invitation"},{testErrorData:"DAILY_ALLOWANCE_REACHED"}]);try{await waitFor(()=>f.w.document.getElementById("prompt"));button(f.w,"Generate answer");await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","Check these event details");button(f.w,"Check my judgment");await waitFor(()=>f.w.document.querySelector('[role="alert"]'));assert.match(f.w.document.querySelector('[role="alert"]').textContent,/Today's AI allowance has been reached/);assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,0);assert.equal(f.w.document.getElementById("judgment").disabled,true);assert.ok([...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Retry assessment"));}finally{f.dom.window.close();}});

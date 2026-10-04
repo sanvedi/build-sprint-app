@@ -10,7 +10,7 @@ Interface: a web page designed for a phone. Students edit a supplied weak prompt
 
 Business logic: Convex generates the answer and assesses the student's prompt, answer judgment and correction explanation against prepared requirements. It records attempts and justified points, handles retries without duplicates, and permits one completed Challenge recheck of the same assessment without consuming an attempt. If AI still disagrees, the student continues normally.
 
-Current build: Beginner final and alternate are also implemented in development, with seen-variant tracking, badge results and supported-practice return. They are not published. The current published build contains both Beginner practices, Next challenge from either completion route, separate points and initial-plus-two-retry allowances, both correction paths, worked examples, anonymous device saving, assessment recheck and recovery. The three-level game and account saving remain planned v1 work. Both practices now have a verified live browser journey at 390px: generation, judgment, feedback, prompt correction, judgment-only correction, justified points, Next challenge, assessment retry, save-only recovery, Challenge recheck and reopening. This proves working mechanics, not AI teaching reliability or physical-phone usability.
+Current build: The unpublished Beginner final draft is preserved at git tag unpublished-beginner-final. Its prior development checks remain historical; current main and the live app contain only the two practices. The current published build contains both Beginner practices, Next challenge from either completion route, separate points and initial-plus-two-retry allowances, both correction paths, worked examples, anonymous device saving, assessment recheck and recovery. The three-level game and account saving remain planned v1 work. Both practices now have a verified live browser journey at 390px: generation, judgment, feedback, prompt correction, judgment-only correction, justified points, Next challenge, assessment retry, save-only recovery, Challenge recheck and reopening. This proves working mechanics, not AI teaching reliability or physical-phone usability.
 
 Database:
 
@@ -18,7 +18,7 @@ Database:
 | --- | --- |
 | practiceSessions | Anonymous session token, challenge ID, assessed attempt count, earned point and latest assessment ID, separately per practice. Legacy rows without challenge ID belong to practice 1 and are preserved. |
 | practiceJobs | Generation, assessment and recheck requests; challenge IDs, request IDs, submitted inputs, pending/done/failed state, results, challenged assessment ID and reviewed result. Original assessment remains retained. |
-| finalProgress | Anonymous token, seen final variants, current variant, Beginner badge decision and the supported practice required after failure. |
+| finalProgress (development draft only) | Anonymous token, seen final variants, current variant, Beginner badge decision and the supported practice required after failure. |
 | practiceUsage | UTC day and reserved app request count across the deployment. |
 | m0Checks | Historical setup-test records only, retained to avoid deleting existing data. Never product usage. |
 
@@ -66,7 +66,7 @@ Repo: https://github.com/sanvedi/build-sprint-app , public (verified with GitHub
 
 Deploy: npm run deploy. A push does not deploy. After I confirm a milestone works: record progress, commit, push, then deploy. Follow the Convex static-hosting skill for release work and check the live flow afterward.
 
-Keys: GEMINI_API_KEY must be in Convex environment variables for development and production separately. Required settings are PROMPT_GAME_MODEL and PROMPT_GAME_AI_ENABLED; optional PROMPT_GAME_GENERATION_MODEL overrides only answer generation; PROMPT_GAME_DAILY_CALL_LIMIT controls the current app allowance. Development uses trustworthy-warthog-680. Production settings and successful generation, assessment and recheck are verified. The current published code is the two-practice release plus generation-model configuration (30d6190); local main also contains unpublished final screens. Do not publish those final screens while doing a practice-only fix. Never copy secrets into files or assume development settings carry over.
+Keys: GEMINI_API_KEY must be in Convex environment variables for development and production separately. Required settings are PROMPT_GAME_MODEL and PROMPT_GAME_AI_ENABLED; optional PROMPT_GAME_GENERATION_MODEL overrides only answer generation; PROMPT_GAME_DAILY_CALL_LIMIT controls the current app allowance. Development uses trustworthy-warthog-680. Production settings and successful generation, assessment and recheck are verified. Current main must match the deployed two-practice code. The final draft is preserved at git tag unpublished-beginner-final; do not restore or publish it during practice fixes. Never copy secrets into files or assume development settings carry over.
 
 .gitignore covers .env.local, .env and .env.*. Do not change that to track secrets.
 
@@ -92,7 +92,7 @@ Calls cap: currently 20 reserved app requests per UTC day across the deployment,
 
 Provider limit: monthly budget not chosen or verified. No paid upgrade is authorized. If paid use is approved, the builder sets a project spend cap in Google AI Studio and records the amount in PLAN.md. Do not promise an exact hard monthly ceiling: Google's project caps can overshoot during delayed processing (around ten minutes). See https://ai.google.dev/gemini-api/docs/billing/#project-spend-caps . Keep the app-side cap as well.
 
-When a cap is hit: show the existing daily-allowance message and UTC reset information; preserve work. When generation fails: use the approved generation-error message. When assessment/recheck fails: keep the exact submission and show the approved assessment-unavailable message with Retry assessment. Retry saving writes the existing checked result only. Use DESIGN.md wording; ask me before inventing new product copy.
+When a cap is hit: read ConvexError.data as well as the message, show the existing daily-allowance message and UTC reset information, and preserve work. Never disguise DAILY_ALLOWANCE_REACHED as generic assessment failure. When generation fails: use the approved generation-error message. When assessment/recheck fails: keep the exact submission and show the approved assessment-unavailable message with Retry assessment. Retry saving writes the existing checked result only. Use DESIGN.md wording; ask me before inventing new product copy.
 
 Login: no account required for first value. Anonymous practice/device saving is implemented; optional Convex Auth sign-in and account recovery are later approved v1 milestones.
 

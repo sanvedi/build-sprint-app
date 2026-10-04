@@ -2,4 +2,18 @@
 
 .level>div{min-width:0}.level.current{flex:2;min-width:240px}.level button{display:block;max-width:100%;text-align:left;font-size:16px;padding:10px 12px;margin-top:6px}.progress span{overflow-wrap:anywhere}@media(max-width:680px){.level.current{flex-basis:100%;min-width:0}}
 
-.final-answer{white-space:pre-wrap;overflow-wrap:anywhere}.badge{display:inline-flex;flex-direction:column;align-items:center;border:1px solid #b1bcb4;border-radius:12px;padding:16px 24px;margin-bottom:16px;color:#17211b;background:#f4f6f4}.badge span{font-size:16px}
+/* Keep the current practice first; future levels do not need full cards on phones. */
+.lock-short{display:none!important}
+@media(max-width:680px){
+.progress{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 12px;padding:12px 0}
+.level.current{grid-column:1;grid-row:1;min-width:0;align-items:flex-start}
+.points{grid-column:2;grid-row:1;flex-direction:column;align-items:flex-end;padding:0;gap:0}
+.level.locked{grid-row:2;min-width:0;gap:6px}
+.level.locked .level-symbol,.lock-detail{display:none!important}
+.level.locked>div{display:flex;align-items:center;gap:6px}
+.lock-short{display:block!important}
+.workspace{margin-top:16px}
+.editor>.primary{position:fixed;bottom:16px;left:16px;right:16px;width:auto;margin:0;z-index:5}
+main{padding-bottom:100px}
+.editor{padding-bottom:72px}
+}

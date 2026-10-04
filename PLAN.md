@@ -24,7 +24,7 @@ Evidence: 31 automated checks passed, including actual Convex mutations in a loc
 
 ## Next milestone: Beginner final and badge
 
-Implemented in development after the builder said Lets build it. The hint-free final and alternate, badge, supported-practice return, fresh-variant restrictions, recheck and saving recovery are built. Awaiting the builder's phone confirmation. Public final awards remain disabled pending reviewed content and recorded feedback-gate evidence.
+The unpublished implementation is preserved at git tag unpublished-beginner-final; current main matches the two-practice production app. Implemented in development after the builder said Lets build it. The hint-free final and alternate, badge, supported-practice return, fresh-variant restrictions, recheck and saving recovery are built. Awaiting the builder's phone confirmation. Public final awards remain disabled pending reviewed content and recorded feedback-gate evidence.
 
 Evidence: 40 automated checks; prepared-response Edge pass/fail journeys at 390px and 1280px; 34 credit-free state previews without undersized text, tap targets or overflow; successful development schema/function push and a real final-access rejection before any AI call. No successful real Gemini final assessment or teacher reliability result is claimed. Development alone has PROMPT_GAME_FINALS_ENABLED=true; production has not been changed for this milestone.
 
