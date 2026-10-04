@@ -307,4 +307,4 @@ Specification review: both correction paths identify visible content, editable f
 
 Implementation checks still required: long-answer desktop/phone comparison, preserved tab reading position and judgment, onscreen keyboard visibility, draft conflict recovery, retry without reassessment, duplicate reward prevention, final hint restrictions, focus order, touch targets and contrast. Capture actual evidence before reporting success.
 
-Implementation status: this brief has not been built or visually tested. The existing setup page remains a truthful placeholder until the feedback gate and first complete flow work.
+Implementation status: the first Beginner practice page now has an implementation and simulated-response interaction checks. Real AI access, account backup, visual browser/phone checks and student comprehension evidence remain pending. The rest of this document still specifies the intended full journey.

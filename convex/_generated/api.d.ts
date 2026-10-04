@@ -8,7 +8,10 @@
  * @module
  */
 
+import type * as assessmentRules from "../assessmentRules.js";
 import type * as http from "../http.js";
+import type * as practice from "../practice.js";
+import type * as practiceData from "../practiceData.js";
 
 import type {
   ApiFromModules,
@@ -17,7 +20,10 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  assessmentRules: typeof assessmentRules;
   http: typeof http;
+  practice: typeof practice;
+  practiceData: typeof practiceData;
 }>;
 
 /**
@@ -47,5 +53,6 @@ export declare const internal: FilterApi<
 >;
 
 export declare const components: {
+  agent: import("@convex-dev/agent/_generated/component.js").ComponentApi<"agent">;
   staticHosting: import("@convex-dev/static-hosting/_generated/component.js").ComponentApi<"staticHosting">;
 };

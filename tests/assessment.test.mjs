@@ -1,0 +1,12 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {transform} from "esbuild";
+import {readFile} from "node:fs/promises";
+const source=await readFile("convex/assessmentRules.ts","utf8");
+const compiled=await transform(source,{loader:"ts",format:"esm"});
+const {earnsPoint}=await import("data:text/javascript;base64,"+Buffer.from(compiled.code).toString("base64"));
+const good={promptMeetsRequirements:true,judgmentMeetsRequirements:true,correctionAddressesGap:true,explanationSound:true};
+test("initial success needs prompt and judgment but not forced correction",()=>{assert.equal(earnsPoint({...good,correctionAddressesGap:false,explanationSound:false},false),true);});
+test("a lucky answer cannot compensate for a weak prompt",()=>{assert.equal(earnsPoint({...good,promptMeetsRequirements:false},false),false);});
+test("a correction cannot earn a point without its own sound explanation",()=>{assert.equal(earnsPoint({...good,explanationSound:false},true),false);});
+test("corrected judgment earns a point only when all criteria hold",()=>{assert.equal(earnsPoint(good,true),true);assert.equal(earnsPoint({...good,judgmentMeetsRequirements:false},true),false);});

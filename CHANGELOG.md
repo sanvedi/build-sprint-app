@@ -10,3 +10,10 @@
 - Retired the reminder test functions and scheduling command. Preserved old material in archive/openloops/ and existing historical records.
 
 Earlier product history is preserved in Git and archive/openloops/CHANGELOG.md.txt; it does not govern this build.
+
+## First Beginner practice implementation
+
+- Added the real first-practice UI and both correction paths, keeping judgment tied to the exact answer.
+- Added device draft saving, save-only retry, two retries and supported examples, with no duplicate point.
+- Added Convex generation/assessment jobs and agent integration on development only; unconfigured AI returns a clear unavailable state.
+- Passed 15 checks, build and type checks. Model access, live AI, accounts and real-phone evidence remain pending.

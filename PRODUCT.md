@@ -2,7 +2,7 @@
 
 Product brief completed 4 October 2026. Working name; final branding is undecided.
 
-The builder asked to complete this brief and move forward. Explicitly agreed choices are distinguished below from defaults chosen to finish the first-version specification. This document specifies behavior; it does not claim a working app.
+The builder asked to complete this brief and move forward. Explicitly agreed choices are distinguished below from defaults chosen to finish the first-version specification. This document specifies behavior. A first-practice implementation now exists; real AI access, full gameplay and browser evidence remain pending in M0_VERIFICATION.md.
 
 ## 1. The job
 
@@ -174,7 +174,7 @@ Progressing to harder challenges is the proposed reason to return. Observe volun
 
 ## 10. Checkable milestones
 
-These describe what I must demonstrate, not work already completed. Start with the riskiest dependency: whether AI can give useful feedback and recognise understanding.
+These describe what I must demonstrate. Implemented code and reported test completion do not by themselves satisfy these checkpoints; current evidence is in M0_VERIFICATION.md. Start with the riskiest dependency: whether AI can give useful feedback and recognise understanding.
 
 1. I can test one prepared Beginner challenge without building the app: use approved AI access to assess a weak prompt, a student's answer judgment, then their correction and explanation. A teacher can check whether the feedback is accurate and whether the skill-point decision is justified. I can record access and cost before running it; no new service or paid plan is assumed approved.
 2. I can repeat that assessment on the 12 teacher-reviewed submissions in section 6, including a weak prompt with a lucky answer and a sensible prompt with a poor answer. Both runs meet the agreement and zero-critical-error rules. If they fail, I follow the stated fallback rather than build untrusted automatic rewards.

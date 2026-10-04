@@ -33,3 +33,21 @@ Record inputs, teacher labels, model/version, instructions, output, decisions, d
 - learning/feedback-review.md contains 12 synthetic review cases across the three difficulties, with a blank teacher-label table. No AI outputs or passing reliability result are claimed.
 - No model key/provider was found in the local project configuration or relevant process environment. Remote AI access has not been verified. No new service was installed.
 - Full student-flow implementation and browser evidence remain pending the feedback gate and provider access.
+
+## First practice implementation
+
+Builder report: the feedback test has been run and the builder instructed implementation to proceed. Scores, disagreements, tested service/model and evaluator instructions have not yet been supplied. Do not record numerical gate acceptance or claim these new instructions match the tested evaluator.
+
+Implemented: first Beginner practice page, prefilled prompt, task requirements, desktop comparison and phone answer tabs, judgment before feedback, both correction paths, two retries and supported example, device-only saving and save-only recovery. Points are capped per challenge. React and Nunito Sans are bundled locally.
+
+Convex development deployment updated with the agent component and real generation/assessment actions, stored jobs for retry-safe results, and a bounded global daily call allowance. Historical test records remain intact. AI is disabled unless PROMPT_GAME_MODEL and PROMPT_GAME_AI_ENABLED are explicitly configured. The prepared adapter uses Convex's gateway, which requires compatible access; no paid upgrade or model usage has been enabled. If the tested provider requires another adapter, align it with the tested service before enabling requests.
+
+Evidence:
+
+- 15 automated checks passed: assessment rules, answer-target binding, both UI correction paths, two retries, first-attempt point, failed generation, same-result save retry and judgment preservation while switching long answers.
+- UI tests use prepared API responses in a simulated document environment. They do not prove real AI quality, physical phone layout or an onscreen keyboard.
+- Build, Convex type check and development push passed. The UI detector reported no findings.
+- A real development call without configured AI returned AI_UNAVAILABLE. No generated answer, point or success was fabricated for that check.
+- No production deployment, real AI generation, account sign-in, three-student comprehension result or browser visual verification is claimed.
+
+Remaining: identify the tested service/model, obtain authorized access and verify the evaluator against the teacher-labelled results. Then walk the real flow on desktop and phone, including long answers and keyboard, run the comprehension check, and implement the remaining challenges/account backup.
