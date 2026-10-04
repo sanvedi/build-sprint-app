@@ -68,3 +68,18 @@ Raised supporting text from 14px to 16px and expanded the seven short links/disc
 The builder selected Challenge ? AI recheck ? continue if AI still disagrees. Implemented one completed recheck per assessment, retained original plus reviewed decisions, immutable submission binding, latest-assessment checks, shared usage limits, and no extra learning attempt. Live Gemini generation, assessment, recheck and replay passed in development: database inspection confirmed one learning attempt, one point and one recheck job. An additional recheck request returned the existing review without a model call.
 
 Expanded existing practice state messages using approved DESIGN.md copy; added durable request IDs, checked-result recovery and read-only submitted work. 22 automated tests cover both correction paths, unchanged/changed rechecks, failed-recheck retry, mount recovery without duplicate requests, and reopening a pending save without another AI request. 20 development-only phone previews passed Edge checks at 390 ? 844 with no AI requests, undersized text/targets or overflow. The phone guide explains each state. Physical-phone keyboard verification, the full teacher feedback gate, extra practices/finals and account saving remain pending. No production publish.
+
+
+## Second Beginner practice and onward navigation, 4 October 2026
+
+Implemented after the builder's Go ahead: a shared synthetic task catalog, second practice, Next challenge after a point or completed-with-help, per-practice attempts and points, review without duplicate rewards, current-practice persistence and challenge-specific pending/request recovery. Existing browser keys and backend rows for practice 1 remain usable; missing backend challenge IDs are interpreted as beginner-01. Convex enforces practice-2 access and prevents cross-practice correction/recheck bindings.
+
+Evidence:
+
+- 31 automated checks passed. Four execute registered Convex mutations and indexes through convex-test's local database: locked access without reserving usage, preserved legacy progress, independent attempts/points, supported unlock and recheck isolation. UI checks cover both onward routes, second-practice drafts and points, pending-save blocking and onward-save recovery.
+- Edge walks at 390 by 844 and 1280 by 900 used prepared API responses. Both completion routes opened practice 2; editing/reloading retained its draft, completing/reloading retained the expected total, and reviewing/returning made no extra requests or awards.
+- All 24 development-only previews passed 390px checks: visible text at least 16px, tappable controls at least 44 by 44, no horizontal overflow and no backend calls. No physical-phone keyboard or student comprehension result is claimed.
+- Build, Convex typecheck, schema/index push to the existing development deployment and the design detector passed.
+- Live Gemini generated the second task's three-step PDF submission instructions using the correct requirements. Its assessment then failed because Google's free-tier generate-content daily limit of 20 was exhausted; the SDK reported three automatic attempts. Database inspection confirmed second practice stayed at zero learning attempts and no point, while practice 1 retained its one attempt and earned point. No second-practice live assessment success or replay result is claimed. No billing change, quota increase or production publish occurred.
+
+Remaining for this milestone: successful live second-practice assessment/replay after provider quota resets, builder phone confirmation, and teacher review of prepared material before release. The local/browser checks prove mechanics, not AI teaching reliability or lasting student learning.

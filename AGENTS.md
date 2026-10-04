@@ -8,18 +8,18 @@ Interface: a web page designed for a phone. Students edit a supplied weak prompt
 
 Business logic: Convex generates the answer and assesses the student's prompt, answer judgment and correction explanation against prepared requirements. It records attempts and justified points, handles retries without duplicates, and permits one completed Challenge recheck of the same assessment without consuming an attempt. If AI still disagrees, the student continues normally.
 
-Current build: Beginner practice 1, both correction paths, two retries, worked example, one point, anonymous device saving, assessment recheck and recovery. The three-level game and account saving remain planned v1 work, not implemented features.
+Current build: both Beginner practices, Next challenge from either completion route, separate points and initial-plus-two-retry allowances, both correction paths, worked examples, anonymous device saving, assessment recheck and recovery. The three-level game and account saving remain planned v1 work. Live second-practice generation passed; its assessment remains unverified because Gemini's free daily quota was exhausted.
 
 Database:
 
 | Table | What it remembers |
 | --- | --- |
-| practiceSessions | Anonymous session token, assessed attempt count, whether the first practice earned its point, latest assessment ID. Currently one challenge per session. |
-| practiceJobs | Generation, assessment and recheck requests; request IDs, submitted inputs, pending/done/failed state, results, challenged assessment ID and reviewed result. Original assessment remains retained. |
+| practiceSessions | Anonymous session token, challenge ID, assessed attempt count, earned point and latest assessment ID, separately per practice. Legacy rows without challenge ID belong to practice 1 and are preserved. |
+| practiceJobs | Generation, assessment and recheck requests; challenge IDs, request IDs, submitted inputs, pending/done/failed state, results, challenged assessment ID and reviewed result. Original assessment remains retained. |
 | practiceUsage | UTC day and reserved app request count across the deployment. |
 | m0Checks | Historical setup-test records only, retained to avoid deleting existing data. Never product usage. |
 
-Drafts and recovery requests are also stored in the student's browser. This is device saving, not an account backup. Prepared challenge material lives in reviewed project files; account/progression tables will be added only in their milestones. The Convex agent component is installed; automatic chat history and message saving are disabled for these practice calls.
+Drafts, the current practice and recovery requests are also stored in the student's browser. This is device saving, not an account backup. Prepared challenge material is shared by the screen and backend in shared/practiceTasks.mjs; teacher review is still pending. Account/progression tables will be added only in their milestones. The Convex agent component is installed; automatic chat history and message saving are disabled for these practice calls.
 
 Third party:
 

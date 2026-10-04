@@ -320,3 +320,10 @@ Builder decision: students may choose Challenge. AI rechecks the same submitted 
 Use the existing approved assessment-loading and unavailable messages during recheck. Keep the submission visible. After success show the rechecked explanation and evidence; remove Challenge for that assessment and retain the normal correction/result path. If recheck fails, keep the original decision and offer Retry assessment. Pending saving uses Retry saving, without another AI call.
 
 The first-practice implementation now includes the approved first-visit and answer-ready instructions, correct assessment loading text, explicit assessment retries, previous judgment during judgment-only correction, read-only submitted work on results, and interrupted-request/pending-save recovery. Phone state previews are development-only, prepared, separate from saved progress and credit-free. See PHONE_STATES.md. Additional practices, finals and account saving remain outside this implemented slice.
+
+
+## Current Beginner milestone implementation
+
+Both Beginner practices now use the approved shared practice page. Next challenge opens practice 2 after either saved practice-1 outcome. The progress strip names each practice separately, retains supported completion without a point, and allows reviewing completed work without another award. Practice 2 uses its own task and prepared examples. After practice 2, the existing More challenges will follow message remains truthful: no final or badge is offered before its milestone is built.
+
+Saved current-practice selection, per-practice drafts and results survive reopening. Navigation is blocked while a request or result save is pending; a failed onward save retains the current result and offers save-only recovery. The two-practice flow passed prepared-response Edge walks at 390px and desktop width. All 24 development state previews passed phone-width size and overflow checks. Live second-task generation passed, but assessment hit Gemini's free daily quota; no successful live second-practice assessment or physical-phone observation is claimed. See M0_VERIFICATION.md.

@@ -8,7 +8,7 @@ The first Beginner practice and its recovery/recheck states are implemented and 
 
 ## Next milestone: Beginner practice 2 and onward navigation
 
-Status: proposed, awaiting the builder's yes before code.
+Status: implemented in development after the builder's Go ahead. Awaiting the builder's phone confirmation and successful live second-practice assessment after Gemini's free daily quota resets. Not published.
 
 I can finish practice 1, choose Next challenge and complete a second prepared Beginner practice with its own task, requirements, supplied prompt and reviewed example.
 
@@ -19,6 +19,8 @@ I can close and reopen without losing which practice I reached, its confirmed wo
 I can reach the second practice from both independent success and completed-with-help. No independent final, badge or next-level unlock is claimed in this milestone.
 
 Proof: focused checks for per-challenge attempt/point isolation, navigation without duplicate awards, both completion routes and reopening; browser walk at 390px; instructions for the builder's phone check. Challenge content needs teacher review before release; do not invent that review.
+
+Evidence: 31 automated checks passed, including actual Convex mutations in a local test database. Edge walks at 390px and 1280px reached practice 2 from both completion routes, retained drafts/results after reload and retained separate points. All 24 development previews passed phone-width text/target/overflow checks without backend calls. Live Gemini generated the second task correctly; assessment was blocked by the provider's free-tier quota, with zero second-practice attempts consumed and the first point retained. See M0_VERIFICATION.md and PHONE_STATES.md.
 
 ## Later milestones, in order
 

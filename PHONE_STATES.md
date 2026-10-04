@@ -28,6 +28,10 @@ Choose a state from the list. These are clearly labelled prepared examples; they
 | with help | Two retries exhausted and worked example |
 | save pending | Checked result held pending; tap Retry saving without reassessment |
 | device error | Saving unavailable; copy-work instruction |
+| second first | Practice 2 with its own instructions and starting prompt |
+| second done | Both practice points displayed separately; final is not offered yet |
+| second help | Practice 2 completed with help, without a second point |
+| second save pending | Second result held pending; Retry saving does not reassess |
 
 The loading and error links intentionally hold that state so you have time to inspect it. Other preview actions use prepared responses.
 
@@ -41,8 +45,16 @@ npm run dev -- --host 0.0.0.0 --port 5175
 
 Use the Wi-Fi Network address printed by the command; the computer's address can change. Append `/state-preview`. Leave that PowerShell window running. If the phone cannot open it, confirm both devices are on the same Wi-Fi and that Windows allows this local server on your private network.
 
-Only the first Beginner practice is implemented. Account saving, practice 2 and independent finals are not previewed or claimed as built. No production publishing occurred.
+Both Beginner practices are implemented. Account saving and independent finals are not previewed or claimed as built. No production publishing occurred.
 
-Verification: 20 preview states walked in Edge at 390 ? 844, with no backend calls, text below 16px, targets below 44 ? 44 or horizontal overflow. Challenge, retry after recheck failure, and save retry were exercised. Actual physical-phone keyboard testing is still for the builder to perform.
+Verification: 24 preview states walked in Edge at 390 by 844, with no backend calls, text below 16px, targets below 44 by 44 or horizontal overflow. Challenge, retry after recheck failure, and save retry were exercised. Actual physical-phone keyboard testing is still for the builder to perform.
+
+## Check the new milestone without spending credits
+
+Open done, tap Next challenge and check that practice 2 has different requirements and a fresh editable prompt. Return to the preview list, open with help and tap Next challenge again: practice 2 should still open, without a point for practice 1. Open second done to inspect two displayed points, and second save pending to check save-only recovery.
+
+For real persistence, use Live practice in the same browser: after completing practice 1, tap Next challenge, edit practice 2, then close and reopen. Its draft and the first outcome should remain. Completing practice 2 should retain both outcomes; reviewing practice 1 and returning must not award another point. This requires available Gemini quota for any unfinished assessments.
+
+The live second-practice assessment check on 4 October was blocked by Gemini's free daily limit. Generation succeeded and the failed assessment consumed no learning attempt. Do not repeatedly press Retry assessment while the provider quota is exhausted; check again after it resets. No billing or usage limit was raised.
 
 Recovery preserves the same request ID across reload and stores a pending checked result separately until saving succeeds. If all browser storage is unavailable, device recovery cannot be guaranteed; the page tells the student to keep it open and copy the work.

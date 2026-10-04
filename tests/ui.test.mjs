@@ -15,6 +15,73 @@ function type(w,id,value){const el=w.document.getElementById(id);assert.ok(el,`M
 const notYet={id:"assessment1",earned:false,route:"prompt",gap:"Add the event facts",why:"Students need the time",evidence:"Your request omits time"};
 const passed={id:"assessment2",earned:true,route:"none",gap:"",why:"All requirements checked",evidence:"Facts present"};
 
+test("Next challenge keeps the first point and gives practice 2 its own attempts and prompt",async()=>{
+ const f=fixture([{id:"answer1",text:"Invitation"},passed,{id:"answer2",text:"Three steps"},{...passed,id:"assessment3"}]);
+ try{
+  await waitFor(()=>f.w.document.getElementById("prompt"));button(f.w,"Generate answer");
+  await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","Meets the invitation requirements");button(f.w,"Check my judgment");
+  await waitFor(()=>f.w.document.body.textContent.includes("Skill point earned"));button(f.w,"Next challenge");
+  await waitFor(()=>f.w.document.body.textContent.includes("Make the instructions easy to follow"));
+  assert.equal(f.w.document.getElementById("prompt").value,"Tell students how to submit their work.");
+  assert.match(f.w.document.body.textContent,/0 of 3 attempts used/);
+  button(f.w,"Generate answer");await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","Three steps include the file and deadline");button(f.w,"Check my judgment");
+  await waitFor(()=>JSON.parse(f.w.localStorage.getItem("prompt-game:beginner-02:v1"))?.point);
+  assert.equal(f.calls[2].args[0].challengeId,"beginner-02");
+  assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,1);
+  assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).point,true);
+  assert.equal(JSON.parse(f.w.localStorage.getItem("prompt-game:beginner-02:v1")).attempts,1);
+  assert.match(f.w.document.querySelector(".points").textContent,/2.*6/);
+  assert.equal(f.calls.length,4);
+ }finally{f.dom.window.close();}
+});
+
+test("completed-with-help unlocks practice 2 without a point and reopening retains its draft",async()=>{
+ const first={version:1,stage:"example",prompt:"Old prompt",judgment:"Old judgment",explanation:"",answer:{id:"answer1",text:"Answer"},feedback:notYet,attempts:3,point:false,correcting:false};
+ const f=fixture([],{[KEY]:first});let reopened;
+ try{
+  await waitFor(()=>f.w.document.body.textContent.includes("Completed with help"));button(f.w,"Next challenge");
+  await waitFor(()=>f.w.document.body.textContent.includes("Make the instructions easy to follow"));type(f.w,"prompt","My second challenge draft");
+  const seed=Object.fromEntries(Object.keys(f.w.localStorage).map(k=>[k,JSON.parse(f.w.localStorage.getItem(k))]));
+  reopened=fixture([],seed);await waitFor(()=>reopened.w.document.getElementById("prompt")?.value==="My second challenge draft");
+  assert.match(reopened.w.document.body.textContent,/Completed with help/);
+  assert.match(reopened.w.document.querySelector(".points").textContent,/0.*6/);
+  assert.equal(f.calls.length+reopened.calls.length,0);
+ }finally{f.dom.window.close();reopened?.dom.window.close();}
+});
+
+test("a pending first-practice save does not permit Next challenge",async()=>{
+ const next={version:1,stage:"complete",prompt:"Prompt",judgment:"Judgment",explanation:"",answer:{id:"answer1",text:"Answer"},feedback:passed,attempts:1,point:true,correcting:false};
+ const f=fixture([],{"prompt-game:request-recovery:v1":{next}});
+ try{await waitFor(()=>f.w.document.body.textContent.includes("Save pending"));assert.equal([...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Next challenge"),false);button(f.w,"Retry saving");await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Next challenge"));assert.equal(f.calls.length,0);}finally{f.dom.window.close();}
+});
+
+test("a failed onward save stays on practice 1 and offers save-only recovery",async()=>{
+ const first={version:1,stage:"complete",prompt:"Prompt",judgment:"Judgment",explanation:"",answer:{id:"answer1",text:"Answer"},feedback:passed,attempts:1,point:true,correcting:false};
+ const f=fixture([],{[KEY]:first});
+ try{
+  await waitFor(()=>f.w.document.body.textContent.includes("Skill point earned"));
+  const proto=f.w.Storage.prototype;const original=proto.setItem;
+  proto.setItem=function(key,value){if(key==="prompt-game:active-practice:v1")throw Error("Storage unavailable");return original.call(this,key,value);};
+  button(f.w,"Next challenge");await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Retry saving"));
+  assert.match(f.w.document.body.textContent,/Make the invitation useful/);proto.setItem=original;
+  button(f.w,"Retry saving");await waitFor(()=>![...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Retry saving"));button(f.w,"Next challenge");
+  await waitFor(()=>f.w.document.body.textContent.includes("Make the instructions easy to follow"));assert.equal(f.calls.length,0);
+ }finally{f.dom.window.close();}
+});
+
+test("reopening a pending second-practice result saves to practice 2 without overwriting practice 1",async()=>{
+ const first={version:1,stage:"complete",prompt:"Invitation prompt",judgment:"Judgment",explanation:"",answer:{id:"answer1",text:"Invitation"},feedback:passed,attempts:1,point:true,correcting:false};
+ const next={...first,prompt:"Submission instructions prompt",answer:{id:"answer2",text:"Three instructions"},feedback:{...passed,id:"second-assessment"}};
+ const f=fixture([],{[KEY]:first,"prompt-game:request-recovery:v1":{next,challengeId:"beginner-02"}});
+ try{
+  await waitFor(()=>f.w.document.body.textContent.includes("Make the instructions easy to follow"));assert.match(f.w.document.querySelector(".points").textContent,/1.*6/);
+  button(f.w,"Retry saving");await waitFor(()=>f.w.localStorage.getItem("prompt-game:beginner-02:v1"));
+  assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).prompt,"Invitation prompt");
+  assert.equal(JSON.parse(f.w.localStorage.getItem("prompt-game:beginner-02:v1")).prompt,"Submission instructions prompt");
+  assert.match(f.w.document.querySelector(".points").textContent,/2.*6/);assert.equal(f.calls.length,0);
+ }finally{f.dom.window.close();}
+});
+
 test("prompt correction judges the replacement answer and preserves the submitted explanation",async()=>{
  const f=fixture([{id:"answer1",text:"Old answer"},notYet,{id:"answer2",text:"Revised answer"},passed]);
  try{await waitFor(()=>f.w.document.getElementById("prompt"));button(f.w,"Generate answer");await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","The time is missing");button(f.w,"Check my judgment");await waitFor(()=>f.w.document.body.textContent.includes("One change to try"));button(f.w,"Try again");await waitFor(()=>f.w.document.getElementById("explanation"));type(f.w,"prompt","Include the complete task facts and limits");type(f.w,"explanation","The time tells students when to attend");button(f.w,"Generate revised answer");await waitFor(()=>f.w.document.getElementById("judgment"));assert.equal(f.w.document.getElementById("judgment").value,"");type(f.w,"judgment","All facts now meet the task");button(f.w,"Check my correction");await waitFor(()=>f.w.document.body.textContent.includes("Skill point earned"));assert.equal(f.calls[3].args[0].answerId,"answer2");assert.equal(f.calls[3].args[0].explanation,"The time tells students when to attend");}finally{f.dom.window.close();}

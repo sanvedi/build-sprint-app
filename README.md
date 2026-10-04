@@ -1,6 +1,6 @@
 # Prompting Game
 
-Students edit weak prompts, compare AI answers, explain corrections and complete fresh challenges without hints. The first Beginner practice is implemented and verified in development with Gemini, device recovery and phone-width browser checks. The full game, account backup and public release remain incomplete.
+Students edit weak prompts, compare AI answers, explain corrections and complete fresh challenges without hints. Both Beginner practices are implemented with separate progress, device recovery and phone-width browser checks. Live Gemini generation passed for practice 2; its live assessment check was blocked by the free daily quota. The full game, account backup and public release remain incomplete.
 
 - PRODUCT.md: learning flow and game rules.
 - IDEA_SCOPE.md: active scope, milestones and proof.
@@ -14,7 +14,7 @@ Students edit weak prompts, compare AI answers, explain corrections and complete
 
 ## Commands
 
-npm install installs dependencies. npm run dev starts the first practice page. npm run build builds it. npm run typecheck checks Convex code.
+npm install installs dependencies. npm run dev starts the practice page. npm run build builds it. npm run typecheck checks Convex code.
 
 npm run deploy publishes backend and static files through Convex static hosting. Git push does not deploy. Existing hosting address: https://combative-jaguar-50.convex.site; no game is verified there. Local changes do not update that site until deployed.
 
@@ -24,4 +24,4 @@ The retired scheduling command is removed. Existing historical test rows are pre
 
 ## Verification
 
-npm test runs focused state, assessment-rule and screen-interaction checks. UI tests use prepared responses, not live AI. M0_VERIFICATION.md records the evidence and limitations. The first practice stops at its own completion; remaining challenges and account backup are not represented as available.
+npm test runs focused state, assessment-rule, Convex mutation and screen-interaction checks. Backend tests use a local test database; UI tests use prepared responses, not live AI. M0_VERIFICATION.md records the evidence and limitations. Practice 1 opens practice 2 after a point or supported completion. Independent finals, remaining levels and account backup are not represented as available.
