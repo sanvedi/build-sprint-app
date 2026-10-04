@@ -144,21 +144,41 @@ Done on an unsuccessful attempt: Not yet. Review the feedback and return to prac
 
 Passing unlocks the next level; passing Pro finishes the game. Failure returns to practice, then an unseen reviewed final variant. If both variants were seen without a pass, keep the next level locked and explain: Keep practising. Another fresh final challenge is needed to unlock the next level. Do not offer a nonworking unlock button.
 
-### Save progress
+### Save progress and account recovery
 
-For: keeping progress across devices after the student has received value.
+For: keeping progress across devices after first value, without losing the current guest attempt or existing account progress.
 
-Top to bottom: Save your progress; explanation of account backup versus device-only saving; Convex Auth sign-in controls; return to current challenge. Authentication methods follow the authorized implementation; no outside sign-in service.
+Stage 1 ? choose saving:
 
-Main action: Save my progress -> sign-in, attach the guest attempt, and return to the current challenge.
-Secondary action: Keep practising on this device -> current challenge, preserving the guest attempt.
+- Visible: current challenge, answer, judgment, feedback and earned/pending result; Save your progress explains device-only storage versus account backup.
+- Editable: authorized Convex Auth sign-in fields only; do not discard or reset the challenge while signing in.
+- One main action: Save my progress -> sign-in and attach the locally retained guest attempt to the account.
+- Secondary action: Keep practising on this device -> return to the unchanged challenge. This is not a claim of account backup.
 
-Empty: Your progress is currently saved on this device only.
+Stage 2 ? attach guest progress:
+
+- Visible: the complete guest attempt remains available, with Saving your progress to your account. Do not clear local work before a confirmed successful save.
+- Submitted: the retained guest attempts and already-assessed results. Do not regenerate answers or repeat assessment to save them.
+- New account with no progress: attach the guest attempt and restore it as the current challenge.
+- Account already containing progress: retain both histories. Never replace a confirmed account attempt with a guest draft. Preserve completed practices, passed levels and badges; award at most one point per practice challenge. Keep all seen final variants recorded, so sign-in cannot make a previously seen final appear fresh.
+- If both account and guest contain different drafts for the same challenge, keep both and show their saved times and short previews. Main action: Continue account draft. Secondary action: Continue this device's draft. Choosing which to continue does not delete the other or overwrite evaluated attempts.
+- Done: Progress saved to your account. Return to the challenge the student selected, with confirmed account progress visible.
+
+Stage 3 ? recover a failed account save:
+
+- Visible: Account saving failed. Your work is still on this device. Keep the prompt, answer, judgment, explanation, feedback and already-assessed outcome visible. Mark that outcome Saved on this device only or Not yet saved to your account, according to actual storage state.
+- Existing account progress remains intact. Do not display a guest reward as confirmed account progress or erase local work after a partial attachment.
+- One main action: Retry account save -> retry attaching the same retained attempts and results. Successful pieces are not duplicated; no new AI assessment or generation is triggered.
+- If sign-in expired, use Sign in to retry -> authenticate, then retry saving the same work. Return to the intended challenge rather than the beginning.
+- Secondary action: Keep practising on this device. Retain the unsynced work for the next account-save attempt.
+- If device storage also failed, say This work is not saved. Keep this page open and copy your work before leaving. Do not claim recovery after closing in that state.
+
+Empty: Your progress is currently saved on this device only, shown only when device storage succeeded.
 Loading: Saving your progress to your account.
-Error: Account saving failed. Your work is still on this device. Try again.
-Done: Progress saved to your account.
+Error: Account saving failed. Your work is still on this device, shown only when true.
+Done: Progress saved to your account, shown only after confirmation.
 
-Show the device-only statement only when local saving succeeded. Closing and reopening restores confirmed drafts, attempts, points and badges; never claim unsaved changes are backed up.
+Closing and reopening restores confirmed device work or account progress. An unsuccessful account save remains clearly unsynced; signing in again offers Retry account save. Retrying an already-assessed result saves that exact result, without reconsidering the student's judgment or consuming an attempt. Another account cannot receive the guest attempt automatically: require the student to choose Save my progress while signed in to that account.
 
 ### Level result and game completion
 
