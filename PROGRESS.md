@@ -14,3 +14,5 @@ Keep one factual line per completed or builder-confirmed step. Distinguish devel
 - 2026-10-04: Builder reported the published game works. No detailed generation, assessment, replay or mobile-data observations were supplied; previous automated quota-failure evidence remains historical.
 
 - 2026-10-04: Final AGENTS.md updated with current published-build facts, the builder's live confirmation, working rules, secret handling and AI limits; live page returned HTTP 200.
+
+- 2026-10-04: Fixed live Beginner answer generation after Gemini 3.8 Flash exhausted its free request quota. Generation alone now uses the production setting PROMPT_GAME_GENERATION_MODEL=gemini-3.5-flash-lite; assessment, game rules and screens unchanged. Deployed only the existing live release plus this fix with npm run deploy. Verified by clicking Generate answer in Edge at 390px and reading its real answer; release tests 33/33 and typecheck passed. No API key printed or committed.
