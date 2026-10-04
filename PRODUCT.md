@@ -2,7 +2,7 @@
 
 Product brief completed 4 October 2026. Working name; final branding is undecided.
 
-The builder asked to complete this brief and move forward. Explicitly agreed choices are distinguished below from defaults chosen to finish the first-version specification. This document specifies behavior. Both Beginner practices are published. The Beginner final, alternate and badge are implemented in development with automated/browser checks recorded in M0_VERIFICATION.md; public final awards remain disabled pending reviewed material and quantitative feedback-gate evidence. Full three-level gameplay and account saving remain pending. PLAN.md gives the next implementation milestone; PROGRESS.md records completed steps.
+The builder asked to complete this brief and move forward. Explicitly agreed choices are distinguished below from defaults chosen to finish the first-version specification. This document specifies behavior. Both Beginner practices are published. The Beginner final, alternate and badge are implemented in development with automated/browser checks recorded in M0_VERIFICATION.md; the builder explicitly authorized publishing the final, while reviewed material and quantitative feedback-gate evidence remain unrecorded. Full three-level gameplay and account saving remain pending. PLAN.md gives the next implementation milestone; PROGRESS.md records completed steps.
 
 ## 1. The job
 

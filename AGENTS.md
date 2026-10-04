@@ -10,7 +10,7 @@ Interface: a web page designed for a phone. Students edit a supplied weak prompt
 
 Business logic: Convex generates the answer and assesses the student's prompt, answer judgment and correction explanation against prepared requirements. It records attempts and justified points, handles retries without duplicates, and permits one completed Challenge recheck of the same assessment without consuming an attempt. If AI still disagrees, the student continues normally.
 
-Current build: The unpublished Beginner final draft is preserved at git tag unpublished-beginner-final. Its prior development checks remain historical; current main and the live app contain only the two practices. The current published build contains both Beginner practices, Next challenge from either completion route, separate points and initial-plus-two-retry allowances, both correction paths, worked examples, anonymous device saving, assessment recheck and recovery. The three-level game and account saving remain planned v1 work. Both practices now have a verified live browser journey at 390px: generation, judgment, feedback, prompt correction, judgment-only correction, justified points, Next challenge, assessment retry, save-only recovery, Challenge recheck and reopening. This proves working mechanics, not AI teaching reliability or physical-phone usability.
+Current build: The Beginner final and alternate are included following the builder's explicit Publish Final Assessment instruction. The earlier draft remains preserved at git tag unpublished-beginner-final. The current published build contains both Beginner practices, Next challenge from either completion route, separate points and initial-plus-two-retry allowances, both correction paths, worked examples, anonymous device saving, assessment recheck and recovery. The three-level game and account saving remain planned v1 work. Both practices now have a verified live browser journey at 390px: generation, judgment, feedback, prompt correction, judgment-only correction, justified points, Next challenge, assessment retry, save-only recovery, Challenge recheck and reopening. This proves working mechanics, not AI teaching reliability or physical-phone usability.
 
 Database:
 
@@ -18,11 +18,11 @@ Database:
 | --- | --- |
 | practiceSessions | Anonymous session token, challenge ID, assessed attempt count, earned point and latest assessment ID, separately per practice. Legacy rows without challenge ID belong to practice 1 and are preserved. |
 | practiceJobs | Generation, assessment and recheck requests; challenge IDs, request IDs, submitted inputs, pending/done/failed state, results, challenged assessment ID and reviewed result. Original assessment remains retained. |
-| finalProgress (development draft only) | Anonymous token, seen final variants, current variant, Beginner badge decision and the supported practice required after failure. |
+| finalProgress | Anonymous token, seen final variants, current variant, Beginner badge decision and the supported practice required after failure. |
 | practiceUsage | UTC day and reserved app request count across the deployment. |
 | m0Checks | Historical setup-test records only, retained to avoid deleting existing data. Never product usage. |
 
-Drafts, the current practice and recovery requests are also stored in the student's browser. This is device saving, not an account backup. Prepared challenge material is shared by the screen and backend in shared/practiceTasks.mjs; teacher review is still pending. Account tables will be added in their milestone; finalProgress now records the Beginner final journey in development. The Convex agent component is installed; automatic chat history and message saving are disabled for these practice calls.
+Drafts, the current practice and recovery requests are also stored in the student's browser. This is device saving, not an account backup. Prepared challenge material is shared by the screen and backend in shared/practiceTasks.mjs; teacher review is still pending. Account tables will be added in their milestone; finalProgress records the Beginner final journey in development and production. The Convex agent component is installed; automatic chat history and message saving are disabled for these practice calls.
 
 Third party:
 
@@ -60,13 +60,13 @@ When I report a bug, I'll name the part. Look there first, find the cause, and t
 
 ## 3. Shipping
 
-Live address: https://combative-jaguar-50.convex.site . Both Beginner practices are published there. The complete published two-practice journey, both correction paths, assessment/save recovery, recheck and reopening passed real 390px Edge browser checks. Physical-phone/mobile-data checks and the full three-level game remain separate pending work.
+Live address: https://combative-jaguar-50.convex.site . Both Beginner practices and the final/alternate are published there. The complete published two-practice journey, both correction paths, assessment/save recovery, recheck and reopening passed real 390px Edge browser checks. Physical-phone/mobile-data checks and the full three-level game remain separate pending work.
 
 Repo: https://github.com/sanvedi/build-sprint-app , public (verified with GitHub CLI).
 
 Deploy: npm run deploy. A push does not deploy. After I confirm a milestone works: record progress, commit, push, then deploy. Follow the Convex static-hosting skill for release work and check the live flow afterward.
 
-Keys: GEMINI_API_KEY must be in Convex environment variables for development and production separately. Required settings are PROMPT_GAME_MODEL and PROMPT_GAME_AI_ENABLED; optional PROMPT_GAME_GENERATION_MODEL overrides only answer generation; PROMPT_GAME_DAILY_CALL_LIMIT controls the current app allowance. Development uses trustworthy-warthog-680. Production settings and successful generation, assessment and recheck are verified. Current main must match the deployed two-practice code. The final draft is preserved at git tag unpublished-beginner-final; do not restore or publish it during practice fixes. Never copy secrets into files or assume development settings carry over.
+Keys: GEMINI_API_KEY must be in Convex environment variables for development and production separately. Required settings are PROMPT_GAME_MODEL and PROMPT_GAME_AI_ENABLED; optional PROMPT_GAME_GENERATION_MODEL overrides only answer generation; PROMPT_GAME_DAILY_CALL_LIMIT controls the current app allowance. Development uses trustworthy-warthog-680. Production settings and successful generation, assessment and recheck are verified. Current main must match the deployed practices plus Beginner final. Do not publish Amateur or Pro during unrelated fixes. Never copy secrets into files or assume development settings carry over.
 
 .gitignore covers .env.local, .env and .env.*. Do not change that to track secrets.
 
@@ -74,26 +74,4 @@ Every usage limit, submission ownership check, attempt limit, point decision and
 
 Before I share the link: I open the published site on my phone, logged out, on mobile data, and complete the core flow once. Development Wi-Fi previews are not proof of the public release.
 
-Final release gate: PROMPT_GAME_FINALS_ENABLED is true in development only. It defaults to disabled when absent. Keep it disabled in production until reviewed task material and the required feedback-test evidence are recorded. Final passes do not add practice points. Seen variants must be recorded in Convex before displaying the task; reopening resumes rather than treating it as unseen.
-
-## 4. The AI call
-
-Model: production uses gemini-3.5-flash-lite for assessment/recheck through PROMPT_GAME_MODEL and for generation through PROMPT_GAME_GENERATION_MODEL. Development retains gemini-3.8-flash unless explicitly updated. Thinking: provider default; low/off has not been explicitly configured or approved as a change.
-
-What goes in: prepared task facts, the edited prompt and, for assessment, the exact generated answer, student judgment and correction explanation. Each student text field is limited to 6,000 characters in Convex. Serialized stored request input is limited to 20,000 characters. No personal PDFs, chats, photos or assignment uploads.
-
-Where it runs: Convex actions in convex/practice.ts using the Convex agent component and the Google AI SDK provider. Never call Gemini from the browser or expose its key there.
-
-Key: GEMINI_API_KEY in Convex environment variables, separately for dev and prod. Both environments have the required settings. Real production generation, assessment and recheck passed automated live-browser checks.
-
-Reply cap: maxOutputTokens 1,600 for generation; 2,000 for assessment and recheck. Tokens are small pieces of text. These are the implemented limits; the template's 500 was not adopted.
-
-Calls cap: currently 20 reserved app requests per UTC day across the deployment, controlled by PROMPT_GAME_DAILY_CALL_LIMIT and checked by a Convex mutation before generation/assessment/recheck. Failed reserved requests count against usage, but not learning attempts. The SDK can retry internally, so this is not an exact provider-call counter. No separate hourly Convex rate limiter is installed. Do not change limits without recording the approved choice and implementing it in Convex.
-
-Provider limit: monthly budget not chosen or verified. No paid upgrade is authorized. If paid use is approved, the builder sets a project spend cap in Google AI Studio and records the amount in PLAN.md. Do not promise an exact hard monthly ceiling: Google's project caps can overshoot during delayed processing (around ten minutes). See https://ai.google.dev/gemini-api/docs/billing/#project-spend-caps . Keep the app-side cap as well.
-
-When a cap is hit: read ConvexError.data as well as the message, show the existing daily-allowance message and UTC reset information, and preserve work. Never disguise DAILY_ALLOWANCE_REACHED as generic assessment failure. When generation fails: use the approved generation-error message. When assessment/recheck fails: keep the exact submission and show the approved assessment-unavailable message with Retry assessment. Retry saving writes the existing checked result only. Use DESIGN.md wording; ask me before inventing new product copy.
-
-Login: no account required for first value. Anonymous practice/device saving is implemented; optional Convex Auth sign-in and account recovery are later approved v1 milestones.
-
-The AI must never obey student instructions to alter scoring, invent task facts/requirements, reward a weak prompt solely for a lucky answer, penalise a sensible prompt solely for a bad answer correctly identified, or reveal final hints before independent submission. In-game points and badges must not be presented as proven lasting mastery.
+Final publication: the builder explicitly authorized publishing the Beginner final on 4 October 2026. PROMPT_GAME_FINALS_ENABLED is true in development and production. Teacher material review and quantitative feedback-test evidence remain unrecorded; publication does not imply this reliability gate passed. Final passes do not add practice points. Seen variants must be recorded in Convex before displaying the task; reopening resumes rather than treating it as unseen.

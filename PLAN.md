@@ -8,7 +8,7 @@ Both Beginner practices and their recovery/recheck states are implemented, publi
 
 ## Completed implementation milestone: Beginner practice 2 and onward navigation
 
-Status: implemented and published after the builder's Go ahead. The builder subsequently reported the live game works; this is a builder report, not a new automated AI/replay verification. Builder confirmed Next challenge opened practice 2 on their phone. Successful live generation, correction and second-practice assessment are now verified at https://combative-jaguar-50.convex.site using Gemini 3.5 Flash-Lite. Production keeps the two-practice release; final screens are not published.
+Status: implemented and published after the builder's Go ahead. The builder subsequently reported the live game works; this is a builder report, not a new automated AI/replay verification. Builder confirmed Next challenge opened practice 2 on their phone. Successful live generation, correction and second-practice assessment are now verified at https://combative-jaguar-50.convex.site using Gemini 3.5 Flash-Lite. The builder subsequently authorized publishing the Beginner final and alternate; Amateur/Pro and account backup remain unbuilt.
 
 I can finish practice 1, choose Next challenge and complete a second prepared Beginner practice with its own task, requirements, supplied prompt and reviewed example.
 
@@ -24,9 +24,9 @@ Evidence: 31 automated checks passed, including actual Convex mutations in a loc
 
 ## Next milestone: Beginner final and badge
 
-The unpublished implementation is preserved at git tag unpublished-beginner-final; current main matches the two-practice production app. Implemented in development after the builder said Lets build it. The hint-free final and alternate, badge, supported-practice return, fresh-variant restrictions, recheck and saving recovery are built. Awaiting the builder's phone confirmation. Public final awards remain disabled pending reviewed content and recorded feedback-gate evidence.
+The builder explicitly authorized publication with Publish Final Assessment. Restored the draft while preserving the latest phone and structured-error fixes. Implemented in development after the builder said Lets build it. The hint-free final and alternate, badge, supported-practice return, fresh-variant restrictions, recheck and saving recovery are built. Awaiting the builder's phone confirmation. Publication is now explicitly authorized by the builder; reviewed-content and quantitative feedback-gate evidence remain unrecorded and are not claimed passed.
 
-Evidence: 40 automated checks; prepared-response Edge pass/fail journeys at 390px and 1280px; 34 credit-free state previews without undersized text, tap targets or overflow; successful development schema/function push and a real final-access rejection before any AI call. No successful real Gemini final assessment or teacher reliability result is claimed. Development alone has PROMPT_GAME_FINALS_ENABLED=true; production has not been changed for this milestone.
+Evidence: 40 automated checks; prepared-response Edge pass/fail journeys at 390px and 1280px; 34 credit-free state previews without undersized text, tap targets or overflow; successful development schema/function push and a real final-access rejection before any AI call. No successful real Gemini final assessment or teacher reliability result is claimed. Earlier draft checks enabled PROMPT_GAME_FINALS_ENABLED in development only; the builder has now explicitly authorized production publication.
 
 ## Remaining milestones, in order
 
