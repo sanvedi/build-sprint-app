@@ -38,3 +38,5 @@ Keep one factual line per completed or builder-confirmed step. Distinguish devel
 - 2026-10-04: Builder explicitly authorized publishing the Beginner final and alternate. Restored the existing draft while retaining compact phone progress, the factual meta description and accurate cap messages. All 44 automated checks, typecheck and build passed. Existing points and the 20-request daily cap unchanged; teacher reliability evidence remains unrecorded.
 
 - 2026-10-04: Published the Beginner final and alternate as explicitly requested. Live opening at 390px and desktop, server-recorded seen variant, unchanged two practice points and reopening passed. Generation remains blocked by the existing exhausted daily cap; no real final pass is claimed.
+
+- 2026-10-05: Builder explicitly authorized practice display polish and deployment. Implemented the five requested changes in separate checkpoints; 54 automated checks, typecheck, build and local 390px checks passed. Live verification follows deployment; scoring, AI instructions, finals and the daily cap are unchanged.

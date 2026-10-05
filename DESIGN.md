@@ -359,3 +359,7 @@ Failure offers Return to practice, selecting practice 1 for a prompt gap or prac
 ## Approved phone refinement, 4 October 2026
 
 At phone widths the current Beginner practice and points share the first progress row. Amateur and Pro use one compact row, each marked Locked; their fuller unlock descriptions remain on desktop. Generate answer and Generate revised answer stay at the bottom of the phone viewport while the editor is open; they disappear on the judgment stage. Retain readable 16px-or-larger text, tap targets of at least 44px and bottom padding so the fixed action does not prevent reaching the remaining content. This changes layout only, not level access, points, attempts or learning rules.
+
+## Practice display polish, 5 October 2026
+
+The builder authorized five display fixes and publication: readable Markdown and maths in practice answers; point, concise success sentence and onward action before collapsed assessment evidence; closer phone task/example/editor with generation directly below; the same starting order and a distinct learning cue in each practice; adjacent judgment-checking status and a skill-focused page description. These changes do not alter backend scoring, points, attempt limits, AI instructions, model settings, usage allowance or final challenges. Practice 2 retains Start final challenge as its existing onward action. Display conversion retains the original answer as the assessment input. Saved legacy invitation work retains its task.
