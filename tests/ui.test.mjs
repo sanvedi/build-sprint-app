@@ -9,11 +9,42 @@ const compiled=await build({entryPoints:["src/main.jsx"],bundle:true,write:false
 const script=compiled.outputFiles[0].text;
 const KEY="prompt-game:beginner-01:v1";
 async function waitFor(fn){for(let i=0;i<100;i++){if(fn())return;await new Promise(r=>setTimeout(r,10));}assert.fail("Screen did not reach expected state");}
-function fixture(responses,seed={}){const calls=[];const dom=new JSDOM('<div id="root"></div>',{url:"http://localhost",runScripts:"dangerously",pretendToBeVisual:true});const w=dom.window;for(const [key,value] of Object.entries(seed))w.localStorage.setItem(key,JSON.stringify(value));Object.defineProperty(w.crypto,"randomUUID",{value:randomUUID});w.HTMLElement.prototype.scrollIntoView=function(){};w.fetch=async(url,options)=>{const body=JSON.parse(options.body);calls.push(body);const value=responses.shift();if(value instanceof Error)throw value;return new Response(JSON.stringify(value?.testErrorData?{status:"error",errorMessage:"Server Error",errorData:value.testErrorData}:{status:"success",value}),{status:200,headers:{"Content-Type":"application/json"}});};w.eval(script);return {dom,w,calls};}
+function fixture(responses,seed={}){const calls=[];const dom=new JSDOM('<div id="root"></div>',{url:"http://localhost",runScripts:"dangerously",pretendToBeVisual:true});const w=dom.window;for(const [key,value] of Object.entries(seed))w.localStorage.setItem(key,JSON.stringify(value));Object.defineProperty(w.crypto,"randomUUID",{value:randomUUID});w.HTMLElement.prototype.scrollIntoView=function(){};w.fetch=async(url,options)=>{const body=JSON.parse(options.body);calls.push(body);const value=await responses.shift();if(value instanceof Error)throw value;return new Response(JSON.stringify(value?.testErrorData?{status:"error",errorMessage:"Server Error",errorData:value.testErrorData}:{status:"success",value}),{status:200,headers:{"Content-Type":"application/json"}});};w.eval(script);return {dom,w,calls};}
 function button(w,text){const b=[...w.document.querySelectorAll("button")].find(x=>x.textContent===text);assert.ok(b,`Missing button ${text}`);assert.equal(b.disabled,false);b.click();}
 function type(w,id,value){const el=w.document.getElementById(id);assert.ok(el,`Missing field ${id}`);Object.getOwnPropertyDescriptor(w.HTMLTextAreaElement.prototype,"value").set.call(el,value);el.dispatchEvent(new w.Event("input",{bubbles:true}));}
 const notYet={id:"assessment1",earned:false,route:"prompt",gap:"Add the event facts",why:"Students need the time",evidence:"Your request omits time"};
 const passed={id:"assessment2",earned:true,route:"none",gap:"",why:"All requirements checked",evidence:"Facts present"};
+
+test("pending judgment shows a disabled checking button and nearby status without consuming an attempt",async()=>{
+ let finishAssessment;
+ const response=new Promise(resolve=>{finishAssessment=resolve;});
+ const f=fixture([{id:"answer1",text:"Mean 6; median 4."},response]);
+ try{
+  await waitFor(()=>f.w.document.getElementById("prompt"));button(f.w,"Generate answer");
+  await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","The sum divided by five is six; the middle number is four.");button(f.w,"Check my judgment");
+  await waitFor(()=>f.w.document.querySelector(".assessment-status"));
+  const action=f.w.document.querySelector(".assessment-action");
+  assert.equal(action.querySelector("button").textContent,"Checking your judgment");assert.equal(action.querySelector("button").disabled,true);
+  assert.equal(action.querySelector('[role="status"]').textContent,"Your work stays here.");
+  assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,0);
+  finishAssessment(passed);await waitFor(()=>f.w.document.querySelector(".result"));
+  assert.equal(f.w.document.querySelector(".assessment-status"),null);
+ }finally{finishAssessment(passed);f.dom.window.close();}
+});
+
+test("a practice point puts the concise result and onward action before collapsed evidence",async()=>{
+ const state={version:1,materialVersion:"quiz-v1",stage:"complete",point:true,attempts:1,prompt:"Explain both with an example",answer:{id:"answer",text:"Mean 6; median 4."},judgment:"Checked both calculations",explanation:"",feedback:passed};
+ const f=fixture([],{[KEY]:state});
+ try{
+  await waitFor(()=>f.w.document.querySelector(".assessment-details"));
+  const result=f.w.document.querySelector(".result"),details=result.querySelector(".assessment-details"),next=result.querySelector(".primary");
+  assert.equal(next.textContent,"Next challenge");assert.equal(details.open,false);
+  assert.ok(result.querySelector(".success-summary").compareDocumentPosition(next)&f.w.Node.DOCUMENT_POSITION_FOLLOWING);
+  assert.ok(next.compareDocumentPosition(details)&f.w.Node.DOCUMENT_POSITION_FOLLOWING);
+  assert.equal([...f.w.document.querySelectorAll("button")].filter(b=>b.textContent==="Next challenge").length,1);
+  assert.match(details.textContent,/Facts present/);
+ }finally{f.dom.window.close();}
+});
 
 test("practice answers render headings, lists and maths while retaining the exact generated text",async()=>{
  const raw=String.raw`## Calculating the mean
@@ -61,7 +92,7 @@ test("untagged saved invitation drafts and results keep their original task",asy
  try{
   await waitFor(()=>f.w.document.getElementById("prompt"));
   assert.match(f.w.document.body.textContent,/Make the invitation useful/);
-  assert.equal(f.w.document.querySelector(".mission-start"),null);
+  assert.ok(f.w.document.querySelector(".mission-start"));
   assert.equal(f.w.document.getElementById("prompt").value,"My invitation draft");
   assert.equal(f.calls.length,0);
  }finally{f.dom.window.close();}
