@@ -4,6 +4,7 @@ import type { MutationCtx } from "./_generated/server";
 import { practiceFinished, isFinal, isReview } from "../shared/practiceTasks.mjs";
 
 import { challengeValidator, materialVersionValidator, type Challenge } from "./challenges";
+import { recordLearningAttempt } from "./learningAttempts";
 function finalsEnabled(){if(process.env.PROMPT_GAME_FINALS_ENABLED!=="true")throw new ConvexError("FINAL_UNAVAILABLE");}
 async function sessionFor(ctx:MutationCtx,token:string,challengeId:Challenge){
   const current=await ctx.db.query("practiceSessions").withIndex("by_token_challenge",q=>q.eq("token",token).eq("challengeId",challengeId)).unique();
@@ -113,6 +114,7 @@ export const finish = internalMutation({
       const session=await sessionFor(ctx,job.token,challengeId);
       if(!session||session.attempts>=3||session.point)throw new ConvexError("PRACTICE_FINISHED");
       if(isFinal(challengeId)&&session.attempts)throw new ConvexError("PRACTICE_FINISHED");
+      await recordLearningAttempt(ctx,job,session.attempts+1);
       if(isFinal(challengeId)){
        const progress=await finalAccess(ctx,job.token,challengeId);
        const route=JSON.parse(a.result).route;

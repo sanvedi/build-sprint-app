@@ -11,6 +11,7 @@
 import type * as assessmentRules from "../assessmentRules.js";
 import type * as challenges from "../challenges.js";
 import type * as http from "../http.js";
+import type * as learningAttempts from "../learningAttempts.js";
 import type * as practice from "../practice.js";
 import type * as practiceData from "../practiceData.js";
 
@@ -24,6 +25,7 @@ declare const fullApi: ApiFromModules<{
   assessmentRules: typeof assessmentRules;
   challenges: typeof challenges;
   http: typeof http;
+  learningAttempts: typeof learningAttempts;
   practice: typeof practice;
   practiceData: typeof practiceData;
 }>;

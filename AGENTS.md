@@ -20,6 +20,7 @@ Database:
 | --- | --- |
 | practiceSessions | Anonymous session token, challenge ID, assessed attempt count, earned point and latest assessment ID, separately per practice. Legacy rows without challenge ID belong to practice 1 and are preserved. |
 | practiceJobs | Generation, assessment and recheck requests; challenge IDs, request IDs, submitted inputs, pending/done/failed state, results, challenged assessment ID and reviewed result. Original assessment remains retained. |
+| learningAttempts | Approved 5 October 2026; development only until release confirmation. One immutable snapshot per assessed submission: first prompt/AI answer, submitted prompt/current AI answer, previous/current judgment, correction explanation and linked generation/assessment/previous attempt. Optional studentEditedAnswerText is reserved; no direct answer editor is built. |
 | finalProgress | Anonymous token, seen final variants, current variant, Beginner badge decision and the supported practice required after failure. |
 | practiceUsage | UTC day and reserved app request count across the deployment. |
 | m0Checks | Historical setup-test records only, retained to avoid deleting existing data. Never product usage. |

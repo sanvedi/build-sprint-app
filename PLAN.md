@@ -58,3 +58,7 @@ These are recorded gaps, not approval to upgrade, change billing, silently relax
 ## Parked requests
 
 None added during the current milestone. Existing out-of-v1 ideas remain excluded by PRODUCT.md: uploads, assignment/presentation generation, message monitoring, payments, leaderboard, streaks, certificates and teacher dashboard.
+
+## Approved data-model addition, 5 October 2026
+
+Builder explicitly approved keeping the five existing tables and adding learningAttempts before database implementation. Implemented and verified in development, including real phone-width correction and exact saved-record inspection. No answer editor, account system, scoring change or AI instruction change is included. Next: builder checks the development flow; then record confirmation, push and deploy following AGENTS.md. The remaining full-game milestones above stay pending.
