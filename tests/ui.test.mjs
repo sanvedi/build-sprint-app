@@ -15,6 +15,27 @@ function type(w,id,value){const el=w.document.getElementById(id);assert.ok(el,`M
 const notYet={id:"assessment1",earned:false,route:"prompt",gap:"Add the event facts",why:"Students need the time",evidence:"Your request omits time"};
 const passed={id:"assessment2",earned:true,route:"none",gap:"",why:"All requirements checked",evidence:"Facts present"};
 
+test("practice answers render headings, lists and maths while retaining the exact generated text",async()=>{
+ const raw=String.raw`## Calculating the mean
+
+1. **Add** the values.
+2. Divide: $\frac{2 + 3 + 4 + 5 + 16}{5} = 6$.
+
+<script>window.answerRan=true</script>`;
+ const f=fixture([{id:"formatted-answer",text:raw}]);
+ try{
+  await waitFor(()=>f.w.document.getElementById("prompt"));button(f.w,"Generate answer");
+  await waitFor(()=>f.w.document.querySelector(".phone-answer .answer-content"));
+  const content=f.w.document.querySelector(".phone-answer .answer-content");
+  assert.equal(content.querySelector("h4").textContent,"Calculating the mean");
+  assert.equal(content.querySelectorAll("ol li").length,2);
+  assert.equal(content.querySelector("strong").textContent,"Add");
+  assert.match(content.textContent,/\(2 \+ 3 \+ 4 \+ 5 \+ 16\) divided by 5 = 6/);
+  assert.equal(content.querySelector("script"),null);assert.equal(f.w.answerRan,undefined);
+  assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).answer.text,raw);
+ }finally{f.dom.window.close();}
+});
+
 test("fresh quiz mission shows the weak answer first and retains its version after completion and reopening",async()=>{
  const f=fixture([{id:"quiz-answer",text:"For 2, 3, 4, 5, 16, mean is 6 and median is 4."},passed]);let reopened;
  try{
