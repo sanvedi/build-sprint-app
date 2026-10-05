@@ -1,5 +1,15 @@
 # Prompting Game: M0 verification
 
+## Real quiz mission verified after approved model switch, 5 October 2026
+
+The builder explicitly authorized switching development to Gemini 3.5 Flash-Lite. Set development PROMPT_GAME_MODEL=gemini-3.5-flash-lite; no generation override is set, so generation, assessment and recheck use it. Confirmed PROMPT_GAME_DAILY_CALL_LIMIT remains 20. Production and billing were not changed.
+
+The first real answer revealed that taskFacts passed assessmentNotes to generation, exposing pre-judgment feedback. Fixed that cause: quiz generation now receives subject reference facts only, while assessment/recheck retain mission requirements and grading instructions. The answer agent explicitly excludes grading/coaching. A regression check verifies separated payloads and retained legacy task facts. All 49 checks, typecheck, build and development push passed.
+
+At 390x844 in real Edge, a request for the mean/median distinction generated definitions without an example or premature assessment. The student's accurate judgment of that omission received prompt-gap feedback without a point. Adding a number example and explaining why generated correct mean 6 and median 4 for 2, 3, 4, 5, 16. Accurate judgment of both calculations and the even-count limitation earned exactly one point on attempt two. Reload retained it; Next challenge and reopening practice 2 made no further AI action. These were real Gemini responses, not prepared replacements. Synthetic screenshots/session data remain in ignored artifacts/.
+
+This supersedes the earlier unavailable-generation status for this mission. Physical-phone confirmation, teacher content review and the quantitative reliability gate remain pending. One working journey does not establish general grading reliability. The quiz mission remains unpublished.
+
 ## Quiz rescue mission in development, 5 October 2026
 
 The builder approved improving Beginner practice 1 around rescuing an unhelpful answer. Fresh starts show the quiz mission, Explain averages request, a labelled prepared vague answer before the editor, and a question about missing information. Feedback instructions connect gaps to the friend; confirmed success recognises a clear request and accurate judgment. Other challenges and final-return practice retain existing material.

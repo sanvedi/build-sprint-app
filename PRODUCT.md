@@ -1,5 +1,7 @@
 # Prompting Game
 
+Latest verification, 5 October 2026: the builder authorized development Gemini 3.5 Flash-Lite. Real quiz generation, gap feedback, correction, one justified point on attempt two, reopening and Next challenge passed in Edge at 390px. Separated answer generation from grading instructions after detecting premature feedback; 49 checks, build, typecheck and development push passed. The 20-request daily allowance, billing and production are unchanged. This supersedes earlier real-AI-blocked statements below; physical-phone confirmation, teacher review, quantitative feedback reliability evidence and quiz publication remain pending.
+
 ## Current approved problem and first-mission build, 5 October 2026
 
 Working problem statement: when AI gives a student an unhelpful answer, they struggle to identify what information is missing and make a useful correction. Rewriting feels like extra work, so they can stay stuck. This focuses on the reported DP experience; demand for a separate practice game remains unproven.

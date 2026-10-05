@@ -1,5 +1,7 @@
 # DESIGN.md
 
+Latest verification, 5 October 2026: the builder authorized development Gemini 3.5 Flash-Lite. Real quiz generation, gap feedback, correction, one justified point on attempt two, reopening and Next challenge passed in Edge at 390px. Separated answer generation from grading instructions after detecting premature feedback; 49 checks, build, typecheck and development push passed. The 20-request daily allowance, billing and production are unchanged. This supersedes earlier real-AI-blocked statements below; physical-phone confirmation, teacher review, quantitative feedback reliability evidence and quiz publication remain pending.
+
 ## Implemented first-mission refinement, 5 October 2026
 
 For fresh Beginner practice 1, the headline is Turn a vague answer into useful help. Supporting words: Spot what is missing. Make one useful edit. Check what changed. The quiz mission shows the starting request and prepared weak answer before the editor, then asks about missing information. Task requirements remain available in a collapsed control. Editor help says Add the missing detail. You do not need to start over.

@@ -1,5 +1,7 @@
 # Beginner mission: Help a friend before a quiz
 
+Latest verification, 5 October 2026: the builder authorized development Gemini 3.5 Flash-Lite. Real quiz generation, gap feedback, correction, one justified point on attempt two, reopening and Next challenge passed in Edge at 390px. Separated answer generation from grading instructions after detecting premature feedback; 49 checks, build, typecheck and development push passed. The 20-request daily allowance, billing and production are unchanged. This supersedes earlier real-AI-blocked statements below; physical-phone confirmation, teacher review, quantitative feedback reliability evidence and quiz publication remain pending.
+
 Status: mission, win rules and focused build approved by the builder on 5 October 2026. Implemented in development; prepared-response browser journeys passed. Real Gemini generation failed twice; real mission feedback, teacher review and student testing remain unverified. The published app remains unchanged.
 
 ## Student mission

@@ -1,5 +1,7 @@
 # AGENTS.md
 
+Latest verification, 5 October 2026: the builder authorized development Gemini 3.5 Flash-Lite. Real quiz generation, gap feedback, correction, one justified point on attempt two, reopening and Next challenge passed in Edge at 390px. Separated answer generation from grading instructions after detecting premature feedback; 49 checks, build, typecheck and development push passed. The 20-request daily allowance, billing and production are unchanged. This supersedes earlier real-AI-blocked statements below; physical-phone confirmation, teacher review, quantitative feedback reliability evidence and quiz publication remain pending.
+
 Project folder: C:\Users\LENOVO\build-sprint-app.
 
 Final project instructions, updated 4 October 2026. This file describes the current build and the rules for further work; it does not claim the full three-level game is complete.

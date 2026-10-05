@@ -1,5 +1,7 @@
 # Prompting Game: v1 build plan
 
+Latest verification, 5 October 2026: the builder authorized development Gemini 3.5 Flash-Lite. Real quiz generation, gap feedback, correction, one justified point on attempt two, reopening and Next challenge passed in Edge at 390px. Separated answer generation from grading instructions after detecting premature feedback; 49 checks, build, typecheck and development push passed. The 20-request daily allowance, billing and production are unchanged. This supersedes earlier real-AI-blocked statements below; physical-phone confirmation, teacher review, quantitative feedback reliability evidence and quiz publication remain pending.
+
 Active requirements: PRODUCT.md and IDEA_SCOPE.md. These describe the game, not implemented features. Historical snapshots are in archive/openloops/.
 
 Current first-mission milestone, 5 October 2026: the builder approved and development implements rescuing an unhelpful answer in Beginner practice 1. Fresh starts use the quiz mission; untagged drafts/jobs/sessions retain invitation material. Optional materialVersion fields pin new work without deleting or rewriting historical records. Generation, assessment and recheck use the matching task; other challenges, progression and points retain their rules. Prepared-response browser journeys and 48 checks passed. Real generation failed twice; actual feedback, builder phone confirmation and release remain pending. This supersedes the first-mission approval request below.

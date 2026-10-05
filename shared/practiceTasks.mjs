@@ -53,6 +53,13 @@ export const quizMission = {
 export function taskFor(id, materialVersion = "legacy-v1") {
   return id === "beginner-01" && materialVersion === "quiz-v1" ? quizMission : practiceTasks[id];
 }
+export function taskFacts(id, materialVersion = "legacy-v1", assessment = true) {
+  const task = taskFor(id, materialVersion);
+  if (!assessment && task === quizMission) return { referenceFacts: task.referenceFacts };
+  return { brief: task.brief, requirements: task.requirements,
+    ...(task.referenceFacts ? { referenceFacts: task.referenceFacts } : {}),
+    ...(assessment && task.assessmentNotes ? { assessmentNotes: task.assessmentNotes } : {}) };
+}
 export function isFinal(id) { return id.startsWith("beginner-final-"); }
 export function isReview(id) { return id.startsWith("beginner-review-"); }
 export function practiceFinished(state) { return Boolean(state && (state.completed || state.point || state.attempts >= 3)); }

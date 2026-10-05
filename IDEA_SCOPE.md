@@ -1,5 +1,7 @@
 # IDEA_SCOPE.md
 
+Latest verification, 5 October 2026: the builder authorized development Gemini 3.5 Flash-Lite. Real quiz generation, gap feedback, correction, one justified point on attempt two, reopening and Next challenge passed in Edge at 390px. Separated answer generation from grading instructions after detecting premature feedback; 49 checks, build, typecheck and development push passed. The 20-request daily allowance, billing and production are unchanged. This supersedes earlier real-AI-blocked statements below; physical-phone confirmation, teacher review, quantitative feedback reliability evidence and quiz publication remain pending.
+
 ## Active first-mission implementation, 5 October 2026
 
 The builder approved improving Beginner practice 1 around rescuing an unhelpful answer. The working problem is identifying missing information and making a useful correction when rewriting feels like extra work; see PRODUCT.md. The quiz mission is implemented in development; old invitation drafts and assessments retain their material version. Other challenges and all reward/recovery rules remain intact.
