@@ -27,3 +27,5 @@ main{padding-bottom:100px}
 .result .success-summary{margin:8px 0 0;font-weight:400}.result>.primary{margin-top:16px}.assessment-details{margin:20px 0 0;padding-top:12px;border-top:1px solid #d8dfda}.assessment-details h3{margin-top:20px}.assessment-details>p{white-space:pre-wrap}.assessment-challenge{margin-top:12px}
 
 .practice-page .challenge-heading h1{font-size:24px;margin-bottom:8px}.practice-page .mission-start{margin:16px 0}.practice-page .mission-start blockquote{margin:8px 0 12px}.practice-page .mission-start .evidence{margin-bottom:8px}.practice-page .editor>.primary{position:static;width:auto;margin:16px 0 0}.practice-page .editor{padding-bottom:0}@media(max-width:680px){main.practice-page{padding-bottom:32px}.practice-page .workspace{margin-top:20px}.practice-page .editor>.primary{width:100%}.practice-page .challenge-heading{gap:0}.practice-page .attempts{margin-bottom:4px}.practice-page .task-brief{margin-bottom:12px}.practice-page .requirements{margin-bottom:16px}}
+
+.learning-cue{font-size:16px;font-weight:600;margin:8px 0 16px}.practice-page .editor>.requirements{margin:12px 0}.practice-page .mission-start .what-to-notice{margin-bottom:8px}
