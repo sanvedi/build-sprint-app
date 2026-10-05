@@ -1,5 +1,15 @@
 # Prompting Game: M0 verification
 
+## Quiz mission published and checked, 5 October 2026
+
+The builder explicitly requested changing the published app. Committed the authorization record, pushed current main to GitHub, and ran npm run deploy successfully to https://combative-jaguar-50.convex.site. Production schema validation succeeded without deleting indexes. Confirmed production Gemini key presence without printing it, both model settings at gemini-3.5-flash-lite, daily limit 20 and finals enabled. No billing/settings increase occurred.
+
+Real Edge at 390x844 loaded the quiz mission for a fresh anonymous session with the prepared weak answer before the editor and no horizontal overflow. A clear request for mean versus median with the numbers 2, 3, 4, 5, 16 generated an accurate answer including both calculations and the even-count median rule, without premature feedback. Accurate student judgment earned exactly one point on attempt one. Reload retained the point; Next challenge opened practice 2, and another reload retained that practice. Reload/navigation made no further AI calls. This used real production Gemini generation and assessment; live correction remains covered by development real-AI and prepared browser evidence, not a new production correction check.
+
+A separate live browser seeded with synthetic untagged invitation progress still showed the invitation task and retained its existing point without AI calls. This proves screen compatibility with legacy saved state, not migration of a real student's record; backend version protections have mutation-test coverage. A fresh 1280px desktop visit also showed the mission without horizontal overflow.
+
+The first quiz mission is now published; other challenge material remains intact. Teacher content review, quantitative feedback reliability and physical-phone/mobile-data review remain pending. One successful synthetic journey does not prove student interest or general model reliability.
+
 ## Real quiz mission verified after approved model switch, 5 October 2026
 
 The builder explicitly authorized switching development to Gemini 3.5 Flash-Lite. Set development PROMPT_GAME_MODEL=gemini-3.5-flash-lite; no generation override is set, so generation, assessment and recheck use it. Confirmed PROMPT_GAME_DAILY_CALL_LIMIT remains 20. Production and billing were not changed.

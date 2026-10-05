@@ -2,6 +2,8 @@
 
 Keep one factual line per completed or builder-confirmed step. Distinguish development, public release, automated proof and builder reports. Details live in M0_VERIFICATION.md; this is not a claim that the whole v1 or feedback gate has passed.
 
+- 2026-10-05: Published the quiz mission after explicit builder instruction, GitHub push and npm run deploy. Real production generation/assessment, one point on attempt one, reopening and Next challenge passed in Edge at 390px; legacy saved-state compatibility and fresh desktop opening passed without AI calls. Model settings, daily allowance and billing unchanged; teacher reliability evidence and physical-phone/mobile-data confirmation remain pending.
+
 - 2026-10-05: Builder explicitly requested publishing the verified quiz mission. Proceeding with the existing Convex release workflow; this is release authorization, not a reported physical-phone check or teacher reliability result.
 
 - 2026-10-05: Builder authorized development Gemini 3.5 Flash-Lite; unchanged 20-request allowance confirmed. Separated generation from assessment instructions after a real premature-feedback failure; 49 checks/build/typecheck/development push passed. Real 390px quiz generation, gap feedback, correction, justified point on attempt two, reopening and Next challenge passed. Production, billing and publication unchanged; teacher reliability evidence and builder phone confirmation remain pending.
