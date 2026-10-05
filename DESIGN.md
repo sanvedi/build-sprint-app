@@ -1,5 +1,13 @@
 # DESIGN.md
 
+## Approved mission direction, 5 October 2026
+
+Lead each challenge with a small mission: a concrete situation, what the student needs to achieve and what success looks like. Present essential requirements as the conditions for achieving that goal. Keep these readable and available while editing and judging the answer.
+
+Connect comparison and feedback to the mission: what does this answer help accomplish, what would still go wrong, and how does the student's correction address it? After a confirmed success, explain the achieved outcome alongside the existing earned point or badge. Preserve accurate supported-completion and pending-save wording.
+
+This direction takes precedence over the earlier statement that playfulness comes only from progression, achievement and encouraging wording. Existing accessibility, stage actions, judgment targets, final hint restrictions and recovery rules still apply. Exact mission copy and screen changes are pending approval; no visual redesign or new game mechanics are specified here. The current app has not been changed or tested for this direction.
+
 Read this before building or changing any screen. If a choice isn't covered here, ask me instead of guessing. PRODUCT.md owns game rules; IDEA_SCOPE.md owns build order. This is a specification, not a built or browser-verified game.
 
 ## 1. The feeling, in labels

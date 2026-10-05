@@ -1,5 +1,11 @@
 # IDEA_SCOPE.md
 
+## Approved refinement, 5 October 2026
+
+Start with more interesting tasks: students solve small missions, with improving the supplied prompt and checking the answer as the way to succeed. PRODUCT.md records this approved direction. Each mission needs a concrete situation, a meaningful goal and a checkable outcome, while preserving prepared requirements and existing learning/reward rules.
+
+This is a documentation decision, not a completed feature or student validation. Exact missions and screen changes need agreement before implementation. No reduced-typing flow, additional game mechanics or expanded v1 scope is approved. The next product discussion is one Beginner mission example before applying the direction across challenges.
+
 This is the active build scope for the prompting game. PRODUCT.md owns the product behavior; this file translates it into implementation boundaries and proof. Retired material in archive/openloops/ must not govern the build. If these two active documents conflict, follow PRODUCT.md and resolve the mismatch before implementing it.
 
 ## 0. Scope status

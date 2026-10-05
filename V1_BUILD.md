@@ -2,6 +2,12 @@
 
 Active requirements: PRODUCT.md and IDEA_SCOPE.md. These describe the game, not implemented features. Historical snapshots are in archive/openloops/.
 
+## Approved mission refinement, 5 October 2026
+
+Challenges should be small missions with a concrete situation, a meaningful goal and a checkable successful outcome. Improving the supplied prompt and judging the actual AI answer are how the student achieves that goal. Connect feedback and confirmed results to the mission while retaining existing assessment, point, final, retry and saving rules.
+
+This direction is documented but not implemented. Agree one Beginner mission example, then obtain approval for its bounded implementation before changing challenge material or screens. Content review and feedback reliability requirements still apply; mission framing is not evidence that either has passed. No new game mechanics or services are authorized.
+
 ## Build sequence
 
 Follow PRODUCT.md section 10 in order. First prepare one teacher-reviewed challenge and test AI feedback without building the app; then pass the 12-submission reliability gate. Build one practice flow and its correction/explanation, retry recovery, Beginner final, sign-in and persistence. Expand to all levels only after that journey works; deploy and observe students.

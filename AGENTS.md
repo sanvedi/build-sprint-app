@@ -37,6 +37,8 @@ When I report a bug, I'll name the part. Look there first, find the cause, and t
 
 ## 2. How we work
 
+- Product direction approved 5 October 2026: make challenges small missions students want to solve, with improving the supplied prompt and judging the answer as the way to win. See PRODUCT.md and DESIGN.md. Exact mission content and screen changes remain to be agreed; this documentation decision does not authorize implementation, new game mechanics or deployment. Preserve existing learning, assessment, reward and recovery rules.
+
 - Read IDEA_SCOPE.md, PRODUCT.md, PLAN.md and PROGRESS.md before anything else. Read DESIGN.md before screen work. Read M0_VERIFICATION.md when deciding what has actually been proved.
 - Before building a new milestone or feature, explain in two or three plain sentences what I want and your plan. Wait for my yes. For an authorized bug fix, find the cause, fix it and check it without asking whether to start. Do not interpret a pasted template as approval to change the app.
 - Work on one milestone at a time: the next one in PLAN.md, end to end. Nothing outside it.

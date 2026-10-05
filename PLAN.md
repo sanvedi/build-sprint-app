@@ -4,6 +4,8 @@ PRODUCT.md owns product rules; DESIGN.md owns screens and approved words. This f
 
 ## Current position
 
+Product discussion update, 5 October 2026: the builder approved making challenges small missions students want to solve, with prompt improvement as the way to win. Record and refine this direction before further implementation. Next discussion: agree one Beginner mission's situation, goal and successful outcome. Then propose a bounded content/screen milestone for approval under AGENTS.md. Existing final verification and remaining implementation milestones remain pending; this documentation update does not authorize app changes or another deployment.
+
 Both Beginner practices and their recovery/recheck states are implemented, published and verified in a real live browser at 390px. Both correction paths, Next challenge, two independent points, exact assessment retry, save-only recovery, Challenge recheck and reopening passed. The full three-level game is not built. Feedback testing was reported complete, but the teacher labels and quantitative gate results remain unavailable; do not claim verified gate acceptance. See M0_VERIFICATION.md.
 
 ## Completed implementation milestone: Beginner practice 2 and onward navigation

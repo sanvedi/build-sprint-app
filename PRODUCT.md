@@ -1,5 +1,15 @@
 # Prompting Game
 
+## Approved product refinement, 5 October 2026
+
+The builder approved starting with more interesting tasks: give students a small mission they want to solve, and make improving the supplied prompt how they win. The concern that the current flow feels like homework with points attached is a product diagnosis, not recorded student evidence.
+
+Each challenge should establish a concrete situation, a goal that matters within that situation and a clear successful outcome. Prompt editing and checking the AI answer should help the student accomplish that mission. Feedback should connect a missing requirement to its consequence for the mission; success should explain what the student's work accomplished.
+
+Keep the existing learning rules: students edit a supplied weak prompt, judge the actual generated answer, and demonstrate a justified correction when needed. Mission success cannot be inferred from a lucky AI answer. Practice points, independent finals, badges, retries and recovery retain their existing criteria.
+
+This approves the product direction and documentation update. Exact missions, screen wording and implementation remain to be agreed. Less typing, new reward mechanics, timers, characters and visual redesign have not been approved. Whether missions make students want to continue remains untested.
+
 Product brief completed 4 October 2026. Working name; final branding is undecided.
 
 The builder asked to complete this brief and move forward. Explicitly agreed choices are distinguished below from defaults chosen to finish the first-version specification. This document specifies behavior. Both Beginner practices are published. The Beginner final, alternate and badge are implemented in development with automated/browser checks recorded in M0_VERIFICATION.md; the builder explicitly authorized publishing the final, while reviewed material and quantitative feedback-gate evidence remain unrecorded. Full three-level gameplay and account saving remain pending. PLAN.md gives the next implementation milestone; PROGRESS.md records completed steps.
