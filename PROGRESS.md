@@ -2,6 +2,8 @@
 
 Keep one factual line per completed or builder-confirmed step. Distinguish development, public release, automated proof and builder reports. Details live in M0_VERIFICATION.md; this is not a claim that the whole v1 or feedback gate has passed.
 
+- 2026-10-05: Builder approved the mean/median quiz mission and its prompt/judgment win rules; recorded learning/quiz-mission.md and linked it from product, design and planning notes. Implementation, teacher review and student testing remain pending.
+
 - 2026-10-05: Builder approved mission-based challenges as the product direction; updated PRODUCT.md, IDEA_SCOPE.md, DESIGN.md, PLAN.md, V1_BUILD.md and AGENTS.md. Exact missions and implementation remain pending; no app change, deployment or student engagement result is claimed.
 
 - 2026-10-04: First Beginner practice, correction paths, retries and save recovery implemented in development; real Gemini generation and assessment verified.

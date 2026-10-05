@@ -2,6 +2,8 @@
 
 ## Approved mission direction, 5 October 2026
 
+First approved example: learning/quiz-mission.md. Its round connects the friend's quiz problem, prompt editing, answer inspection and judgment. Result wording may acknowledge a clear request and an accurate answer check; do not claim the friend is ready for the quiz or has learned from a generated answer alone.
+
 Lead each challenge with a small mission: a concrete situation, what the student needs to achieve and what success looks like. Present essential requirements as the conditions for achieving that goal. Keep these readable and available while editing and judging the answer.
 
 Connect comparison and feedback to the mission: what does this answer help accomplish, what would still go wrong, and how does the student's correction address it? After a confirmed success, explain the achieved outcome alongside the existing earned point or badge. Preserve accurate supported-completion and pending-save wording.
