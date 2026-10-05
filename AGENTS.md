@@ -8,13 +8,15 @@ Final project instructions, updated 4 October 2026. This file describes the curr
 
 ## 1. How the product works
 
-Interface: a web page designed for a phone. Students edit a supplied weak prompt, inspect the AI answer and judge it against the task before receiving feedback.
+Interface: a web page designed for a phone. Students improve a weak prompt, read the AI answer, and explain whether it meets the task.
 
-Business logic: Convex generates the answer and assesses the student's prompt, answer judgment and correction explanation against prepared requirements. It records attempts and justified points, handles retries without duplicates, and permits one completed Challenge recheck of the same assessment without consuming an attempt. If AI still disagrees, the student continues normally.
+Business logic: Convex generates the answer, checks the student's prompt and judgment against prepared requirements, and gives feedback. It manages corrections, points, attempt limits, assessment rechecks and final challenge results. Retries do not create duplicate rewards; one completed recheck of the same assessment does not consume another attempt. If AI still disagrees, the student continues normally.
 
 Current build: The Beginner final and alternate are included following the builder's explicit Publish Final Assessment instruction. The earlier draft remains preserved at git tag unpublished-beginner-final. The current published build contains both Beginner practices, Next challenge from either completion route, separate points and initial-plus-two-retry allowances, both correction paths, worked examples, anonymous device saving, assessment recheck and recovery. The three-level game and account saving remain planned v1 work. Both practices now have a verified live browser journey at 390px: generation, judgment, feedback, prompt correction, judgment-only correction, justified points, Next challenge, assessment retry, save-only recovery, Challenge recheck and reopening. This proves working mechanics, not AI teaching reliability or physical-phone usability.
 
-Database:
+Database: remembers progress per challenge, prompts, original and revised AI answers, student judgments, correction explanations, feedback, points, attempts and final variants seen. Progress currently uses an anonymous device identifier; account backup is planned for v1. The new structured attempt-history table is verified in development but has not been published.
+
+Table details:
 
 | Table | What it remembers |
 | --- | --- |
@@ -36,7 +38,7 @@ Third party:
 
 Not in v1: completing assignments or presentations, personal uploads, WhatsApp/Gmail access, reminders, payments, leaderboard, streaks, certificates and a teacher dashboard. Optional sign-in after first value IS in the approved v1; it is not built yet.
 
-When I report a bug, I'll name the part. Look there first, find the cause, and tell me if I named the wrong part.
+Bug reports: when I report a bug, I'll name the part. Look there first, find the cause, and tell me if I named the wrong part.
 
 ## 2. How we work
 
