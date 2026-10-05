@@ -288,3 +288,16 @@ test("reopening a capped assessment preserves work without sending another reque
   assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,0);
  }finally{f.dom.window.close();}
 });
+
+test("editing a prompt after a generation cap keeps the reset message and disabled control on reopening",async()=>{
+ const f=fixture([{testErrorData:"DAILY_ALLOWANCE_REACHED"}]);let reopened;
+ try{
+  await waitFor(()=>f.w.document.getElementById("prompt"));button(f.w,"Generate answer");await waitFor(()=>f.w.document.querySelector('[role="alert"]'));
+  type(f.w,"prompt","My saved edit after the limit");await waitFor(()=>JSON.parse(f.w.localStorage.getItem(KEY)).prompt==="My saved edit after the limit");
+  assert.match(f.w.document.querySelector('[role="alert"]').textContent,/Today's practice limit is used up/);
+  const seed=Object.fromEntries([KEY,"prompt-game:request-recovery:v1"].map(key=>[key,JSON.parse(f.w.localStorage.getItem(key))]));reopened=fixture([],seed);
+  await waitFor(()=>reopened.w.document.getElementById("prompt"));assert.equal(reopened.w.document.getElementById("prompt").value,"My saved edit after the limit");
+  assert.match(reopened.w.document.querySelector('[role="alert"]').textContent,/Today's practice limit is used up/);
+  assert.equal([...reopened.w.document.querySelectorAll("button")].find(b=>b.textContent==="Generate answer").disabled,true);assert.equal(reopened.calls.length,0);
+ }finally{f.dom.window.close();reopened?.dom.window.close();}
+});
