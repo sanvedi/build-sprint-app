@@ -105,7 +105,7 @@ function App(){
       setRecords(old=>({...old,[challengeId]:s,[opened.challengeId]:next}));setChallengeId(opened.challengeId);setS(next);request.current=null;
     }catch(e){setError(message(e));}finally{setBusy("");}
   }
-  function edit(field,value){setError("");setErrorAction("");request.current=null;if(!preview)forget();persist({...s,[field]:value});}
+  function edit(field,value){setError(allowanceReached?allowanceMessage:"");setErrorAction("");request.current=null;const next={...s,[field]:value};if(!preview){if(allowanceReached){try{remember({before:next,challengeId,allowanceResetAt});}catch{}}else forget();}persist(next);}
   async function generate(){
     if(!s.prompt.trim()){setError("Add a prompt before generating an answer.");return;}if(s.correcting&&!s.explanation.trim()){setError("Explain what you changed and why before generating.");return;}
     if(!client&&!preview){setError("Answers are unavailable right now. Your edit is still here.");return;}
