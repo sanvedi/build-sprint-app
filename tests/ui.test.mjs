@@ -15,6 +15,37 @@ function type(w,id,value){const el=w.document.getElementById(id);assert.ok(el,`M
 const notYet={id:"assessment1",earned:false,route:"prompt",gap:"Add the event facts",why:"Students need the time",evidence:"Your request omits time"};
 const passed={id:"assessment2",earned:true,route:"none",gap:"",why:"All requirements checked",evidence:"Facts present"};
 
+test("fresh quiz mission shows the weak answer first and retains its version after completion and reopening",async()=>{
+ const f=fixture([{id:"quiz-answer",text:"For 2, 3, 4, 5, 16, mean is 6 and median is 4."},passed]);let reopened;
+ try{
+  await waitFor(()=>f.w.document.querySelector(".mission-start"));
+  assert.equal(f.w.document.getElementById("prompt").value,"Explain averages.");
+  assert.ok(f.w.document.querySelector(".mission-start").compareDocumentPosition(f.w.document.querySelector(".editor"))&f.w.Node.DOCUMENT_POSITION_FOLLOWING);
+  type(f.w,"prompt","Explain mean versus median with one checkable number example.");button(f.w,"Generate answer");
+  await waitFor(()=>f.w.document.getElementById("judgment"));
+  assert.equal(f.calls[0].args[0].materialVersion,"quiz-v1");
+  type(f.w,"judgment","The sum is 30, so the mean is 6; the sorted middle is 4.");button(f.w,"Check my judgment");
+  await waitFor(()=>f.w.document.querySelector(".mission-outcome"));
+  const seed={[KEY]:JSON.parse(f.w.localStorage.getItem(KEY))};
+  reopened=fixture([],seed);await waitFor(()=>reopened.w.document.querySelector(".mission-outcome"));
+  assert.equal(JSON.parse(reopened.w.localStorage.getItem(KEY)).materialVersion,"quiz-v1");
+  assert.equal(JSON.parse(reopened.w.localStorage.getItem(KEY)).attempts,1);
+  assert.equal(reopened.calls.length,0);
+ }finally{f.dom.window.close();reopened?.dom.window.close();}
+});
+
+test("untagged saved invitation drafts and results keep their original task",async()=>{
+ const state={version:1,stage:"edit",prompt:"My invitation draft",judgment:"",explanation:"",answer:null,feedback:null,attempts:0,point:false,correcting:false};
+ const f=fixture([],{[KEY]:state});
+ try{
+  await waitFor(()=>f.w.document.getElementById("prompt"));
+  assert.match(f.w.document.body.textContent,/Make the invitation useful/);
+  assert.equal(f.w.document.querySelector(".mission-start"),null);
+  assert.equal(f.w.document.getElementById("prompt").value,"My invitation draft");
+  assert.equal(f.calls.length,0);
+ }finally{f.dom.window.close();}
+});
+
 const completedPractice={version:1,stage:"complete",prompt:"Prepared prompt",judgment:"Prepared judgment",explanation:"",answer:{id:"practice-answer",text:"Practice answer"},feedback:passed,attempts:1,point:true,correcting:false};
 const finalSeed={"prompt-game:beginner-01:v1":completedPractice,"prompt-game:beginner-02:v1":completedPractice,"prompt-game:active-practice:v1":"beginner-02"};
 test("final hides all examples and awards a badge without changing practice points",async()=>{

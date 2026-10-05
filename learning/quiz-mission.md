@@ -1,6 +1,6 @@
 # Beginner mission: Help a friend before a quiz
 
-Status: mission and win rules approved by the builder on 5 October 2026. Not implemented, teacher-reviewed or tested with students. This is a proposed first Beginner mission; existing published challenge material remains intact.
+Status: mission, win rules and focused build approved by the builder on 5 October 2026. Implemented in development; prepared-response browser journeys passed. Real Gemini generation failed twice; real mission feedback, teacher review and student testing remain unverified. The published app remains unchanged.
 
 ## Student mission
 
@@ -23,4 +23,6 @@ Mean is the sum divided by the number of values. Median is the middle value afte
 
 ## Implementation boundary
 
-Propose a focused first-mission build before editing the app. Connect task, feedback and confirmed success to helping the friend; keep answer judgment and existing learning rules. Do not change the remaining challenges, add a timer or imply a measured learning outcome. Decide how to preserve old saved attempts when changing challenge material before implementation.
+The builder approved changing Beginner practice 1 to rescuing an unhelpful answer. Show the prepared vague answer before editing, ask for a useful addition rather than a rewrite, connect feedback to the friend's problem, and acknowledge a clear request plus accurate judgment after confirmed success. Remaining challenges and supported final-return practices retain their existing material. No timer or measured learning outcome is implied.
+
+Fresh first-practice states carry materialVersion=quiz-v1. Untagged drafts and database rows retain legacy-v1 invitation material. The backend pins the version to practice sessions/jobs, rejects switching versions before reserving usage, and assesses/rechecks using the generated answer's version. Attempts and points remain attached to the same first-practice slot; the mission cannot earn a second first-practice point. Evidence is in M0_VERIFICATION.md.

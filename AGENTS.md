@@ -37,6 +37,8 @@ When I report a bug, I'll name the part. Look there first, find the cause, and t
 
 ## 2. How we work
 
+- First-mission implementation approved 5 October 2026: fresh Beginner practice 1 uses the quiz rescue mission in development. Untagged drafts/attempts belong to legacy-v1 invitation material; quiz-v1 is pinned to new sessions/jobs. Never reinterpret an old answer against the new task, reset old rewards or award a second first-practice point. Other challenges and final-return practice material remain intact. Actual mission feedback and builder phone confirmation are pending; this milestone has not changed production.
+
 - Product direction approved 5 October 2026: make challenges small missions students want to solve, with improving the supplied prompt and judging the answer as the way to win. See PRODUCT.md and DESIGN.md. Exact mission content and screen changes remain to be agreed; this documentation decision does not authorize implementation, new game mechanics or deployment. Preserve existing learning, assessment, reward and recovery rules.
 
 - Read IDEA_SCOPE.md, PRODUCT.md, PLAN.md and PROGRESS.md before anything else. Read DESIGN.md before screen work. Read M0_VERIFICATION.md when deciding what has actually been proved.

@@ -18,6 +18,34 @@ const finish=makeFunctionReference("practiceData:finish");
 const openFinal=makeFunctionReference("practiceData:openFinal");
 const returnToPractice=makeFunctionReference("practiceData:returnToPractice");
 const token="f".repeat(64);
+
+test("quiz material is pinned to new sessions and cannot replace legacy saved work",async()=>{
+ const t=convexTest(schema,modules);
+ const legacy=await t.run(ctx=>ctx.db.insert("practiceSessions",{token,attempts:1,point:true}));
+ await assert.rejects(t.mutation(reserve,{token,requestId:"switch-material",kind:"generate",input:"{}",materialVersion:"quiz-v1"}),/TASK_VERSION_CHANGED/);
+ assert.equal(await t.run(ctx=>ctx.db.query("practiceUsage").first()),null);
+ assert.equal((await t.run(ctx=>ctx.db.get(legacy))).point,true);
+ const freshToken="e".repeat(64);
+ const answer=await t.mutation(reserve,{token:freshToken,requestId:"quiz-answer",kind:"generate",input:'{"prompt":"Explain mean and median with an example"}',materialVersion:"quiz-v1"});
+ assert.equal((await t.run(ctx=>ctx.db.get(answer))).materialVersion,"quiz-v1");
+ const session=await t.run(ctx=>ctx.db.query("practiceSessions").withIndex("by_token",q=>q.eq("token",freshToken)).first());
+ assert.equal(session.materialVersion,"quiz-v1");
+ await assert.rejects(t.mutation(reserve,{token:freshToken,requestId:"switch-back",kind:"generate",input:"{}"}),/TASK_VERSION_CHANGED/);
+ assert.equal((await t.run(ctx=>ctx.db.query("practiceUsage").first())).count,1);
+});
+
+test("quiz corrections and recheck retain their material version and award one point",async()=>{
+ const t=convexTest(schema,modules);
+ const first=await t.mutation(reserve,{token,requestId:"quiz-first",kind:"assess",input:input(),materialVersion:"quiz-v1"});
+ await t.mutation(finish,{id:first,result:JSON.stringify({earned:false}),earned:false});
+ const corrected=await t.mutation(reserve,{token,requestId:"quiz-correction",kind:"assess",input:input(first),materialVersion:"quiz-v1"});
+ await t.mutation(finish,{id:corrected,result:JSON.stringify({earned:true}),earned:true});
+ const review=await t.mutation(reserve,{token,requestId:"quiz-recheck",kind:"recheck",assessmentId:corrected,input:"{}",materialVersion:"quiz-v1"});
+ await t.mutation(finish,{id:review,result:JSON.stringify({earned:true}),earned:true});
+ const session=await t.run(ctx=>ctx.db.query("practiceSessions").withIndex("by_token",q=>q.eq("token",token)).first());
+ assert.equal(session.attempts,2);assert.equal(session.point,true);assert.equal(session.materialVersion,"quiz-v1");
+ await assert.rejects(t.mutation(reserve,{token,requestId:"extra-point",kind:"assess",input:input(corrected),materialVersion:"quiz-v1"}),/PRACTICE_FINISHED/);
+});
 const input=previous=>JSON.stringify({answerId:"synthetic-answer",previousAssessmentId:previous||null});
 async function attempt(t,challengeId,requestId,earned,previous){
  const id=await t.mutation(reserve,{token,challengeId,requestId,kind:"assess",input:input(previous)});

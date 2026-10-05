@@ -4,6 +4,8 @@ PRODUCT.md owns product rules; DESIGN.md owns screens and approved words. This f
 
 ## Current position
 
+Active milestone, approved 5 October 2026: improve Beginner practice 1 around rescuing the vague answer to Explain averages. Development implementation and prepared-response Edge journeys at 390px/1280px are checked; old invitation work retains its material version. All 48 automated checks, build, typecheck, development push and design detector passed. Real Gemini generation failed twice; no actual quiz assessment is claimed. Next: finish the real-AI check when available and get builder phone confirmation before pushing/deploying. This supersedes the earlier first-mission proposal/approval steps below; other milestones remain pending.
+
 First mission agreed: Help a friend before a quiz, starting from Explain averages. The builder approved its prompt and answer-judgment win rules; see learning/quiz-mission.md. Next: propose a focused first-mission implementation and obtain the required milestone approval. Preserve existing saved attempts when changing task material. The earlier request to agree a mission example is now satisfied; app implementation and student testing remain pending.
 
 Product discussion update, 5 October 2026: the builder approved making challenges small missions students want to solve, with prompt improvement as the way to win. Record and refine this direction before further implementation. Next discussion: agree one Beginner mission's situation, goal and successful outcome. Then propose a bounded content/screen milestone for approval under AGENTS.md. Existing final verification and remaining implementation milestones remain pending; this documentation update does not authorize app changes or another deployment.

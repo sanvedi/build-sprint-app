@@ -1,5 +1,15 @@
 # Prompting Game: M0 verification
 
+## Quiz rescue mission in development, 5 October 2026
+
+The builder approved improving Beginner practice 1 around rescuing an unhelpful answer. Fresh starts show the quiz mission, Explain averages request, a labelled prepared vague answer before the editor, and a question about missing information. Feedback instructions connect gaps to the friend; confirmed success recognises a clear request and accurate judgment. Other challenges and final-return practice retain existing material.
+
+Optional materialVersion fields preserve legacy rows and pin quiz-v1 sessions/jobs. Untagged drafts retain the invitation task. Switching a saved session's material is rejected before reserving usage; assessment/recheck use the generated answer's material version. First-practice attempt/point limits are unchanged.
+
+48 automated checks passed, including actual registered Convex mutations in a local test database and preservation of untagged invitation drafts. Build, typecheck, development push and design detector passed. Real Edge prepared-response walks at 390x844 and 1280x844 exercised generation, prompt-gap feedback, correction/explanation, judgment of the replacement answer, one point on attempt two, reload without another AI request, Next challenge and reopening practice 2. Seven phone previews passed text-size and horizontal-overflow checks. Synthetic screenshots/browser sessions stay in ignored artifacts/.
+
+Real development generation failed twice. The first provider error in development logs was Gemini 3.8 Flash high demand after SDK retries; the second request also showed generation unavailable. Edits were retained and no learning attempt was assessed. No actual quiz generation, assessment, teacher reliability result or physical-phone check is claimed. Model settings, daily cap and production were not changed. Prepared responses establish interaction mechanics, not AI reliability or student interest.
+
 Updated 4 October 2026. Status: feedback reliability not yet verified.
 
 ## Evidence boundaries

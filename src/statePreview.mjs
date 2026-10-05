@@ -1,6 +1,6 @@
 import {initialState,task,practiceTasks,isFinal} from "./practice.mjs";
 const answer={id:"preview-answer",text:task.exampleAnswer};
-const feedback={id:"preview-assessment",earned:false,route:"prompt",gap:"The request omits the time.",why:"Students need the time to attend.",evidence:"Compare the request with Friday at 2 PM in the requirements."};
+const feedback={id:"preview-assessment",earned:false,route:"prompt",gap:"The request does not ask for a checkable example.",why:"Your friend needs numbers to see how mean and median differ.",evidence:"The request asks for averages without asking for an example."};
 const base={...initialState(),answer,feedback,judgment:"The answer meets the task requirements.",attempts:1};
 export const previewNames=["first","returning","empty","loading","error","answer","wrong-answer","empty-judgment","assessment-error","feedback","prompt-correction","judgment-correction","revised-answer","recheck-loading","recheck-error","recheck-done","done","with-help","save-pending","device-error","second-first","second-done","second-help","second-save-pending","final-first","final-answer","final-loading","final-assessment-error","final-not-yet","final-pass","final-save-pending","final-alternate","final-review","final-exhausted"];
 export function statePreview(name){
@@ -17,13 +17,13 @@ export function statePreview(name){
   feedback:{state:{...base,stage:"feedback"}},
   "prompt-correction":{state:{...base,stage:"editCorrection",correcting:true}},
   "judgment-correction":{state:{...base,stage:"judgeCorrection",correcting:true,judgment:"",previousJudgment:"It meets every requirement.",feedback:{...feedback,route:"judgment"}}},
-  "revised-answer":{state:{...base,stage:"judgeCorrection",correcting:true,previousAnswer:answer,judgment:"",explanation:"Added the time so students know when to attend."}},
+  "revised-answer":{state:{...base,stage:"judgeCorrection",correcting:true,previousAnswer:answer,judgment:"",explanation:"Asked for a number example so my friend can check both calculations."}},
   "recheck-loading":{state:{...base,stage:"feedback"},busy:"Checking your prompt and judgment."},
   "recheck-error":{state:{...base,stage:"feedback"},error:"Assessment is unavailable. Your answer and judgment are still here.",errorAction:"recheck"},
   "recheck-done":{state:{...base,stage:"feedback",feedback:{...feedback,rechecked:true}}},
-  done:{state:{...base,stage:"complete",point:true,prompt:task.examplePrompt,judgment:"The answer meets the audience, facts and limits in the task.",feedback:{...feedback,earned:true,gap:""}}},
+  done:{state:{...base,stage:"complete",point:true,prompt:task.examplePrompt,judgment:"The answer defines mean and median and correctly calculates 6 and 4 for 2, 3, 4, 5, 16.",feedback:{...feedback,earned:true,gap:""}}},
   "with-help":{state:{...base,stage:"example",attempts:3}},
-  "save-pending":{state:{...base,stage:"complete",point:true,prompt:task.examplePrompt,judgment:"The answer meets the audience, facts and limits in the task.",feedback:{...feedback,earned:true,gap:""}},pending:true},
+  "save-pending":{state:{...base,stage:"complete",point:true,prompt:task.examplePrompt,judgment:"The answer defines mean and median and correctly calculates 6 and 4 for 2, 3, 4, 5, 16.",feedback:{...feedback,earned:true,gap:""}},pending:true},
   "device-error":{state:initialState(),saveError:true}
  };
  if(name?.startsWith("final-")){

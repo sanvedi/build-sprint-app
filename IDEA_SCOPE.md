@@ -1,5 +1,11 @@
 # IDEA_SCOPE.md
 
+## Active first-mission implementation, 5 October 2026
+
+The builder approved improving Beginner practice 1 around rescuing an unhelpful answer. The working problem is identifying missing information and making a useful correction when rewriting feels like extra work; see PRODUCT.md. The quiz mission is implemented in development; old invitation drafts and assessments retain their material version. Other challenges and all reward/recovery rules remain intact.
+
+Prepared-response phone/desktop journeys passed; real Gemini generation failed twice. Next: verify actual mission generation/assessment when available and obtain builder phone confirmation before release. Teacher review and the quantitative reliability gate remain pending. This supersedes earlier pending-approval statements for this first-mission build only.
+
 ## Approved refinement, 5 October 2026
 
 Start with more interesting tasks: students solve small missions, with improving the supplied prompt and checking the answer as the way to succeed. PRODUCT.md records this approved direction. Each mission needs a concrete situation, a meaningful goal and a checkable outcome, while preserving prepared requirements and existing learning/reward rules.

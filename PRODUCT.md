@@ -1,5 +1,13 @@
 # Prompting Game
 
+## Current approved problem and first-mission build, 5 October 2026
+
+Working problem statement: when AI gives a student an unhelpful answer, they struggle to identify what information is missing and make a useful correction. Rewriting feels like extra work, so they can stay stuck. This focuses on the reported DP experience; demand for a separate practice game remains unproven.
+
+The builder approved a focused Beginner practice 1 change: rescue the vague answer to Explain averages so a friend can understand mean and median before a quiz. Show the weak prepared answer before editing, ask for missing detail, and connect feedback and confirmed success to the mission. Win rules are in learning/quiz-mission.md. Existing points, attempts, saving and other challenges remain intact. This supersedes earlier pending-approval statements for this first-mission build.
+
+Development implementation has prepared-response browser proof. Real Gemini generation failed twice; real mission feedback and teacher reliability evidence remain pending. Existing untagged saved work continues the invitation task under its original requirements. No production release or student engagement result is claimed.
+
 ## Approved product refinement, 5 October 2026
 
 The builder approved starting with more interesting tasks: give students a small mission they want to solve, and make improving the supplied prompt how they win. The concern that the current flow feels like homework with points attached is a product diagnosis, not recorded student evidence.

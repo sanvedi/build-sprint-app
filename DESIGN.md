@@ -1,5 +1,13 @@
 # DESIGN.md
 
+## Implemented first-mission refinement, 5 October 2026
+
+For fresh Beginner practice 1, the headline is Turn a vague answer into useful help. Supporting words: Spot what is missing. Make one useful edit. Check what changed. The quiz mission shows the starting request and prepared weak answer before the editor, then asks about missing information. Task requirements remain available in a collapsed control. Editor help says Add the missing detail. You do not need to start over.
+
+After generation, direct the student to check both ideas and calculations. Retain answer tabs, judgment fields and both correction paths. Confirmed independent success recognises a clear request and accurate check, without implying actual quiz readiness. The full worked example appears only after two retries. Old invitation work, other challenges and final screens retain earlier wording.
+
+The white/green palette, Nunito Sans, phone controls and fixed Generate action remain. Prepared-response Edge journeys at 390px/1280px passed; real Gemini generation failed twice. Physical-phone confirmation remains pending.
+
 ## Approved mission direction, 5 October 2026
 
 First approved example: learning/quiz-mission.md. Its round connects the friend's quiz problem, prompt editing, answer inspection and judgment. Result wording may acknowledge a clear request and an accurate answer check; do not claim the friend is ready for the quiz or has learned from a generated answer alone.

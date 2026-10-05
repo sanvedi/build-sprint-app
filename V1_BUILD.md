@@ -2,6 +2,8 @@
 
 Active requirements: PRODUCT.md and IDEA_SCOPE.md. These describe the game, not implemented features. Historical snapshots are in archive/openloops/.
 
+Current first-mission milestone, 5 October 2026: the builder approved and development implements rescuing an unhelpful answer in Beginner practice 1. Fresh starts use the quiz mission; untagged drafts/jobs/sessions retain invitation material. Optional materialVersion fields pin new work without deleting or rewriting historical records. Generation, assessment and recheck use the matching task; other challenges, progression and points retain their rules. Prepared-response browser journeys and 48 checks passed. Real generation failed twice; actual feedback, builder phone confirmation and release remain pending. This supersedes the first-mission approval request below.
+
 ## Approved mission refinement, 5 October 2026
 
 Challenges should be small missions with a concrete situation, a meaningful goal and a checkable successful outcome. Improving the supplied prompt and judging the actual AI answer are how the student achieves that goal. Connect feedback and confirmed results to the mission while retaining existing assessment, point, final, retry and saving rules.

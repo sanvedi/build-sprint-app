@@ -36,6 +36,23 @@ export const practiceTasks = {
     startingPrompt: "Tell students about studying together."
   }
 };
+export const quizMission = {
+  title: "Help a friend before a quiz",
+  brief: "Your friend has 20 minutes before a quiz and is confused about mean and median. Get an explanation with one example they can check.",
+  requirements: ["Ask AI to explain the difference between mean and median", "Ask for one number example your friend can check", "Check that the answer explains both ideas and calculates them correctly"],
+  startingPrompt: "Explain averages.",
+  original: "An average is a value that represents a group of numbers. Averages are useful for understanding data and comparing different groups.",
+  originalGap: "This sounds useful, but your friend still cannot tell mean from median or check a calculation. What information is missing from the request?",
+  examplePrompt: "Explain the difference between mean and median in plain words. Use one small set of numbers and show how to calculate both so my friend can check the example.",
+  exampleAnswer: "Mean is the sum of the numbers divided by how many there are. Median is the middle number after putting them in order. For 2, 3, 4, 5, 16: the mean is (2 + 3 + 4 + 5 + 16) / 5 = 6. The median is 4, the middle number. The large value 16 pulls the mean up, while the median stays 4.",
+  exampleWhy: "The request names the two ideas and asks for a calculation your friend can check. The example shows why mean and median can differ. Check the actual explanation and arithmetic; a clear prompt cannot guarantee a correct answer.",
+  referenceFacts: "Mean is sum divided by count. Median is the middle sorted value; for an even count it is the mean of the two middle values. For 2, 3, 4, 5, 16, mean=6 and median=4. Other correct datasets are acceptable.",
+  assessmentNotes: "The prompt must request mean versus median and a checkable number example. Do not require the deadline, exact words, a role, a fixed dataset, a word limit or a specific format. Judge whether the student accurately checks the actual explanation and calculations; correctly identifying a bad answer can pass. Connect feedback to what the friend would still struggle to understand, and success to the student's clear request and accurate check. Do not claim the friend has learned or is ready for the quiz."
+};
+// Missing versions retain the published invitation task and its historical judgments.
+export function taskFor(id, materialVersion = "legacy-v1") {
+  return id === "beginner-01" && materialVersion === "quiz-v1" ? quizMission : practiceTasks[id];
+}
 export function isFinal(id) { return id.startsWith("beginner-final-"); }
 export function isReview(id) { return id.startsWith("beginner-review-"); }
 export function practiceFinished(state) { return Boolean(state && (state.completed || state.point || state.attempts >= 3)); }
