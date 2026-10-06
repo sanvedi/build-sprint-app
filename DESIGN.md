@@ -1,8 +1,8 @@
 # DESIGN.md
 
-## Prompt Gully rebrand proposal, 6 October 2026 - awaiting chat approval
+## Approved Prompt Gully rebrand, 6 October 2026
 
-Status: proposal only. The builder requested this rebrand and a DESIGN.md review before code. Wait for explicit approval in chat before changing application code or deploying. The existing six-screen practice flow is already live; this milestone changes its name and visual identity, not its learning mechanics. On approval, this section takes precedence over the earlier practice palette and branding instructions below.
+Status: approved explicitly in chat on 6 October 2026. Implementation and release verification are in progress. The existing six-screen practice flow is already live; this milestone changes its name and visual identity, not its learning mechanics. On approval, this section takes precedence over the earlier practice palette and branding instructions below.
 
 ### Name and voice
 

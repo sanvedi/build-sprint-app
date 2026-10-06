@@ -1,5 +1,10 @@
 # PLAN.md
 
+## Active Prompt Gully rebrand, 6 October 2026
+
+Builder explicitly approved the DESIGN.md proposal: rename the existing app Prompt Gully in the title, header, sharing description and confirmed practice celebration; cobalt/pink/citrus practice styling with the existing six screens. Publish using npm run deploy and verify real Beginner practice 1 at 390px with a screenshot per step and release hash. Do not change learning rules, AI instructions, cap or finals beyond the approved shared header name. Exclude development-only attempt history. Development checks passed; release verification is next. This is the only active milestone.
+
+
 ## Active authorized milestone, 6 October 2026
 
 Builder approved the friendly six-screen practice redesign in DESIGN.md and explicitly requested npm run deploy plus real live Beginner practice 1 verification at 390px, screenshots of every step and the release commit hash. This bounded redesign replaces the previously pending live-check task for this turn. Keep scoring, points, attempts, cap, AI instructions and finals unchanged. Exclude development-only attempt-history backend work from release. Published and verified: all six live Beginner practice 1 screens at 390px, real generation and assessment, one point on attempt one, celebration, reopening and Next challenge passed. Release bb3f268 excludes development-only attempt history. Screenshot and hash handoff complete this milestone; stop here. Other milestones still need their own approval.

@@ -21,7 +21,7 @@ This is the active build scope for the prompting game. PRODUCT.md owns the produ
 | Field | Status |
 | --- | --- |
 | Event | GrowthX Build Sprint, Season 04 |
-| Product | Prompting Game, working name |
+| Product | Prompt Gully, name approved 6 October 2026 |
 | Last updated | 4 October 2026 |
 | Submission deadline | 17 October 2026, 11 AM IST; target 9 AM |
 | Current milestone | Beginner final and alternate published by explicit builder instruction; real final AI assessment and reliability evidence pending |
