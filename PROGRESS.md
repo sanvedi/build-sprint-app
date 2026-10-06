@@ -49,3 +49,5 @@ Keep one factual line per completed or builder-confirmed step. Distinguish devel
 - 2026-10-05: Published daily-cap UI fix e59be4d with npm run deploy. Actual live 390px capped recheck verified disabled Retry, one reset message, visible original answer/judgment, unchanged point/attempt and reopening without a request. Saved screenshot; the requested fresh practice-1 and practice-2 starting screenshot await the actual midnight UTC reset.
 
 - 2026-10-05: Added a focused generation-cap edit/reopen check: editing the prompt retains the reset message and saved cap timestamp instead of clearing the state. All 56 release checks passed. No game or backend changes.
+
+- 2026-10-06: Builder approved DESIGN.md and authorized the friendly practice redesign and deployment. Six-screen practice flow, purple/peach/yellow styling and confirmed-point celebration passed 62 development checks, typecheck/build and prepared-response Edge journeys at 390px/1280px, including prompt correction, judgment-only correction, back navigation, reopening and practice-2 access. Finals and backend unchanged; live release verification follows separately.

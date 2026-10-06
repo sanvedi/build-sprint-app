@@ -2,7 +2,7 @@
 
 ## Proposed practice redesign, 6 October 2026 — awaiting chat approval
 
-Status: design proposal only. No application code, deployment or browser verification is included in this update. The builder must approve this proposal in chat before implementation. Once approved, this section replaces earlier practice layout, palette and motion instructions; the existing final screens and their styling remain unchanged.
+Status: approved by the builder in chat on 6 October 2026. Implemented and checked in development with six manual screens, both correction paths, saved-view recovery and confirmed-point celebration. This section replaces earlier practice layout, palette and motion instructions; final screens and their styling remain unchanged. Production verification will be recorded separately after deployment.
 
 ### Visual direction: a pocket-sized prompt game
 
