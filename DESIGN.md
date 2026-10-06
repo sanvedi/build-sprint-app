@@ -1,5 +1,57 @@
 # DESIGN.md
 
+## Prompt Gully rebrand proposal, 6 October 2026 - awaiting chat approval
+
+Status: proposal only. The builder requested this rebrand and a DESIGN.md review before code. Wait for explicit approval in chat before changing application code or deploying. The existing six-screen practice flow is already live; this milestone changes its name and visual identity, not its learning mechanics. On approval, this section takes precedence over the earlier practice palette and branding instructions below.
+
+### Name and voice
+
+Product name: Prompt Gully. Make it feel like a friendly little lane where students tackle prompt missions: bright painted signs, sticker-like step markers and a quick earned celebration. Take the requested friendliness and focused lesson pacing from Duolingo as general inspiration, without copying its mascot, logo, exact colours, text or artwork. Create no mascot, new reward, timer, streak or sound.
+
+Use the exact name in these places:
+
+- Browser page title: "Prompt Gully | Improve prompts. Check answers."
+- App header: "Prompt Gully".
+- Search/share description: "Prompt Gully: small missions to practise improving prompts and checking AI answers." Apply the same truthful text to the page description and standard link-sharing metadata; do not add an unverified social image or product claim.
+- Confirmed practice celebration: "A Prompt Gully win!", followed by the explicit reward "You earned 1 skill point!" and the existing task-specific success sentence. Show the brand as part of the celebration, without implying another point or a new scoring rule.
+
+Words stay encouraging and specific. Keep clear action labels such as Generate answer, Write my judgment, Check my judgment and Next challenge. Task content, requirements and returned AI feedback remain exactly as they are. Interface headings can say "Your mission", "This prompt needs a boost", "Make one useful edit", "See what AI made" and "Does it do the job?". An unsuccessful attempt still identifies the actual gap, rather than treating every submission as a win.
+
+### Palette and street-art character
+
+Replace the current purple/lavender/peach practice look with cobalt blue, hot pink and citrus yellow-green against clean white reading surfaces and a pale sky background. Use dark ink for all reading text. The street-art character comes from the lettering, small painted geometric marks and angled sticker shapes; keep long answers, fields and requirements calm and easy to read.
+
+| Role | Colour | Use |
+| --- | --- | --- |
+| Background | #F0FAFF | Pale sky page surface |
+| Reading surface | #FFFFFF | Mission, prompt, answer and form workspace |
+| Ink | #20233D | Dark headings, labels and body text |
+| Main action | #2446D8 | Cobalt-blue buttons with white lettering |
+| Street accent | #FF67AC | Pink wordmark backing and small step details, with dark ink |
+| Progress and reward | #D8F36A | Citrus progress fill and earned-point sticker, with dark ink |
+
+Keep the bundled Nunito Sans typeface: heavy, friendly lettering for the name and headings, clear normal text for answers. The Prompt Gully wordmark may use a small pink painted-sign backing beneath "Gully", a slight angle and an original simple sparkle shape. No copied lettering, animal character or generated graffiti image. Decorative geometric marks must not interfere with labels, controls or reading.
+
+Use large rounded buttons, a shallow pressed edge, an original sticker-shaped point marker and small cobalt/pink celebration dots and stars. Keep main buttons at least 56px tall, other controls at least 44px, visible text at least 16px and the existing narrow lesson column. Retain readable contrast, visible keyboard focus and sensible enlarged-text wrapping. Verify colour contrast in implementation; do not place white body text on the pink or citrus accents.
+
+### Layout and celebration
+
+Preserve the six existing practice screens in order: task, weak prompt, edit, AI answer, your judgment and feedback. The progress bar remains across the top with the current step name and step count; it shows screen position, not mastery or points. Keep one clear main action per screen, requirements within reach, original/revised-answer comparisons and an expandable exact answer on the judgment screen. Long content may scroll.
+
+Preserve Back navigation, saved views, drafts and the rule that editing a submitted prompt requires a new answer and a fresh judgment. Both correction paths, worked examples, rechecks, allowance/reset messages and save-only recovery retain their existing behavior.
+
+The earned-point celebration lasts approximately 700ms, uses a citrus point sticker plus cobalt/pink stars and dots, and plays only when an independent practice point becomes newly confirmed. It never delays Next challenge, replays on reopening, rewards supported practice or duplicates a point. With reduced motion enabled, display the static point and words. Pending saves and unsuccessful assessments never show a confirmed win.
+
+### Boundaries and release proof
+
+Apply this practice identity to both existing Beginner practices and supported return practice. The shared product name and page/share metadata become Prompt Gully everywhere they appear, including the existing header when a final is open; that is the only branding change on final views. Final task content, layout, colours, hints, badges, assessment behavior and onward rules remain unchanged. Do not restyle final screens or change final-specific copy.
+
+Do not change scoring, point decisions or totals, attempts, the daily request cap, model settings, AI instructions, task material, backend ownership checks or final rules. Do not publish the unrelated development-only attempt-history backend work. Never print or commit an API key or any credential. Keep current device progress and storage keys intact across the rename.
+
+After chat approval: implement only this rebrand, check the existing tests/build/type checks, inspect the practice screens at phone and desktop widths, and verify final isolation and existing saved progress. Commit and push the reviewed release, deploy with npm run deploy, then play Beginner practice 1 with real AI generation and assessment on the public site at 390px. Paste a real screenshot of each of the six steps and the release commit hash. Check the confirmed point, short celebration, reopening without another AI request and Next challenge. Report a real cap/provider blocker if it prevents completion; never increase the cap or stage a pass.
+
+Assumptions for approval: this is a rebrand of the existing six-screen flow, not another rebuild; both Beginner practices adopt the new identity; the global name changes on the final header but final-specific design and behavior stay intact; no mascot, sound or new image asset is needed. Browser verification at 390px remains separate from a physical-phone/mobile-data check.
+
 ## Proposed practice redesign, 6 October 2026 — awaiting chat approval
 
 Status: approved by the builder in chat on 6 October 2026. Implemented and checked in development with six manual screens, both correction paths, saved-view recovery and confirmed-point celebration. This section replaces earlier practice layout, palette and motion instructions; final screens and their styling remain unchanged. Published with npm run deploy on 6 October 2026. The real live six-screen Beginner practice 1 journey passed in Edge at 390px: correct generated answer, actual assessment, one point on attempt one, celebration animation, reopening without another request and Next challenge. This is browser proof, not a physical-phone or teacher-feedback reliability result.
