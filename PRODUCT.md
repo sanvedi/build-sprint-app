@@ -1,4 +1,4 @@
-# Prompting Game
+# Prompt Gully
 
 Latest release, 5 October 2026: the builder explicitly authorized publishing the quiz mission. GitHub push and npm run deploy succeeded. Real production generation/assessment, one point on attempt one, reopening and Next challenge passed in Edge at 390px; legacy saved invitation state and desktop opening passed. Both deployments use Gemini 3.5 Flash-Lite with the existing 20-request daily allowance. The quiz mission is now published; other challenge material and billing are unchanged. This supersedes earlier unpublished/blocked statements below. Teacher content review, quantitative feedback reliability and physical-phone/mobile-data confirmation remain pending.
 
@@ -22,7 +22,7 @@ This approves the product direction and documentation update. Exact missions, sc
 
 Follow-up agreement: the first mission is helping a friend understand mean and median before a quiz, starting from Explain averages. The prompt must request the distinction and a checkable example; the student must correctly judge the explanation and calculations. Full agreed material and implementation boundaries are in learning/quiz-mission.md. Other missions and app implementation remain pending.
 
-Product brief completed 4 October 2026. Working name; final branding is undecided.
+Product brief completed 4 October 2026. Prompt Gully is the builder-approved product name as of 6 October 2026; the rebrand preserves all existing product and learning rules.
 
 The builder asked to complete this brief and move forward. Explicitly agreed choices are distinguished below from defaults chosen to finish the first-version specification. This document specifies behavior. Both Beginner practices are published. The Beginner final, alternate and badge are implemented in development with automated/browser checks recorded in M0_VERIFICATION.md; the builder explicitly authorized publishing the final, while reviewed material and quantitative feedback-gate evidence remain unrecorded. Full three-level gameplay and account saving remain pending. PLAN.md gives the next implementation milestone; PROGRESS.md records completed steps.
 
