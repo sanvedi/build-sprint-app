@@ -9,7 +9,10 @@ const compiled=await build({entryPoints:["src/main.jsx"],bundle:true,write:false
 const script=compiled.outputFiles[0].text;
 const KEY="prompt-game:beginner-01:v1";
 async function waitFor(fn){for(let i=0;i<100;i++){if(fn())return;await new Promise(r=>setTimeout(r,10));}assert.fail("Screen did not reach expected state");}
-function fixture(responses,seed={}){const calls=[];const dom=new JSDOM('<div id="root"></div>',{url:"http://localhost",runScripts:"dangerously",pretendToBeVisual:true});const w=dom.window;for(const [key,value] of Object.entries(seed))w.localStorage.setItem(key,JSON.stringify(value));Object.defineProperty(w.crypto,"randomUUID",{value:randomUUID});w.HTMLElement.prototype.scrollIntoView=function(){};w.fetch=async(url,options)=>{const body=JSON.parse(options.body);calls.push(body);const value=await responses.shift();if(value instanceof Error)throw value;return new Response(JSON.stringify(value?.testErrorData?{status:"error",errorMessage:"Server Error",errorData:value.testErrorData}:{status:"success",value}),{status:200,headers:{"Content-Type":"application/json"}});};w.eval(script);return {dom,w,calls};}
+function fixture(responses,seed={},manual=false){const calls=[];const dom=new JSDOM('<div id="root"></div>',{url:"http://localhost",runScripts:"dangerously",pretendToBeVisual:true});const w=dom.window;for(const [key,value] of Object.entries(seed))w.localStorage.setItem(key,JSON.stringify(value));Object.defineProperty(w.crypto,"randomUUID",{value:randomUUID});w.HTMLElement.prototype.scrollIntoView=function(){};w.fetch=async(url,options)=>{const body=JSON.parse(options.body);calls.push(body);const value=await responses.shift();if(value instanceof Error)throw value;return new Response(JSON.stringify(value?.testErrorData?{status:"error",errorMessage:"Server Error",errorData:value.testErrorData}:{status:"success",value}),{status:200,headers:{"Content-Type":"application/json"}});};// Existing rule checks walk through the new view-only steps before their submission.
+// Manual fixtures below verify each screen and its navigation independently.
+if(!manual){new w.MutationObserver(()=>{const next=[...w.document.querySelectorAll("button")].find(b=>["See the starting prompt","Improve this prompt","Write my judgment"].includes(b.textContent)&&!b.disabled);if(next)next.click();}).observe(w.document.getElementById("root"),{childList:true,subtree:true,attributes:true});}
+w.eval(script);return {dom,w,calls};}
 function button(w,text){const b=[...w.document.querySelectorAll("button")].find(x=>x.textContent===text);assert.ok(b,`Missing button ${text}`);assert.equal(b.disabled,false);b.click();}
 function type(w,id,value){const el=w.document.getElementById(id);assert.ok(el,`Missing field ${id}`);Object.getOwnPropertyDescriptor(w.HTMLTextAreaElement.prototype,"value").set.call(el,value);el.dispatchEvent(new w.Event("input",{bubbles:true}));}
 const notYet={id:"assessment1",earned:false,route:"prompt",gap:"Add the event facts",why:"Students need the time",evidence:"Your request omits time"};
@@ -70,9 +73,9 @@ test("practice answers render headings, lists and maths while retaining the exac
 test("fresh quiz mission shows the weak answer first and retains its version after completion and reopening",async()=>{
  const f=fixture([{id:"quiz-answer",text:"For 2, 3, 4, 5, 16, mean is 6 and median is 4."},passed]);let reopened;
  try{
-  await waitFor(()=>f.w.document.querySelector(".mission-start"));
+  await waitFor(()=>f.w.document.getElementById("prompt"));
   assert.equal(f.w.document.getElementById("prompt").value,"Explain averages.");
-  assert.ok(f.w.document.querySelector(".mission-start").compareDocumentPosition(f.w.document.querySelector(".editor"))&f.w.Node.DOCUMENT_POSITION_FOLLOWING);
+  assert.equal(f.w.document.querySelector(".lesson-progress").getAttribute("aria-valuenow"),"3");
   type(f.w,"prompt","Explain mean versus median with one checkable number example.");button(f.w,"Generate answer");
   await waitFor(()=>f.w.document.getElementById("judgment"));
   assert.equal(f.calls[0].args[0].materialVersion,"quiz-v1");
@@ -92,7 +95,7 @@ test("untagged saved invitation drafts and results keep their original task",asy
  try{
   await waitFor(()=>f.w.document.getElementById("prompt"));
   assert.match(f.w.document.body.textContent,/Make the invitation useful/);
-  assert.ok(f.w.document.querySelector(".mission-start"));
+  assert.equal(f.w.document.querySelector(".lesson-progress").getAttribute("aria-valuenow"),"3");
   assert.equal(f.w.document.getElementById("prompt").value,"My invitation draft");
   assert.equal(f.calls.length,0);
  }finally{f.dom.window.close();}
@@ -120,7 +123,7 @@ test("failed final returns to supported practice and opens an unseen alternate a
   await waitFor(()=>f.w.document.body.textContent.includes("Explain the library change"));button(f.w,"Generate answer");
   await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","It is fine");button(f.w,"Submit final");
   await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Return to practice"));button(f.w,"Return to practice");
-  await waitFor(()=>f.w.document.body.textContent.includes("Make the invitation useful"));button(f.w,"Generate answer");
+  await waitFor(()=>f.w.document.getElementById("prompt"));button(f.w,"Generate answer");
   await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","Invitation meets the task");button(f.w,"Check my judgment");
   await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Start fresh final"));
   assert.match(f.w.document.querySelector(".points").textContent,/2.*6/);button(f.w,"Start fresh final");
@@ -157,8 +160,8 @@ test("Next challenge keeps the first point and gives practice 2 its own attempts
  try{
   await waitFor(()=>f.w.document.getElementById("prompt"));button(f.w,"Generate answer");
   await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","Meets the invitation requirements");button(f.w,"Check my judgment");
-  await waitFor(()=>f.w.document.body.textContent.includes("Skill point earned"));button(f.w,"Next challenge");
-  await waitFor(()=>f.w.document.body.textContent.includes("Make the instructions easy to follow"));
+  await waitFor(()=>f.w.document.body.textContent.includes("You earned 1 skill point!"));button(f.w,"Next challenge");
+  await waitFor(()=>f.w.document.getElementById("prompt"));
   assert.equal(f.w.document.getElementById("prompt").value,"Tell students how to submit their work.");
   assert.match(f.w.document.body.textContent,/0 of 3 attempts used/);
   button(f.w,"Generate answer");await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","Three steps include the file and deadline");button(f.w,"Check my judgment");
@@ -177,7 +180,7 @@ test("completed-with-help unlocks practice 2 without a point and reopening retai
  const f=fixture([],{[KEY]:first});let reopened;
  try{
   await waitFor(()=>f.w.document.body.textContent.includes("Completed with help"));button(f.w,"Next challenge");
-  await waitFor(()=>f.w.document.body.textContent.includes("Make the instructions easy to follow"));type(f.w,"prompt","My second challenge draft");
+  await waitFor(()=>f.w.document.getElementById("prompt"));type(f.w,"prompt","My second challenge draft");
   const seed=Object.fromEntries(Object.keys(f.w.localStorage).map(k=>[k,JSON.parse(f.w.localStorage.getItem(k))]));
   reopened=fixture([],seed);await waitFor(()=>reopened.w.document.getElementById("prompt")?.value==="My second challenge draft");
   assert.match(reopened.w.document.body.textContent,/Completed with help/);
@@ -196,13 +199,13 @@ test("a failed onward save stays on practice 1 and offers save-only recovery",as
  const first={version:1,stage:"complete",prompt:"Prompt",judgment:"Judgment",explanation:"",answer:{id:"answer1",text:"Answer"},feedback:passed,attempts:1,point:true,correcting:false};
  const f=fixture([],{[KEY]:first});
  try{
-  await waitFor(()=>f.w.document.body.textContent.includes("Skill point earned"));
+  await waitFor(()=>f.w.document.body.textContent.includes("You earned 1 skill point!"));
   const proto=f.w.Storage.prototype;const original=proto.setItem;
   proto.setItem=function(key,value){if(key==="prompt-game:active-practice:v1")throw Error("Storage unavailable");return original.call(this,key,value);};
   button(f.w,"Next challenge");await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Retry saving"));
   assert.match(f.w.document.body.textContent,/Make the invitation useful/);proto.setItem=original;
   button(f.w,"Retry saving");await waitFor(()=>![...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Retry saving"));button(f.w,"Next challenge");
-  await waitFor(()=>f.w.document.body.textContent.includes("Make the instructions easy to follow"));assert.equal(f.calls.length,0);
+  await waitFor(()=>f.w.document.getElementById("prompt"));assert.equal(f.calls.length,0);
  }finally{f.dom.window.close();}
 });
 
@@ -211,7 +214,7 @@ test("reopening a pending second-practice result saves to practice 2 without ove
  const next={...first,prompt:"Submission instructions prompt",answer:{id:"answer2",text:"Three instructions"},feedback:{...passed,id:"second-assessment"}};
  const f=fixture([],{[KEY]:first,"prompt-game:request-recovery:v1":{next,challengeId:"beginner-02"}});
  try{
-  await waitFor(()=>f.w.document.body.textContent.includes("Make the instructions easy to follow"));assert.match(f.w.document.querySelector(".points").textContent,/1.*6/);
+  await waitFor(()=>f.w.document.querySelector(".mission-title"));assert.match(f.w.document.querySelector(".points").textContent,/1.*6/);
   button(f.w,"Retry saving");await waitFor(()=>f.w.localStorage.getItem("prompt-game:beginner-02:v1"));
   assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).prompt,"Invitation prompt");
   assert.equal(JSON.parse(f.w.localStorage.getItem("prompt-game:beginner-02:v1")).prompt,"Submission instructions prompt");
@@ -221,11 +224,11 @@ test("reopening a pending second-practice result saves to practice 2 without ove
 
 test("prompt correction judges the replacement answer and preserves the submitted explanation",async()=>{
  const f=fixture([{id:"answer1",text:"Old answer"},notYet,{id:"answer2",text:"Revised answer"},passed]);
- try{await waitFor(()=>f.w.document.getElementById("prompt"));button(f.w,"Generate answer");await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","The time is missing");button(f.w,"Check my judgment");await waitFor(()=>f.w.document.body.textContent.includes("One change to try"));button(f.w,"Try again");await waitFor(()=>f.w.document.getElementById("explanation"));type(f.w,"prompt","Include the complete task facts and limits");type(f.w,"explanation","The time tells students when to attend");button(f.w,"Generate revised answer");await waitFor(()=>f.w.document.getElementById("judgment"));assert.equal(f.w.document.getElementById("judgment").value,"");type(f.w,"judgment","All facts now meet the task");button(f.w,"Check my correction");await waitFor(()=>f.w.document.body.textContent.includes("Skill point earned"));assert.equal(f.calls[3].args[0].answerId,"answer2");assert.equal(f.calls[3].args[0].explanation,"The time tells students when to attend");}finally{f.dom.window.close();}
+ try{await waitFor(()=>f.w.document.getElementById("prompt"));button(f.w,"Generate answer");await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","The time is missing");button(f.w,"Check my judgment");await waitFor(()=>f.w.document.body.textContent.includes("One more useful change"));button(f.w,"Try again");await waitFor(()=>f.w.document.getElementById("explanation"));type(f.w,"prompt","Include the complete task facts and limits");type(f.w,"explanation","The time tells students when to attend");button(f.w,"Generate revised answer");await waitFor(()=>f.w.document.getElementById("judgment"));assert.equal(f.w.document.getElementById("judgment").value,"");type(f.w,"judgment","All facts now meet the task");button(f.w,"Check my correction");await waitFor(()=>f.w.document.body.textContent.includes("You earned 1 skill point!"));assert.equal(f.calls[3].args[0].answerId,"answer2");assert.equal(f.calls[3].args[0].explanation,"The time tells students when to attend");}finally{f.dom.window.close();}
 });
 test("judgment-only path submits against the same answer without generating",async()=>{
  const f=fixture([{id:"answer1",text:"Wrong time in this answer"},{...notYet,route:"judgment"},passed]);
- try{await waitFor(()=>f.w.document.getElementById("prompt"));button(f.w,"Generate answer");await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","It is fine");button(f.w,"Check my judgment");await waitFor(()=>f.w.document.body.textContent.includes("One change to try"));button(f.w,"Try again");await waitFor(()=>f.w.document.getElementById("explanation"));assert.equal(f.w.document.getElementById("prompt"),null);type(f.w,"judgment","It has the wrong time");type(f.w,"explanation","I checked the time against the task");button(f.w,"Check my corrected judgment");await waitFor(()=>f.w.document.body.textContent.includes("Skill point earned"));assert.equal(f.calls.length,3);assert.equal(f.calls[2].args[0].answerId,"answer1");}finally{f.dom.window.close();}
+ try{await waitFor(()=>f.w.document.getElementById("prompt"));button(f.w,"Generate answer");await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","It is fine");button(f.w,"Check my judgment");await waitFor(()=>f.w.document.body.textContent.includes("One more useful change"));button(f.w,"Try again");await waitFor(()=>f.w.document.getElementById("explanation"));assert.equal(f.w.document.getElementById("prompt"),null);type(f.w,"judgment","It has the wrong time");type(f.w,"explanation","I checked the time against the task");button(f.w,"Check my corrected judgment");await waitFor(()=>f.w.document.body.textContent.includes("You earned 1 skill point!"));assert.equal(f.calls.length,3);assert.equal(f.calls[2].args[0].answerId,"answer1");}finally{f.dom.window.close();}
 });
 test("failed local result save retries only storage, not AI assessment",async()=>{
  const f=fixture([{id:"answer1",text:"Useful answer"},passed]);
@@ -244,11 +247,11 @@ test("generation failure preserves the prompt and consumes no attempt",async()=>
 
 test("challenging a decision rechecks the same assessment once and continues without an extra attempt",async()=>{
  const f=fixture([{id:"answer1",text:"Answer"},notYet,{...notYet,rechecked:true}]);
- try{await waitFor(()=>f.w.document.getElementById("prompt"));button(f.w,"Generate answer");await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","The time is missing");button(f.w,"Check my judgment");await waitFor(()=>f.w.document.body.textContent.includes("One change to try"));button(f.w,"Challenge this assessment");await waitFor(()=>JSON.parse(f.w.localStorage.getItem(KEY)).feedback.rechecked);await waitFor(()=>![...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Challenge this assessment"));assert.equal(f.calls[2].path,"practice:recheck");assert.equal(f.calls[2].args[0].assessmentId,"assessment1");assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,1);assert.equal([...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Challenge this assessment"),false);button(f.w,"Try again");await waitFor(()=>f.w.document.getElementById("explanation"));assert.equal(f.calls.length,3);}finally{f.dom.window.close();}
+ try{await waitFor(()=>f.w.document.getElementById("prompt"));button(f.w,"Generate answer");await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","The time is missing");button(f.w,"Check my judgment");await waitFor(()=>f.w.document.body.textContent.includes("One more useful change"));button(f.w,"Challenge this assessment");await waitFor(()=>JSON.parse(f.w.localStorage.getItem(KEY)).feedback.rechecked);await waitFor(()=>![...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Challenge this assessment"));assert.equal(f.calls[2].path,"practice:recheck");assert.equal(f.calls[2].args[0].assessmentId,"assessment1");assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,1);assert.equal([...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Challenge this assessment"),false);button(f.w,"Try again");await waitFor(()=>f.w.document.getElementById("explanation"));assert.equal(f.calls.length,3);}finally{f.dom.window.close();}
 });
 test("failed recheck keeps the original result and retries the same request",async()=>{
  const f=fixture([{id:"answer1",text:"Answer"},notYet,new Error("Network failed"),{...passed,id:"assessment1",rechecked:true}]);
- try{await waitFor(()=>f.w.document.getElementById("prompt"));button(f.w,"Generate answer");await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","Checked answer");button(f.w,"Check my judgment");await waitFor(()=>f.w.document.body.textContent.includes("One change to try"));button(f.w,"Challenge this assessment");await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Retry assessment"));assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,1);button(f.w,"Retry assessment");await waitFor(()=>f.w.document.body.textContent.includes("Skill point earned"));assert.equal(f.calls[2].args[0].requestId,f.calls[3].args[0].requestId);assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,1);}finally{f.dom.window.close();}
+ try{await waitFor(()=>f.w.document.getElementById("prompt"));button(f.w,"Generate answer");await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","Checked answer");button(f.w,"Check my judgment");await waitFor(()=>f.w.document.body.textContent.includes("One more useful change"));button(f.w,"Challenge this assessment");await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Retry assessment"));assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,1);button(f.w,"Retry assessment");await waitFor(()=>f.w.document.body.textContent.includes("You earned 1 skill point!"));assert.equal(f.calls[2].args[0].requestId,f.calls[3].args[0].requestId);assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,1);}finally{f.dom.window.close();}
 });
 test("reopening an interrupted assessment resumes its request only once",async()=>{
  const before={version:1,stage:"judge",prompt:"Prompt",judgment:"Judgment",explanation:"",answer:{id:"answer1",text:"Answer"},previousAnswer:null,feedback:null,attempts:0,point:false,correcting:false};
@@ -256,7 +259,7 @@ test("reopening an interrupted assessment resumes its request only once",async()
  const f=fixture([notYet],{[KEY]:before,"prompt-game:session:v1":token,"prompt-game:request-recovery:v1":{action:"assess",before,request:{fingerprint:JSON.stringify(payload),id:"original-request"}}});
  // session token is a raw string in actual storage.
  f.w.localStorage.setItem("prompt-game:session:v1",token);
- try{await waitFor(()=>f.w.document.body.textContent.includes("One change to try"));assert.equal(f.calls.length,1);assert.equal(f.calls[0].args[0].requestId,"original-request");assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,1);}finally{f.dom.window.close();}
+ try{await waitFor(()=>f.w.document.body.textContent.includes("One more useful change"));assert.equal(f.calls.length,1);assert.equal(f.calls[0].args[0].requestId,"original-request");assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,1);}finally{f.dom.window.close();}
 });
 test("reopening a pending save restores the checked result without another AI request",async()=>{
  const next={version:1,stage:"complete",prompt:"Prompt",judgment:"Judgment",explanation:"",answer:{id:"answer1",text:"Answer"},previousAnswer:null,feedback:passed,attempts:1,point:true,correcting:false};
@@ -267,7 +270,7 @@ test("reopening a pending save restores the checked result without another AI re
 
 test("assessment failure holds the exact judgment read-only until its same-request retry completes",async()=>{
  const f=fixture([{id:"answer1",text:"Answer"},new Error("Response lost"),passed]);
- try{await waitFor(()=>f.w.document.getElementById("prompt"));button(f.w,"Generate answer");await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","My exact judgment");button(f.w,"Check my judgment");await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Retry assessment"));assert.equal(f.w.document.getElementById("judgment").disabled,true);button(f.w,"Retry assessment");await waitFor(()=>f.w.document.body.textContent.includes("Skill point earned"));assert.deepEqual(f.calls[1].args,f.calls[2].args);assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,1);}finally{f.dom.window.close();}
+ try{await waitFor(()=>f.w.document.getElementById("prompt"));button(f.w,"Generate answer");await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","My exact judgment");button(f.w,"Check my judgment");await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Retry assessment"));assert.equal(f.w.document.getElementById("judgment").disabled,true);button(f.w,"Retry assessment");await waitFor(()=>f.w.document.body.textContent.includes("You earned 1 skill point!"));assert.deepEqual(f.calls[1].args,f.calls[2].args);assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,1);}finally{f.dom.window.close();}
 });
 
 test("a daily-cap error disables retry and keeps the answer and judgment without consuming an attempt",async()=>{const f=fixture([{id:"answer-cap",text:"Invitation"},{testErrorData:"DAILY_ALLOWANCE_REACHED"}]);try{await waitFor(()=>f.w.document.getElementById("prompt"));button(f.w,"Generate answer");await waitFor(()=>f.w.document.getElementById("judgment"));type(f.w,"judgment","Check these event details");button(f.w,"Check my judgment");await waitFor(()=>f.w.document.querySelector('[role="alert"]'));assert.match(f.w.document.querySelector('[role="alert"]').textContent,/Today's practice limit is used up.*midnight UTC.*5:30 AM India time/);assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,0);assert.equal(f.w.document.getElementById("judgment").disabled,true);assert.equal([...f.w.document.querySelectorAll("button")].find(b=>b.textContent==="Retry assessment").disabled,true);assert.equal(f.w.document.getElementById("judgment").value,"Check these event details");assert.match(f.w.document.querySelector(".phone-answer").textContent,/Invitation/);assert.equal(f.calls.length,2);}finally{f.dom.window.close();}});
@@ -300,4 +303,32 @@ test("editing a prompt after a generation cap keeps the reset message and disabl
   assert.match(reopened.w.document.querySelector('[role="alert"]').textContent,/Today's practice limit is used up/);
   assert.equal([...reopened.w.document.querySelectorAll("button")].find(b=>b.textContent==="Generate answer").disabled,true);assert.equal(reopened.calls.length,0);
  }finally{f.dom.window.close();reopened?.dom.window.close();}
+});
+
+
+test("six manual screens preserve navigation and drafts without extra AI requests or repeated celebration",async()=>{
+ const f=fixture([{id:"answer-manual",text:"Mean is 6 and median is 4 for 2, 3, 4, 5, 16."},passed],{},true);let reopened;
+ const step=()=>f.w.document.querySelector('[role="progressbar"]')?.getAttribute("aria-valuenow");
+ try{
+  await waitFor(()=>step()==="1");assert.equal(f.w.document.getElementById("prompt"),null);assert.equal(f.calls.length,0);
+  button(f.w,"See the starting prompt");await waitFor(()=>step()==="2");assert.match(f.w.document.querySelector(".mission-start").textContent,/Explain averages/);assert.equal(f.w.document.getElementById("prompt"),null);
+  button(f.w,"Improve this prompt");await waitFor(()=>step()==="3");type(f.w,"prompt","Explain mean and median using 2, 3, 4, 5, 16 and show both calculations.");
+  button(f.w,"Back");await waitFor(()=>step()==="2");button(f.w,"Improve this prompt");await waitFor(()=>step()==="3");assert.match(f.w.document.getElementById("prompt").value,/show both calculations/);assert.equal(f.calls.length,0);
+  button(f.w,"Generate answer");await waitFor(()=>step()==="4");assert.equal(f.w.document.getElementById("judgment"),null);assert.equal(f.calls.length,1);
+  button(f.w,"Write my judgment");await waitFor(()=>step()==="5");type(f.w,"judgment","The sum is 30, so mean is 6. The sorted middle value is 4. Both ideas and calculations are correct.");
+  button(f.w,"Back to answer");await waitFor(()=>step()==="4");button(f.w,"Original answer");await waitFor(()=>f.w.document.getElementById("tab-old").getAttribute("aria-selected")==="true");button(f.w,"Write my judgment");await waitFor(()=>step()==="5");assert.match(f.w.document.getElementById("judgment").value,/sum is 30/);assert.match(f.w.document.querySelector('label[for="judgment"]').textContent,/your answer/);
+  button(f.w,"Check my judgment");await waitFor(()=>step()==="6");await waitFor(()=>f.w.document.querySelector(".celebrating"));assert.equal(f.calls.length,2);assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,1);
+  const seed=Object.fromEntries(Object.keys(f.w.localStorage).filter(key=>key!=="prompt-game:session:v1").map(key=>[key,JSON.parse(f.w.localStorage.getItem(key))]));
+  reopened=fixture([],seed,true);await waitFor(()=>reopened.w.document.querySelector(".result"));assert.equal(reopened.w.document.querySelector(".celebrating"),null);assert.equal(reopened.calls.length,0);assert.equal(reopened.w.document.querySelector('[role="progressbar"]').getAttribute("aria-valuenow"),"6");
+ }finally{f.dom.window.close();reopened?.dom.window.close();}
+});
+
+test("reopening the judgment view keeps its draft, and editing the prompt requires a new answer",async()=>{
+ const before={version:1,materialVersion:"quiz-v1",stage:"judge",prompt:"Original generated prompt",judgment:"A saved draft",explanation:"",answer:{id:"old-answer",text:"Old answer"},feedback:null,attempts:0,point:false,correcting:false};
+ const f=fixture([{id:"new-answer",text:"A different answer"}],{[KEY]:before,"prompt-game:beginner-01:view:v1":{step:5,stage:"judge",answerId:"old-answer"}},true);
+ try{
+  await waitFor(()=>f.w.document.getElementById("judgment"));assert.equal(f.w.document.getElementById("judgment").value,"A saved draft");assert.equal(f.calls.length,0);
+  button(f.w,"Back to answer");await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Edit my prompt"));button(f.w,"Edit my prompt");await waitFor(()=>f.w.document.getElementById("prompt"));type(f.w,"prompt","The newly edited prompt");assert.equal(f.w.document.getElementById("judgment"),null);assert.equal([...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Check my judgment"),false);
+  button(f.w,"Generate answer");await waitFor(()=>f.w.document.querySelector('[role="progressbar"]').getAttribute("aria-valuenow")==="4");button(f.w,"Write my judgment");await waitFor(()=>f.w.document.getElementById("judgment"));assert.equal(f.w.document.getElementById("judgment").value,"");assert.equal(f.calls.length,1);assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).answer.id,"new-answer");assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,0);
+ }finally{f.dom.window.close();}
 });

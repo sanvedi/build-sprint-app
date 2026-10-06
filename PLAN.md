@@ -1,5 +1,9 @@
 # PLAN.md
 
+## Active authorized milestone, 6 October 2026
+
+Builder approved the friendly six-screen practice redesign in DESIGN.md and explicitly requested npm run deploy plus real live Beginner practice 1 verification at 390px, screenshots of every step and the release commit hash. This bounded redesign replaces the previously pending live-check task for this turn. Keep scoring, points, attempts, cap, AI instructions and finals unchanged. Exclude development-only attempt-history backend work from release. Development implementation and checks passed; finish release and live verification, then stop. Other milestones still need their own approval.
+
 Latest release, 5 October 2026: the builder explicitly authorized publishing the quiz mission. GitHub push and npm run deploy succeeded. Real production generation/assessment, one point on attempt one, reopening and Next challenge passed in Edge at 390px; legacy saved invitation state and desktop opening passed. Both deployments use Gemini 3.5 Flash-Lite with the existing 20-request daily allowance. The quiz mission is now published; other challenge material and billing are unchanged. This supersedes earlier unpublished/blocked statements below. Teacher content review, quantitative feedback reliability and physical-phone/mobile-data confirmation remain pending.
 
 PRODUCT.md owns product rules; DESIGN.md owns screens and approved words. This file gives the current implementation order. Historical OpenLoops plans do not apply.
@@ -58,3 +62,7 @@ These are recorded gaps, not approval to upgrade, change billing, silently relax
 ## Parked requests
 
 None added during the current milestone. Existing out-of-v1 ideas remain excluded by PRODUCT.md: uploads, assignment/presentation generation, message monitoring, payments, leaderboard, streaks, certificates and teacher dashboard.
+
+## Approved data-model addition, 5 October 2026
+
+Builder explicitly approved keeping the five existing tables and adding learningAttempts before database implementation. Implemented and verified in development, including real phone-width correction and exact saved-record inspection. No answer editor, account system, scoring change or AI instruction change is included. Next: builder checks the development flow; then record confirmation, push and deploy following AGENTS.md. The remaining full-game milestones above stay pending.

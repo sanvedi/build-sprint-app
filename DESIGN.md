@@ -1,5 +1,65 @@
 # DESIGN.md
 
+## Proposed practice redesign, 6 October 2026 — awaiting chat approval
+
+Status: approved by the builder in chat on 6 October 2026. Implemented and checked in development with six manual screens, both correction paths, saved-view recovery and confirmed-point celebration. This section replaces earlier practice layout, palette and motion instructions; final screens and their styling remain unchanged. Production verification will be recorded separately after deployment.
+
+### Visual direction: a pocket-sized prompt game
+
+Make practice feel cute, welcoming and playful through rounded shapes, friendly words, clear steps and a small earned celebration. The student rescues an unhelpful answer by improving the supplied prompt and checking the result. Borrow the general friendliness and focused lesson pacing requested by the builder, without copying Duolingo's mascot, logo, palette, wording or screen artwork. No new mascot, sound, timer, streak, reward or game mechanic.
+
+Use a bright purple action button, peach lesson accents and sunshine-yellow progress/achievement details on a pale lavender background. Keep reading areas white and text dark. Avoid a stack of decorative cards: one central lesson workspace carries the current step, with generous breathing room and a clear action below it.
+
+| Role | Colour | Use |
+| --- | --- | --- |
+| Page | #F5F2FF | Pale lavender background |
+| Reading surface | #FFFFFF | Prompt, answer and form surfaces |
+| Ink | #29213D | Headings, body and labels |
+| Main action | #6941C6 | Purple buttons with white text; darker pressed edge |
+| Warm accent | #FFD4BF | Peach step markers and quiet illustration-free decoration |
+| Progress and reward | #FFD66B | Yellow progress fill and earned-point shape, with dark labels |
+
+Retain the bundled Nunito Sans font: bold rounded headings at 28–32px, step headings at 24px, body and buttons at 18px, supporting text at least 16px. Use left-aligned reading text and fields; centre the short success heading and earned-point moment. Check contrast, focus and disabled states in implementation; accents never carry meaning without words.
+
+Buttons: full-width main actions on phones, at least 56px tall, 18px corners and a shallow solid lower edge that compresses on press. Secondary controls have at least 44px tap targets and visible labels. Fields have 16px padding and 16px corners. Use a 480px-wide lesson column on larger screens, phone gutters of 20px and 24px gaps between groups. Long answers scroll naturally; one step per screen does not mean cutting off content to fit one viewport.
+
+### Six practice screens
+
+The progress bar stays across the top of the lesson, paired with the current step name and “Step X of 6”. It indicates position in this practice flow, not points, mastery or level unlocks. Keep the current practice, existing point total and device-save status compact; detailed level status may be opened through a secondary control. Back navigation changes the view only and never sends an AI request.
+
+| Step | Visible content | Main action |
+| --- | --- | --- |
+| 1. Task | Existing mission situation, goal and essential requirements. Heading: “Your mission”. | “See the starting prompt” |
+| 2. Weak prompt | Supplied weak prompt and its existing prepared weak answer, clearly labelled as the starting example. Heading: “This needs a little help”. | “Improve this prompt” |
+| 3. Edit | Editable supplied prompt and task requirements within reach. Heading: “Make one useful edit”. Existing correction explanation field appears here when required. | “Generate answer”, or “Generate revised answer” |
+| 4. AI answer | Full generated answer, submitted prompt and existing original/previous-answer comparison controls. Heading: “Your answer is ready”. No success judgement before assessment. | “Write my judgment” |
+| 5. Your judgment | Labelled judgment field about this exact generated answer, with its answer and requirements accessible in place. Heading: “Does it do the job?” | Existing “Check my judgment” or appropriate correction action |
+| 6. Feedback | Actual assessment, concise outcome, confirmed point when earned, and existing evidence/recheck/correction/worked-example controls. | Existing onward action, or a clear action opening the required correction |
+
+This is a change of view inside the existing challenge, not six independent submissions. Persist the current view alongside drafts so reopening resumes coherently. A recovered answer or result opens its appropriate view without a new AI call. Moving backwards preserves edits and judgments. Editing a submitted prompt still requires a new generated answer and a new judgment before assessment, under existing rules.
+
+Keep task requirements available from edit, answer and judgment screens. Comparison tabs never change which answer the judgment assesses. Preserve full answer formatting, draft judgments and answer reading positions. Moving to judgment must not hide the answer beyond reach; an expandable “Read the answer” control shows the exact answer on that screen.
+
+### Corrections, recovery and earned celebration
+
+Prompt correction returns to Edit with the actual feedback gap and the existing explanation field, then proceeds through revised answer, fresh judgment and feedback. Judgment-only correction returns to Your judgment with the unchanged answer, previous judgment, actual feedback gap and required explanation; it makes no generation request. Existing retry counts, worked-example availability, supported completion and onward destinations remain intact. Navigation alone never consumes attempts or creates points.
+
+Keep waiting, error, allowance and save-pending states on the relevant screen. Use factual existing recovery messages and separate Retry assessment from Retry saving. Preserve the daily reset message, disabled request controls until reset and retained work. Show a waiting label adjacent to the disabled main action while generation or assessment is running. Assessment uncertainty does not become failure or success.
+
+For a newly confirmed independent practice point, show “You earned 1 skill point!” with a yellow point shape and a short, approximately 700ms burst of small stars and dots. Use locally rendered shapes and CSS motion, not generated bitmap assets. Play once when the result becomes confirmed; do not replay on reopening, back navigation or an assessment retry, and never imply a second reward on replay. With reduced motion enabled, show the same static point and words. The onward button is immediately usable and never waits for animation.
+
+A not-yet result says “One more useful change” followed by the actual gap. Supported completion retains explicit “No skill point” wording and receives no earned-point animation. Existing AI feedback is displayed as returned; playful interface wording never rewrites evaluator instructions, requirements or results, and never claims quiz readiness or proven learning.
+
+### Scope and verification after approval
+
+Apply the six-screen flow and new styling to the existing Beginner practices, including legacy saved invitation work and supported return practice. Final screens, content, hints, badges and behaviour retain their current implementation and visual treatment; scope practice CSS to prevent changes spilling into finals. No new levels, sign-in, answer editor or backend feature. Release must exclude the unrelated development-only learningAttempts addition unless separately authorized.
+
+Scoring, points, attempts, daily request cap, model settings, AI instructions, ownership checks and all recovery/recheck rules remain unchanged. Never print or commit API keys or other credentials.
+
+After implementation, check the existing rule tests, build and type checks, and inspect phone and desktop practice layouts. Exercise both correction paths, back navigation, reopening, save-only retry, allowance recovery and final isolation with suitable existing tests or prepared-response checks. Deploy using npm run deploy under the Convex static-hosting skill. Then play Beginner practice 1 with real generation and assessment on the public site at 390px, capture and paste screenshots of all six steps plus the earned-point celebration and report the release commit hash. If the unchanged daily allowance or actual assessment prevents completion, report the exact blocker without staging a fake pass or raising the cap.
+
+Assumptions for approval: the redesign covers both existing Beginner practices; finals stay visually unchanged; no mascot or sound is needed; six screens can contain scrolling content; current mission material and all learning rules are preserved. Physical-phone verification remains separate from a 390px browser check.
+
 Latest release, 5 October 2026: the builder explicitly authorized publishing the quiz mission. GitHub push and npm run deploy succeeded. Real production generation/assessment, one point on attempt one, reopening and Next challenge passed in Edge at 390px; legacy saved invitation state and desktop opening passed. Both deployments use Gemini 3.5 Flash-Lite with the existing 20-request daily allowance. The quiz mission is now published; other challenge material and billing are unchanged. This supersedes earlier unpublished/blocked statements below. Teacher content review, quantitative feedback reliability and physical-phone/mobile-data confirmation remain pending.
 
 ## Implemented first-mission refinement, 5 October 2026
