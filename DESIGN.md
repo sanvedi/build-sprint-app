@@ -2,7 +2,7 @@
 
 ## Approved Prompt Gully rebrand, 6 October 2026
 
-Status: approved explicitly in chat on 6 October 2026. Implementation and release verification are in progress. The existing six-screen practice flow is already live; this milestone changes its name and visual identity, not its learning mechanics. On approval, this section takes precedence over the earlier practice palette and branding instructions below.
+Status: approved explicitly in chat on 6 October 2026. Published on 6 October 2026 with npm run deploy. Real Beginner practice 1 passed at 390px with all six screens, one point on attempt one, the branded celebration, reopening and Next challenge. Live title/header/share text and pre-rebrand progress preservation passed. Physical-phone and teacher-feedback reliability evidence remain separate. The existing six-screen practice flow is already live; this milestone changes its name and visual identity, not its learning mechanics. On approval, this section takes precedence over the earlier practice palette and branding instructions below.
 
 ### Name and voice
 
