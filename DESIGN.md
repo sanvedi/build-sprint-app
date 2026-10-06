@@ -2,7 +2,7 @@
 
 ## Proposed practice redesign, 6 October 2026 — awaiting chat approval
 
-Status: approved by the builder in chat on 6 October 2026. Implemented and checked in development with six manual screens, both correction paths, saved-view recovery and confirmed-point celebration. This section replaces earlier practice layout, palette and motion instructions; final screens and their styling remain unchanged. Production verification will be recorded separately after deployment.
+Status: approved by the builder in chat on 6 October 2026. Implemented and checked in development with six manual screens, both correction paths, saved-view recovery and confirmed-point celebration. This section replaces earlier practice layout, palette and motion instructions; final screens and their styling remain unchanged. Published with npm run deploy on 6 October 2026. The real live six-screen Beginner practice 1 journey passed in Edge at 390px: correct generated answer, actual assessment, one point on attempt one, celebration animation, reopening without another request and Next challenge. This is browser proof, not a physical-phone or teacher-feedback reliability result.
 
 ### Visual direction: a pocket-sized prompt game
 
