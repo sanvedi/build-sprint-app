@@ -5,7 +5,7 @@ import { convexTest } from "convex-test";
 import { makeFunctionReference } from "convex/server";
 
 // Execute the actual registered mutations and indexes in Convex's local test database.
-// No Google requests, deployed records or real usage allowance are touched.
+// No provider requests, deployed records or real usage allowance are touched.
 async function moduleFor(path){
  const output=await build({entryPoints:[path],bundle:true,write:false,format:"esm",platform:"node",plugins:[{name:"resolve-convex",setup(builder){builder.onResolve({filter:/^convex\//},args=>({path:import.meta.resolve(args.path),external:true}));}}]});
  return import("data:text/javascript;base64,"+Buffer.from(output.outputFiles[0].text).toString("base64"));
@@ -18,6 +18,21 @@ const finish=makeFunctionReference("practiceData:finish");
 const openFinal=makeFunctionReference("practiceData:openFinal");
 const returnToPractice=makeFunctionReference("practiceData:returnToPractice");
 const token="f".repeat(64);
+
+test("daily cap blocks the next request across devices and failed calls remain counted",async()=>{
+ const t=convexTest(schema,modules);
+ const day=new Date().toISOString().slice(0,10);
+ const cap=Number(process.env.PROMPT_GAME_DAILY_CALL_LIMIT||"20");
+ await t.run(ctx=>ctx.db.insert("practiceUsage",{day,count:cap-1}));
+ const id=await t.mutation(reserve,{token,requestId:"last-allowed",kind:"generate",input:"{}"});
+ await t.mutation(makeFunctionReference("practiceData:failed"),{id});
+ await assert.rejects(t.mutation(reserve,{token:"e".repeat(64),requestId:"other-device",kind:"generate",input:"{}"}),/DAILY_ALLOWANCE_REACHED/);
+ const usage=await t.run(ctx=>ctx.db.query("practiceUsage").withIndex("by_day",q=>q.eq("day",day)).unique());
+ assert.equal(usage.count,cap);
+ const session=await t.run(ctx=>ctx.db.query("practiceSessions").withIndex("by_token",q=>q.eq("token",token)).unique());
+ assert.equal(session.attempts,0);assert.equal(session.point,false);
+ assert.equal(await t.run(ctx=>ctx.db.query("practiceSessions").withIndex("by_token",q=>q.eq("token","e".repeat(64))).unique()),null);
+});
 
 test("quiz material is pinned to new sessions and cannot replace legacy saved work",async()=>{
  const t=convexTest(schema,modules);
