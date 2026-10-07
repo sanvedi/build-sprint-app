@@ -29,6 +29,7 @@ test("student feedback retains the specific learning explanation and hides inter
  assert.equal(shown.evidence,"Your judgment correctly checks 30 divided by 5 = 6.");
  assert.equal(JSON.stringify(raw),original);
  assert.equal(shown.earned,true);assert.equal(shown.id,raw.id);
+ assert.equal(studentFeedback({...raw,why:"Your judgment checks the answer correctly. No correction is needed, so the correction criterion is not applicable and is treated as satisfied."}).why,"Your judgment checks the answer correctly.");
  const failed=studentFeedback({earned:false,route:"prompt",gap:"Your prompt omits the filename.",why:"promptMeetsRequirements is false.",evidence:"The filename student-ID_report.pdf is missing."});
  assert.equal(failed.gap,"Your prompt omits the filename.");assert.match(failed.why,/prompt/);assert.equal(failed.evidence,"The filename student-ID_report.pdf is missing.");
 });
