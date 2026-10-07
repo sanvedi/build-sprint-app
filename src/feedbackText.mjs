@@ -1,5 +1,5 @@
 // Rewrite only the practice display. Saved assessment and scoring stay intact.
-const internal=/\b(?:correction[-\s]related|fields?|flags?|booleans?|schema|promptMeetsRequirements|judgmentMeetsRequirements|correctionAddressesGap|explanationSound|earned\s*=|route\s*=)\b/i;
+const internal=/\b(?:correction[-\s]related|fields?|flags?|booleans?|schema|empty explanation|promptMeetsRequirements|judgmentMeetsRequirements|correctionAddressesGap|explanationSound|earned\s*=|route\s*=)\b/i;
 function studentText(text="") {
   return text.split(/(?<=[.!?])\s+|\n+/)
     .filter(sentence=>!internal.test(sentence))
