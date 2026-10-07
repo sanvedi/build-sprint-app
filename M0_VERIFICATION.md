@@ -1,5 +1,13 @@
 # Prompting Game: M0 verification
 
+## OpenAI migration, 7 October 2026
+
+Builder authorized replacing Gemini with OpenAI and deploying, preserving instructions and game rules. Selected gpt-5.6-luna from fetched official documentation: https://developers.openai.com/api/docs/models/gpt-5.6-luna . Listed input/output pricing: $0.20/$1.20 per million tokens. Production key verified privately; authenticated model retrieval returned HTTP 200 and gpt-5.6-luna.
+
+Changed provider import/factory, key lookup/redaction, provider options and package dependency. Responses use reasoningEffort=none to retain visible reply space within unchanged 1600 generation / 2000 assessment/recheck token caps; store=false. All system/task instructions and feedback schema unchanged. Release schema, persistence, task content and frontend match prior production; development-only learningAttempts excluded. Both production model settings use gpt-5.6-luna. Missing AI/finals enable flags restored to true; absent cap override leaves the existing 20-request default intact.
+
+All 59 release tests, typecheck/build passed. npm run deploy published backend and frontend. Real Edge at 390x844 opened the quiz and submitted a mean/median prompt. First request failed before reservation because AI enable flag was missing. After restoration, OpenAI rejected generation: "You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/." No successful OpenAI answer, assessment, point or two-practice completion claimed. Existing SDK retries occurred; stop manual retries until credits are added. Synthetic session and screenshot preserved under ignored artifacts/openai-live. No secret printed or committed. Teacher reliability and physical-phone evidence remain separate.
+
 ## Quiz mission published and checked, 5 October 2026
 
 The builder explicitly requested changing the published app. Committed the authorization record, pushed current main to GitHub, and ran npm run deploy successfully to https://combative-jaguar-50.convex.site. Production schema validation succeeded without deleting indexes. Confirmed production Gemini key presence without printing it, both model settings at gemini-3.5-flash-lite, daily limit 20 and finals enabled. No billing/settings increase occurred.

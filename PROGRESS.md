@@ -1,5 +1,7 @@
 # PROGRESS.md
 
+- 2026-10-07: Authorized OpenAI replacement deployed with npm run deploy, excluding development-only attempt history. All 59 release checks, typecheck/build and private key/model-access checks passed. Missing production AI/finals enable flags restored; instructions, reply caps, scoring, points, attempts and default 20-request cap unchanged. Live generation failed because OpenAI had no API credits; both requested real answers and assessments remain blocked. No secret printed or committed.
+
 Keep one factual line per completed or builder-confirmed step. Distinguish development, public release, automated proof and builder reports. Details live in M0_VERIFICATION.md; this is not a claim that the whole v1 or feedback gate has passed.
 
 - 2026-10-05: Published the quiz mission after explicit builder instruction, GitHub push and npm run deploy. Real production generation/assessment, one point on attempt one, reopening and Next challenge passed in Edge at 390px; legacy saved-state compatibility and fresh desktop opening passed without AI calls. Model settings, daily allowance and billing unchanged; teacher reliability evidence and physical-phone/mobile-data confirmation remain pending.

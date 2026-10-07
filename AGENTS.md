@@ -1,5 +1,7 @@
 # AGENTS.md
 
+Latest provider update, 7 October 2026: builder-authorized OpenAI replacement deployed. Production uses OPENAI_API_KEY and gpt-5.6-luna for answers, assessments and rechecks. Historical Gemini settings below are superseded; see OPENAI_SETUP.md. Instructions, reply caps, scoring, points, attempts and default 20-request daily cap unchanged. Missing production AI/finals enable flags restored to true. All 59 release tests, typecheck/build and model access passed; npm run deploy succeeded. Live generation is blocked by OpenAI having no API credits remaining; no real OpenAI answer/assessment or two-practice completion is claimed. Resume only after builder adds credits. Development-only attempt history remains excluded from release.
+
 Latest release, 5 October 2026: the builder explicitly authorized publishing the quiz mission. GitHub push and npm run deploy succeeded. Real production generation/assessment, one point on attempt one, reopening and Next challenge passed in Edge at 390px; legacy saved invitation state and desktop opening passed. Both deployments use Gemini 3.5 Flash-Lite with the existing 20-request daily allowance. The quiz mission is now published; other challenge material and billing are unchanged. This supersedes earlier unpublished/blocked statements below. Teacher content review, quantitative feedback reliability and physical-phone/mobile-data confirmation remain pending.
 
 Project folder: C:\Users\LENOVO\build-sprint-app.
