@@ -1,5 +1,9 @@
 # PLAN.md
 
+## OpenAI replacement, 7 October 2026
+
+Builder authorized replacement, deployment and real Beginner practice 1/2 verification with verbatim replies. OpenAI gpt-5.6-luna deployed; 59 release checks, typecheck/build and model access passed. Live generation is blocked by the OpenAI account having no API credits. Next: after builder adds credits, resume the preserved synthetic live session, complete both practices, save exact answers/assessments and report the deployed commit. Do not raise the cap, change scoring or publish development-only attempt history.
+
 ## Active Prompt Gully rebrand, 6 October 2026
 
 Builder explicitly approved the DESIGN.md proposal: rename the existing app Prompt Gully in the title, header, sharing description and confirmed practice celebration; cobalt/pink/citrus practice styling with the existing six screens. Publish using npm run deploy and verify real Beginner practice 1 at 390px with a screenshot per step and release hash. Do not change learning rules, AI instructions, cap or finals beyond the approved shared header name. Exclude development-only attempt history. Published release 2f63575 passed all 58 release checks, typecheck/build and real live 390px Beginner practice 1: one point on attempt one, celebration, reopening and Next challenge. All six screenshots and hash are ready for handoff. Existing saved progress and live branding metadata passed. This milestone is complete; stop here until another milestone is approved.

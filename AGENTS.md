@@ -1,5 +1,7 @@
 # AGENTS.md
 
+Latest provider update, 7 October 2026: builder-authorized OpenAI replacement deployed. Production uses OPENAI_API_KEY and gpt-5.6-luna for answers, assessments and rechecks. Historical Gemini settings below are superseded; see OPENAI_SETUP.md. Instructions, reply caps, scoring, points, attempts and default 20-request daily cap unchanged. Missing production AI/finals enable flags restored to true. All 59 release tests, typecheck/build and model access passed; npm run deploy succeeded. Live generation is blocked by OpenAI having no API credits remaining; no real OpenAI answer/assessment or two-practice completion is claimed. Resume only after builder adds credits. Development-only attempt history remains excluded from release.
+
 Latest release, 5 October 2026: the builder explicitly authorized publishing the quiz mission. GitHub push and npm run deploy succeeded. Real production generation/assessment, one point on attempt one, reopening and Next challenge passed in Edge at 390px; legacy saved invitation state and desktop opening passed. Both deployments use Gemini 3.5 Flash-Lite with the existing 20-request daily allowance. The quiz mission is now published; other challenge material and billing are unchanged. This supersedes earlier unpublished/blocked statements below. Teacher content review, quantitative feedback reliability and physical-phone/mobile-data confirmation remain pending.
 
 Project folder: C:\Users\LENOVO\build-sprint-app.
@@ -8,18 +10,21 @@ Final project instructions, updated 4 October 2026. This file describes the curr
 
 ## 1. How the product works
 
-Interface: a web page designed for a phone. Students edit a supplied weak prompt, inspect the AI answer and judge it against the task before receiving feedback.
+Interface: a web page designed for a phone. Students improve a weak prompt, read the AI answer, and explain whether it meets the task.
 
-Business logic: Convex generates the answer and assesses the student's prompt, answer judgment and correction explanation against prepared requirements. It records attempts and justified points, handles retries without duplicates, and permits one completed Challenge recheck of the same assessment without consuming an attempt. If AI still disagrees, the student continues normally.
+Business logic: Convex generates the answer, checks the student's prompt and judgment against prepared requirements, and gives feedback. It manages corrections, points, attempt limits, assessment rechecks and final challenge results. Retries do not create duplicate rewards; one completed recheck of the same assessment does not consume another attempt. If AI still disagrees, the student continues normally.
 
 Current build: The Beginner final and alternate are included following the builder's explicit Publish Final Assessment instruction. The earlier draft remains preserved at git tag unpublished-beginner-final. The current published build contains both Beginner practices, Next challenge from either completion route, separate points and initial-plus-two-retry allowances, both correction paths, worked examples, anonymous device saving, assessment recheck and recovery. The three-level game and account saving remain planned v1 work. Both practices now have a verified live browser journey at 390px: generation, judgment, feedback, prompt correction, judgment-only correction, justified points, Next challenge, assessment retry, save-only recovery, Challenge recheck and reopening. This proves working mechanics, not AI teaching reliability or physical-phone usability.
 
-Database:
+Database: remembers progress per challenge, prompts, original and revised AI answers, student judgments, correction explanations, feedback, points, attempts and final variants seen. Progress currently uses an anonymous device identifier; account backup is planned for v1. The new structured attempt-history table is verified in development but has not been published.
+
+Table details:
 
 | Table | What it remembers |
 | --- | --- |
 | practiceSessions | Anonymous session token, challenge ID, assessed attempt count, earned point and latest assessment ID, separately per practice. Legacy rows without challenge ID belong to practice 1 and are preserved. |
 | practiceJobs | Generation, assessment and recheck requests; challenge IDs, request IDs, submitted inputs, pending/done/failed state, results, challenged assessment ID and reviewed result. Original assessment remains retained. |
+| learningAttempts | Approved 5 October 2026; development only until release confirmation. One immutable snapshot per assessed submission: first prompt/AI answer, submitted prompt/current AI answer, previous/current judgment, correction explanation and linked generation/assessment/previous attempt. Optional studentEditedAnswerText is reserved; no direct answer editor is built. |
 | finalProgress | Anonymous token, seen final variants, current variant, Beginner badge decision and the supported practice required after failure. |
 | practiceUsage | UTC day and reserved app request count across the deployment. |
 | m0Checks | Historical setup-test records only, retained to avoid deleting existing data. Never product usage. |
@@ -35,7 +40,7 @@ Third party:
 
 Not in v1: completing assignments or presentations, personal uploads, WhatsApp/Gmail access, reminders, payments, leaderboard, streaks, certificates and a teacher dashboard. Optional sign-in after first value IS in the approved v1; it is not built yet.
 
-When I report a bug, I'll name the part. Look there first, find the cause, and tell me if I named the wrong part.
+Bug reports: when I report a bug, I'll name the part. Look there first, find the cause, and tell me if I named the wrong part.
 
 ## 2. How we work
 
