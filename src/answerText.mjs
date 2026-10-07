@@ -48,9 +48,10 @@ export function readableAnswer(text = "") {
 export function readablePracticeAnswer(text = "") {
   const operators={div:"÷",over:"÷",times:"×",cdot:"×",approx:"≈",simeq:"≈",le:"≤",leq:"≤",ge:"≥",geq:"≥",neq:"≠",ne:"≠",pm:"±",infty:"∞",alpha:"α",beta:"β",pi:"π",theta:"θ",sum:"sum",prod:"product"};
   text=text.replace(/\\(?:begin|end)\s*\{[^}]*\}/g, "")
+    .replace(/\\(?:boxed|underline|overline)(?![A-Za-z])/g,"\\mathrm")
     .replace(/\\([a-zA-Z]+)(?![a-zA-Z])/g,(all,name)=>Object.hasOwn(operators,name)?` ${operators[name]} `:all);
   return readableAnswer(text).split("\n").map(line=>{
-    const hasMath=/\\|[÷×≈≤≥≠±]|\bdivided by\b|\bsquare root\b/.test(line);
+    const hasMath=/\\|[÷×≈≤≥≠±]|\bdivided by\b|\bsquare root\b|[\w)]\s*=\s*\d/.test(line);
     if(!hasMath)return line;
     const indent=line.match(/^\s*/)[0];
     return indent+mathText(line)
