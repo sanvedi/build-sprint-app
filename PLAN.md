@@ -1,5 +1,9 @@
 # PLAN.md
 
+## Practice display fixes, 7 October 2026
+
+Builder-authorized maths/feedback display fixes published and verified. Both real Beginner practices passed in a fresh private 390px Edge session; final screenshots and deployed hash ready for handoff. Raw generated/saved inputs and marking unchanged; finals unchanged. 63 release checks passed. No further feature work approved; per-device limit remains deferred by builder.
+
 ## OpenAI replacement, 7 October 2026
 
 Completed real live verification after credits were added: both practices passed at 390x844 with one point on attempt one; reopening made no extra AI request. Saved verbatim answers/results for handoff. Daily usage 7/20; cross-device cap/failed-call test passed with all 60 release checks. No per-device limit added; a separate product choice was asked because one person can consume the existing shared allowance. No new app deployment was needed for verification/tests/documentation.

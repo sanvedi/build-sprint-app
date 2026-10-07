@@ -1,5 +1,7 @@
 # PROGRESS.md
 
+- 2026-10-07: Published authorized practice-only maths/feedback display fixes as fcba83cf14d268f2d9bd4cef87accc664aad1875 via npm run deploy. All 63 release checks, typecheck/build, local 390/1280px checks and real fresh-private live 390px Beginner 1/2 journeys passed. Each earned one point on attempt one; raw saved answers/assessments retained, four screenshots captured, reopening used no AI. Four AI requests; usage 15/20. Backend/AI instructions/scoring/attempts/cap/finals unchanged; no secret printed or committed.
+
 - 2026-10-07: After builder added credits, both published Beginner practices completed with real OpenAI answers/assessments at 390x844. Each earned one point on attempt one and reopened without another AI request. Usage 7/20; 60 release checks passed including real backend daily-cap enforcement across devices and failed-call accounting. Exact synthetic replies/results and screenshots saved locally; no cap increase, per-device limit, provider billing change or unrelated feature deployment.
 
 - 2026-10-07: Authorized OpenAI replacement deployed with npm run deploy, excluding development-only attempt history. All 59 release checks, typecheck/build and private key/model-access checks passed. Missing production AI/finals enable flags restored; instructions, reply caps, scoring, points, attempts and default 20-request cap unchanged. Live generation failed because OpenAI had no API credits; both requested real answers and assessments remain blocked. No secret printed or committed.
