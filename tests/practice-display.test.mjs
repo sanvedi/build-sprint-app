@@ -14,6 +14,8 @@ test("practice maths handles bare commands, code, delimiters and unfamiliar comm
  assert.match(shown,/30 ÷ 5 = 6/);
  assert.match(shown,/÷ 5 = 6/);
  assert.match(shown,/square root of/);
+ assert.equal(readablePracticeAnswer(String.raw`\[2,\ 3,\ \boxed{4},\ 5,\ 6\]`).trim(),"2, 3, 4, 5, 6");
+ assert.equal(readablePracticeAnswer("Median=4"),"Median = 4");
  assert.doesNotMatch(shown,/\\[A-Za-z]|\\[()[\]]/);
  assert.match(raw,/\\div/);
  assert.equal(readableAnswer(String.raw`20\div5=4`),String.raw`20\div5=4`,"final answer rendering remains unchanged");
