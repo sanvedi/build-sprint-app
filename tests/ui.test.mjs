@@ -64,9 +64,25 @@ test("practice answers render headings, lists and maths while retaining the exac
   assert.equal(content.querySelector("h4").textContent,"Calculating the mean");
   assert.equal(content.querySelectorAll("ol li").length,2);
   assert.equal(content.querySelector("strong").textContent,"Add");
-  assert.match(content.textContent,/\(2 \+ 3 \+ 4 \+ 5 \+ 16\) divided by 5 = 6/);
+  assert.match(content.textContent,/\(2 \+ 3 \+ 4 \+ 5 \+ 16\) ÷ 5 = 6/);
   assert.equal(content.querySelector("script"),null);assert.equal(f.w.answerRan,undefined);
   assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).answer.text,raw);
+ }finally{f.dom.window.close();}
+});
+
+test("practice display hides internal feedback while retaining the exact saved assessment and raw answer",async()=>{
+ const rawFeedback={...passed,why:"The student's prompt covers the task. Correction-related fields are true on an initial attempt.",evidence:"The student's judgment checks the calculation. explanationSound is true."};
+ const raw=String.raw`20\div5=4`;
+ const state={version:1,materialVersion:"quiz-v1",stage:"complete",point:true,attempts:1,prompt:"Explain mean and median with an example",answer:{id:"answer",text:raw},judgment:"Checked the calculation",explanation:"",feedback:rawFeedback};
+ const f=fixture([],{[KEY]:state});
+ try{
+  await waitFor(()=>f.w.document.querySelector(".assessment-details"));
+  const details=f.w.document.querySelector(".assessment-details");details.open=true;
+  assert.match(details.textContent,/Your prompt covers the task/);
+  assert.match(details.textContent,/Your judgment checks the calculation/);
+  assert.match(details.textContent,/20 ÷ 5 = 4/);
+  assert.doesNotMatch(details.textContent,/correction-related|explanationSound|\\div/i);
+  const saved=JSON.parse(f.w.localStorage.getItem(KEY));assert.deepEqual(saved.feedback,rawFeedback);assert.equal(saved.answer.text,raw);assert.equal(f.calls.length,0);
  }finally{f.dom.window.close();}
 });
 

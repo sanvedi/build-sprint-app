@@ -43,3 +43,23 @@ export function readableAnswer(text = "") {
     .replace(/\\\(([\s\S]*?)\\\)/g, (_all, value) => mathText(value))
     .replace(/(?<!\\)\$([^\n$]+)\$/g, (all, value) => /\\[a-zA-Z]|[=+*/^]|^\s*[\d.,\s-]+\s*$/.test(value) ? mathText(value) : all);
 }
+
+// Practice-only display: retain the original answer for saving and assessment.
+export function readablePracticeAnswer(text = "") {
+  const operators={div:"÷",over:"÷",times:"×",cdot:"×",approx:"≈",simeq:"≈",le:"≤",leq:"≤",ge:"≥",geq:"≥",neq:"≠",ne:"≠",pm:"±",infty:"∞",alpha:"α",beta:"β",pi:"π",theta:"θ",sum:"sum",prod:"product"};
+  text=text.replace(/\\(?:begin|end)\s*\{[^}]*\}/g, "")
+    .replace(/\\([a-zA-Z]+)(?![a-zA-Z])/g,(all,name)=>Object.hasOwn(operators,name)?` ${operators[name]} `:all);
+  return readableAnswer(text).split("\n").map(line=>{
+    const hasMath=/\\|[÷×≈≤≥≠±]|\bdivided by\b|\bsquare root\b/.test(line);
+    if(!hasMath)return line;
+    const indent=line.match(/^\s*/)[0];
+    return indent+mathText(line)
+      .replace(/\\([a-zA-Z]+)/g,(_all,name)=>` ${name.replace(/([a-z])([A-Z])/g,"$1 $2")} `)
+      .replace(/\\[()[\]{}]|\\\\/g," ")
+      .replace(/\\/g," ")
+      .replace(/[{}]/g,"")
+      .replace(/\bdivided by\b/g,"÷").replace(/\btimes\b/g,"×")
+      .replace(/\s*([=÷×≈≤≥≠±])\s*/g," $1 ")
+      .replace(/\s+/g," ").trim();
+  }).join("\n");
+}
