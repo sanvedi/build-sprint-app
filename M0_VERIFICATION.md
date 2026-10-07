@@ -1,5 +1,15 @@
 # Prompting Game: M0 verification
 
+## OpenAI live verification after credits, 7 October 2026
+
+Builder confirmed credits added and requested protection from exhaustion. Resumed the preserved synthetic session at the actual public URL in Edge at 390x844. A pending failed generation recovered using the saved prompt. Its new answer correctly explained mean and median with sum 30, mean 6 and median 4 for 2, 3, 4, 5, 16. Accurate judgment received earned=true, route=none, no gap, and one point on attempt one. Next challenge opened practice 2; its real answer supplied exactly three PDF-submission steps with the filename, portal and Tuesday 5 PM deadline. Accurate judgment earned its separate point on attempt one. Both results persisted after reload with no further AI action. Both phases passed no-overflow and no-page-error checks.
+
+Four new reserved AI requests completed the two practices; today's stored count rose from 3 to 7 of the existing 20. Raw original answers and full verbatim returned assessment fields are saved in ignored artifacts/openai-live/beginner-01-answer.txt, beginner-02-answer.txt and corresponding assessment/state JSON files. Generated text was read from saved raw results, not reconstructed from display. Screenshots and session are alongside them.
+
+Added a local Convex database test: the final allowed request is counted even after failure, a different device's next request receives DAILY_ALLOWANCE_REACHED, usage does not exceed the cap, and no learning attempt/point or second-device session is created by rejection. All 60 release tests passed. Main development dependency installation initially lacked esbuild; npm ci restored dependencies and tests were rerun. No real production allowance was consumed by these local tests.
+
+The backend shared cap and 1600/2000 reply limits remain unchanged. This caps app request volume, not dollars or exact provider calls: SDK retries can issue multiple provider attempts within one reserved request. One anonymous person can consume the shared daily allowance; per-device limits and a provider billing cap were not implemented or claimed. A concrete per-device choice was requested separately. Live app commit remains 30c6c8f1567954c351ba3bc2860562e9156d13ed; only tests and evidence changed after deployment. Teacher reliability, physical-phone/mobile-data and account-backed abuse protection remain separate.
+
 ## OpenAI migration, 7 October 2026
 
 Builder authorized replacing Gemini with OpenAI and deploying, preserving instructions and game rules. Selected gpt-5.6-luna from fetched official documentation: https://developers.openai.com/api/docs/models/gpt-5.6-luna . Listed input/output pricing: $0.20/$1.20 per million tokens. Production key verified privately; authenticated model retrieval returned HTTP 200 and gpt-5.6-luna.

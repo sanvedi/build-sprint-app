@@ -2,6 +2,8 @@
 
 ## OpenAI replacement, 7 October 2026
 
+Completed real live verification after credits were added: both practices passed at 390x844 with one point on attempt one; reopening made no extra AI request. Saved verbatim answers/results for handoff. Daily usage 7/20; cross-device cap/failed-call test passed with all 60 release checks. No per-device limit added; a separate product choice was asked because one person can consume the existing shared allowance. No new app deployment was needed for verification/tests/documentation.
+
 Builder authorized replacement, deployment and real Beginner practice 1/2 verification with verbatim replies. OpenAI gpt-5.6-luna deployed; 59 release checks, typecheck/build and model access passed. Live generation is blocked by the OpenAI account having no API credits. Next: after builder adds credits, resume the preserved synthetic live session, complete both practices, save exact answers/assessments and report the deployed commit. Do not raise the cap, change scoring or publish development-only attempt history.
 
 ## Active Prompt Gully rebrand, 6 October 2026

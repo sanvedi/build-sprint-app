@@ -1,5 +1,7 @@
 # PROGRESS.md
 
+- 2026-10-07: After builder added credits, both published Beginner practices completed with real OpenAI answers/assessments at 390x844. Each earned one point on attempt one and reopened without another AI request. Usage 7/20; 60 release checks passed including real backend daily-cap enforcement across devices and failed-call accounting. Exact synthetic replies/results and screenshots saved locally; no cap increase, per-device limit, provider billing change or unrelated feature deployment.
+
 - 2026-10-07: Authorized OpenAI replacement deployed with npm run deploy, excluding development-only attempt history. All 59 release checks, typecheck/build and private key/model-access checks passed. Missing production AI/finals enable flags restored; instructions, reply caps, scoring, points, attempts and default 20-request cap unchanged. Live generation failed because OpenAI had no API credits; both requested real answers and assessments remain blocked. No secret printed or committed.
 
 Keep one factual line per completed or builder-confirmed step. Distinguish development, public release, automated proof and builder reports. Details live in M0_VERIFICATION.md; this is not a claim that the whole v1 or feedback gate has passed.
