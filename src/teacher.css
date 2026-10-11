@@ -1,5 +1,8 @@
 .name-step { max-width: 480px; margin: 48px auto; padding: 24px; }
 .name-step h1 { margin-top: 40px; }
+.name-step .welcome-headline { font-size: 32px; line-height: 1.15; margin-bottom: 16px; }
+.name-step .first-action { line-height: 1.5; margin-bottom: 28px; }
+.name-step h2 { font-size: 22px; margin: 0 0 12px; }
 .name-step .primary { min-height: 56px; background: #2446D8; border-color: #2446D8; }
 .name-step .primary:hover:not(:disabled) { background: #1937ad; }
 .name-step input:focus-visible { outline: 3px solid #2446D8; outline-offset: 3px; }
