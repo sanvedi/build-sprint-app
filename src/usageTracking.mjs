@@ -1,6 +1,7 @@
+import { isPractice } from "../shared/pathMissions.mjs";
 const PREFIX = "prompt-game:usage-pending:v1:";
 // Start a new visit on the introduction release; earlier rows stay unmodified.
-const VISIT = "prompt-game:visit:stories-v1";
+const VISIT = "prompt-game:visit:missions-v1";
 const VISIT_PATH = `${VISIT}:path`;
 const randomId = () => Array.from(crypto.getRandomValues(new Uint8Array(32)), n => n.toString(16).padStart(2, "0")).join("");
 
@@ -22,7 +23,7 @@ export function createUsageTracking({ token, send, initialPath = null, storage =
       if (!key?.startsWith(PREFIX)) continue;
       try {
         const event = JSON.parse(storage.getItem(key));
-        if (event.token === token && /^[a-f0-9]{64}$/.test(event.visitId) && (!event.challengeId || ["beginner-01", "beginner-02"].includes(event.challengeId))) pending.set(key, event);
+        if (event.token === token && /^[a-f0-9]{64}$/.test(event.visitId) && (!event.challengeId || isPractice(event.challengeId))) pending.set(key, event);
       } catch {}
     }
   } catch {}

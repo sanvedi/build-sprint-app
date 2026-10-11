@@ -11,6 +11,7 @@ import PracticeFlow from "./PracticeFlow.jsx";
 import StudentName, { NAME_KEY } from "./StudentName.jsx";
 import TeacherPage from "./TeacherPage.jsx";
 import ChoosePath from "./ChoosePath.jsx";
+import { missionPath, missionPaths, missionIds, practicePair, practiceNumber, isPractice } from "../shared/pathMissions.mjs";
 import { PATH_KEY, savedPath, storyPaths } from "../shared/storyPaths.mjs";
 import { createUsageTracking } from "./usageTracking.mjs";
 import Teaching, { TEACHING_KEY } from "./Teaching.jsx";
@@ -31,7 +32,7 @@ function savedPractice(id){return loadState(()=>localStorage.getItem(practiceKey
 function startingPractice(){
  if(preview)return preview.challengeId||"beginner-01";
  const recovery=storedRecovery();if(recovery)return recovery.challengeId||"beginner-01";
- try{const id=JSON.parse(localStorage.getItem(ACTIVE));return id in practiceTasks&&(id==="beginner-01"||practiceFinished(savedPractice("beginner-01")))?id:"beginner-01";}catch{return "beginner-01";}
+ try{const id=JSON.parse(localStorage.getItem(ACTIVE));return id in practiceTasks&&(id===practicePair(id)[0]||practiceFinished(savedPractice(practicePair(id)[0])))?id:"beginner-01";}catch{return "beginner-01";}
 }
 const TOKEN="prompt-game:session:v1";
 const client=__CONVEX_URL__?new ConvexHttpClient(__CONVEX_URL__):null;
@@ -46,18 +47,14 @@ function requestError(error,kind){
 }
 function Progress({state,pending,challengeId,records,onOpen,disabled}){
   const all={...records,[challengeId]:state};
-  const firstFinished=practiceFinished(pending&&challengeId==="beginner-01"?records["beginner-01"]:all["beginner-01"]);
+  const newMode=Boolean(missionPath(challengeId)||(isFinal(challengeId)||isReview(challengeId))&&missionIds.some(id=>all[id]?.answer||all[id]?.attempts));
+  const [first,second]=practicePair(newMode&&!missionPath(challengeId)?`path-${savedPath()||"A"}-01`:challengeId);
+  const ids=newMode?missionIds:[first,second];
+  const points=ids.reduce((sum,id)=>sum+(all[id]?.point&&!(pending&&id===challengeId)?1:0),0);
   const badge=Object.entries(all).some(([id,value])=>isFinal(id)&&value.passed&&!(pending&&id===challengeId));
-  const points=Object.entries(all).reduce((sum,[id,value])=>sum+(["beginner-01","beginner-02"].includes(id)&&value.point&&!(id===challengeId&&pending)?1:0),0);
-  function words(id){
-    const value=all[id];const number=id==="beginner-01"?1:2;
-    if(id===challengeId&&pending)return `Practice ${number} - Save pending`;
-    if(value?.point)return `Practice ${number} - 1 skill point earned`;
-    if(practiceFinished(value))return `Practice ${number} - Completed with help - No skill point`;
-    if(id===challengeId)return `Practice ${number} of 2 - Current`;
-    return `Practice ${number} - ${firstFinished?"Ready":"Locked"}`;
-  }
-  return <nav className="progress" aria-label="Learning progress"><div className="level current"><span className="level-symbol" aria-hidden="true">1</span><div><strong>Beginner</strong>{["beginner-01","beginner-02"].map(id=>id!==challengeId&&(practiceFinished(all[id])||id==="beginner-02"&&firstFinished)?<button key={id} onClick={()=>onOpen(id)} disabled={disabled}>{words(id)}</button>:<span key={id} aria-current={id===challengeId?"step":undefined}>{words(id)}</span>)}<span>{pending&&isFinal(challengeId)?"Final challenge - Save pending":badge?"Beginner badge earned":isFinal(challengeId)?"Final challenge - Current":practiceFinished(all["beginner-01"])&&practiceFinished(all["beginner-02"])?"Final challenge - Ready":"Final challenge - Locked"}</span></div></div><div className="level locked"><span className="level-symbol" aria-hidden="true">2</span><div><strong>Amateur</strong><span className="lock-short">{badge?"Ready":"Locked"}</span><span className="lock-detail">{badge?"Ready - More challenges will follow.":"Locked - Pass Beginner's final"}</span></div></div><div className="level locked"><span className="level-symbol" aria-hidden="true">3</span><div><strong>Pro</strong><span className="lock-short">Locked</span><span className="lock-detail">Locked - Pass Amateur's final</span></div></div><div className="points"><strong>{points}<span> / 6</span></strong><span>Skill points</span></div></nav>;
+  const earlier=["beginner-01","beginner-02"].filter(id=>all[id]?.answer||all[id]?.attempts||all[id]?.prompt!==initialState(id).prompt);
+  function item(id){const value=all[id];const locked=id===practicePair(id)[1]&&!practiceFinished(all[practicePair(id)[0]]);const label=`${missionPath(id)?`Path ${missionPath(id)} · `:""}Practice ${practiceNumber(id)} — ${pending&&id===challengeId?"Save pending":value?.point?"1 skill point earned":practiceFinished(value)?"Completed with help":id===challengeId?"Current":locked?"Locked":"Ready"}`;return id===challengeId||locked?<span key={id}>{label}</span>:<button key={id} onClick={()=>onOpen(id)} disabled={disabled}>{label}</button>;}
+  return <nav className="progress" aria-label="Learning progress"><div className="level current"><span className="level-symbol" aria-hidden="true">1</span><div><strong>Beginner</strong>{ids.map(item)}<span>{pending&&isFinal(challengeId)?"Final challenge - Save pending":badge?"Beginner badge earned":isFinal(challengeId)?"Final challenge - Current":practiceFinished(all[first])&&practiceFinished(all[second])?"Final challenge - Ready":"Final challenge - Locked"}</span>{missionPath(challengeId)&&earlier.length>0&&<><strong>Earlier saved practices</strong>{earlier.map(item)}<span>{earlier.filter(id=>all[id]?.point).length} earlier points kept in history</span></>}</div></div><div className="level locked"><span className="level-symbol" aria-hidden="true">2</span><div><strong>Amateur</strong><span>{badge?"Ready - More challenges will follow.":"Locked - Pass Beginner's final"}</span></div></div><div className="level locked"><span className="level-symbol" aria-hidden="true">3</span><div><strong>Pro</strong><span>Locked - Pass Amateur's final</span></div></div><div className="points"><strong>{points}<span> / 6</span></strong><span>Skill points</span></div></nav>;
 }
 function Requirements({task,open=false}){return <details className="requirements" open={open||undefined}><summary>Task requirements</summary><ul>{task.requirements.map(r=><li key={r}>{r}</li>)}</ul></details>;}
 function Answers({state,task}){
@@ -67,12 +64,12 @@ function Answers({state,task}){
   function switchTab(next){if(body.current)positions.current[tab]=body.current.scrollTop;setTab(next);requestAnimationFrame(()=>{if(body.current)body.current.scrollTop=positions.current[next]||0;});}
   return <section aria-label="Answer comparison" className="answer-section" id="answer-view"><div className="comparison-tools"><div className="answer-tabs" role="tablist" aria-label="Compare answers"><button type="button" role="tab" aria-selected={tab==="old"} onClick={()=>switchTab("old")} aria-controls="phone-answer" id="tab-old">{state.previousAnswer?"Previous answer":"Original answer"}</button><button type="button" role="tab" aria-selected={tab==="new"} onClick={()=>switchTab("new")} aria-controls="phone-answer" id="tab-new">{state.previousAnswer?"Revised answer":"Your answer"}</button></div><a href="#judgment" onClick={()=>requestAnimationFrame(()=>document.getElementById("judgment")?.focus())}>Write my judgment</a></div><div className="answer-grid"><article className="desktop-answer"><h3>{state.previousAnswer?"Previous answer":"Original example"}</h3><Answer text={old}/></article><article className="desktop-answer"><h3>{state.previousAnswer?"Revised answer":"Your answer"}</h3><Answer text={state.answer.text}/></article></div><article className="phone-answer" id="phone-answer" role="tabpanel" aria-labelledby={tab==="old"?"tab-old":"tab-new"} ref={body}><h3>{tab==="old"?(state.previousAnswer?"Previous answer":"Original example"):(state.previousAnswer?"Revised answer":"Your answer")}</h3><Answer text={tab==="old"?old:state.answer.text}/></article></section>;
 }
-function App({tracking, pathId, onChooseAnother}){
+function App({tracking, pathId, onChooseAnother, onPathChange}){
   const [challengeId,setChallengeId]=useState(startingPractice);
   const final=isFinal(challengeId);const review=isReview(challengeId);
   const [records,setRecords]=useState(()=>preview?preview.records||{}:Object.fromEntries(Object.keys(practiceTasks).map(id=>[id,savedPractice(id)])));
   const [s,setS]=useState(()=>preview?.state||storedRecovery()?.next||storedRecovery()?.before||savedPractice(startingPractice()));
-  useEffect(()=>{if(!preview&&["beginner-01","beginner-02"].includes(challengeId)&&!practiceFinished(s))tracking?.start(challengeId);},[challengeId,tracking]);
+  useEffect(()=>{if(!preview&&isPractice(challengeId)&&!practiceFinished(s))tracking?.start(challengeId);},[challengeId,tracking]);
   const task=taskFor(challengeId,s.materialVersion);const mission=challengeId==="beginner-01"&&s.materialVersion==="quiz-v1";
   const [allowanceResetAt,setAllowanceResetAt]=useState(()=>preview?null:savedAllowanceReset());
   const allowanceReached=allowanceResetAt!==null;
@@ -88,16 +85,18 @@ function App({tracking, pathId, onChooseAnother}){
   function persist(next,{confirmed=false}={}){const result=saveResult(next,value=>{if(!preview)localStorage.setItem(practiceKey(challengeId),value);});setS(next);setSaveError(!result.saved);if(result.saved)setRecords(old=>({...old,[challengeId]:next}));if(confirmed){setPending(result.pending);if(!preview){if(result.saved)forget();else try{remember({next,challengeId});}catch{}}}return result.saved;}
   function openPractice(id,provided){
     if(pending||busy||saveError||errorAction)return;
-    if(id==="beginner-02"&&!practiceFinished(challengeId==="beginner-01"?s:records["beginner-01"]))return;
+    const [first,second]=practicePair(id);
+    if(id===second&&!practiceFinished(challengeId===first?s:records[first]))return;
     const next=provided||(preview?(records[id]||initialState(id)):savedPractice(id));
     try{if(!preview)localStorage.setItem(ACTIVE,JSON.stringify(id));}catch{setSaveError(true);setPending(s);try{remember({next:s,challengeId});}catch{}return;}
+    if(!preview&&missionPath(id)&&missionPath(id)!==pathId)onPathChange(missionPath(id));
     setRecords(old=>({...old,[challengeId]:s}));setChallengeId(id);setS(next);request.current=null;setError("");setErrorAction("");if(!preview)forget();
   }
   async function startFinal(){
     if(pending||busy||saveError||errorAction)return;
     setBusy("Final challenge");setError("");
     try{
-      const opened=preview?{challengeId:review?"beginner-final-02":"beginner-final-01"}:await client.mutation(api.practiceData.openFinal,{token:sessionToken()});
+      const opened=preview?{challengeId:review?"beginner-final-02":"beginner-final-01"}:await client.mutation(api.practiceData.openFinal,{token:sessionToken(),...(missionPath(challengeId)?{pathId:missionPath(challengeId)}:{})});
       const id=opened.challengeId;const next=preview?(records[id]||initialState(id)):savedPractice(id);
       // The server records seen variants before any final task is displayed.
       if(!preview){localStorage.setItem(practiceKey(id),JSON.stringify(next));localStorage.setItem(ACTIVE,JSON.stringify(id));}
@@ -147,9 +146,9 @@ function App({tracking, pathId, onChooseAnother}){
   const practiceResult=s.stage==="complete"&&!final&&!review;
   const learningCue=mission?"Name the difference. Ask for an example.":challengeId==="beginner-02"?"Clear steps leave nothing to guess.":"Include the facts your reader needs.";
   const notice=task.originalGap||(challengeId==="beginner-02"?"This answer leaves the file, deadline and destination unclear, and invents a fee. What details would make the steps followable?":"This answer leaves out the session details and invents experts and registration. What does your reader actually need to know?");
-  const successSummary=mission?"You asked for a checkable example and checked both calculations.":challengeId==="beginner-02"?"You made the submission steps clear and checked the required details.":"You included the invitation details and checked the answer against them.";
+  const successSummary=task.success||(mission?"You asked for a checkable example and checked both calculations.":challengeId==="beginner-02"?"You made the submission steps clear and checked the required details.":"You included the invitation details and checked the answer against them.");
   const variantsExhausted=records["beginner-final-02"]?.stage==="finalFail"||challengeId==="beginner-final-02"&&s.stage==="finalFail";
-  if(!final)return <PracticeFlow key={challengeId} path={storyPaths[pathId]} onChooseAnother={onChooseAnother} state={s} task={task} challengeId={challengeId} records={records} pending={pending} saveError={saveError} error={error} errorAction={errorAction} busy={busy} allowanceReached={allowanceReached} preview={preview} edit={edit} editPrompt={()=>persist({...s,stage:s.correcting?"editCorrection":"edit"})} generate={generate} assess={assess} challenge={challenge} retrySaving={()=>persist(pending,{confirmed:true})} tryAgain={()=>{request.current=null;persist(correction(s));}} openPractice={openPractice} startFinal={startFinal} variantsExhausted={variantsExhausted} successSummary={successSummary} notice={notice} learningCue={learningCue} Progress={Progress}/>;
+  if(!final)return <PracticeFlow key={challengeId} path={missionPath(challengeId)?missionPaths[missionPath(challengeId)]:storyPaths[pathId]} onChooseAnother={onChooseAnother} state={s} task={task} challengeId={challengeId} records={records} pending={pending} saveError={saveError} error={error} errorAction={errorAction} busy={busy} allowanceReached={allowanceReached} preview={preview} edit={edit} editPrompt={()=>persist({...s,stage:s.correcting?"editCorrection":"edit"})} generate={generate} assess={assess} challenge={challenge} retrySaving={()=>persist(pending,{confirmed:true})} tryAgain={()=>{request.current=null;persist(correction(s));}} openPractice={openPractice} startFinal={startFinal} variantsExhausted={variantsExhausted} successSummary={successSummary} notice={notice} learningCue={learningCue} Progress={Progress}/>;
   return <><header className="site-header"><a href="/" className="wordmark">Prompt Gully<span className="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H10l-5 4v-4H4z"/><path d="m9 10 2 2 4-4"/></svg></span></a><span className="device-save">{saveError?"Device save failed":"Progress on this device"}</span></header><main className={final||review?undefined:"practice-page"}><Progress state={s} pending={pending} challengeId={challengeId} records={records} onOpen={openPractice} disabled={!!busy||!!pending||saveError||!!errorAction}/><div className="workspace">{final||review?<div className="intro">{preview&&<p role="note">This is a prepared example, not a new AI answer.</p>}<h1>{mission?"Turn a vague answer into useful help.":"Get answers that fit what you need."}</h1><p>{mission?"Spot what is missing. Make one useful edit. Check what changed.":"Practise improving a prompt, compare AI answers, and learn what to trust."}</p></div>:preview&&<p className="evidence" role="note">This is a prepared example, not a new AI answer.</p>}<div className="challenge-heading"><div>{(final||review)&&<span className="practice-label">{final?"Final challenge":review?"Return to practice":`Beginner practice ${challengeId==="beginner-01"?1:2} of 2`}</span>}{final||review?<h2>{task.title}</h2>:<h1>{task.title}</h1>}</div><span className="attempts">{final?`${s.attempts} of 1 final attempt used`:`${s.attempts} of 3 attempts used`}</span></div><p className="task-brief">{task.brief}</p>{(final||review||!isEdit)&&<Requirements task={task} open={isEdit&&!mission}/>} {!final&&!review&&isEdit&&!s.correcting&&<section className="mission-start" aria-label="The answer that missed the mark"><p className="evidence">Weak answer (prepared example)</p><blockquote>{task.original}</blockquote><p className="what-to-notice">{notice}</p><p className="learning-cue">{learningCue}</p></section>}{isEdit&&!s.correcting&&(final||review)&&<p className="evidence">{mission?"Keep the starting prompt and add what your friend needs.":"Your starting prompt is ready to edit."}</p>}{isJudge&&<p className="evidence">{mission?"Did your edit make the answer more useful? Check both ideas and the calculations.":"Your answer is ready. Check it against the task."}</p>}
     {saveError&&!pending&&<div className="error" role="alert">This edit could not be saved on this device. Keep this page open and copy your work before leaving.</div>}
     {pending&&<section className="error" role="alert"><h3>Result checked ? Save pending</h3><p>Your work is still on this page. Retry saving the same result; your answer will not be assessed again.</p><button className="primary" onClick={()=>persist(pending,{confirmed:true})}>Retry saving</button></section>}
@@ -185,14 +184,18 @@ function Entry(){
   useEffect(()=>{if(!named||taught||teacherPath||preview)return;let active=true;client.query(api.teacher.getTeachingAnswer,{token:sessionToken()}).then(answer=>{if(!active)return;if(answer){try{localStorage.setItem(TEACHING_KEY,JSON.stringify(answer));}catch{}setTaught(true);}setIntroLoaded(true);}).catch(()=>{if(active)setIntroLoaded(true);});return()=>{active=false;};},[named,taught]);
   function finishTeaching(){
     // Open the existing editor for a fresh practice; never reset saved work or recovery.
-    if(!storedRecovery())try{localStorage.setItem(ACTIVE,JSON.stringify("beginner-01"));const first=savedPractice("beginner-01");if(first.stage==="edit"&&!first.answer)localStorage.setItem("prompt-game:beginner-01:view:v1",JSON.stringify({stage:"edit",step:3}));}catch{}
+    if(!storedRecovery())try{const id=startingPractice();localStorage.setItem(ACTIVE,JSON.stringify(id));const first=savedPractice(id);if(!missionPath(id)&&first.stage==="edit"&&!first.answer)localStorage.setItem("prompt-game:beginner-01:view:v1",JSON.stringify({stage:"edit",step:3}));}catch{}
     setTaught(true);
   }
   function choosePath(id){
-    try{localStorage.setItem(PATH_KEY,JSON.stringify(id));if(pathId&&!storedRecovery())localStorage.setItem(ACTIVE,JSON.stringify("beginner-01"));}catch{}
+    try{localStorage.setItem(PATH_KEY,JSON.stringify(id));if(!storedRecovery())localStorage.setItem(ACTIVE,JSON.stringify(`path-${id}-01`));}catch{}
     tracking.choosePath(id);setPathId(id);setChoosingPath(false);
   }
+  function switchMissionPath(id){
+    try{localStorage.setItem(PATH_KEY,JSON.stringify(id));}catch{}
+    tracking.choosePath(id);setPathId(id);
+  }
   if(teacherPath)return <TeacherPage client={client} viewToken={teacherPath[1]}/>;
-  return <>{recordingError&&<aside className="recording-warning" role="status">Your visit could not be recorded. Your practice still works. <button onClick={()=>tracking.retry()}>Retry recording</button></aside>}{!named&&!preview?<StudentName saveName={firstName=>client.mutation(api.teacher.saveFirstName,{token:sessionToken(),firstName,visitId:tracking.visitId})} onContinue={()=>setNamed(true)}/>:(!pathId||choosingPath)&&!preview?<ChoosePath onChoose={choosePath}/>:!taught&&!preview?(introLoaded?<Teaching saveAnswer={optionIndex=>client.mutation(api.teacher.saveTeachingAnswer,{token:sessionToken(),visitId:tracking.visitId,optionIndex})} onContinue={finishTeaching}/>:<main className="name-step"><p role="status">Loading your introduction…</p></main>):<App tracking={tracking} pathId={pathId} onChooseAnother={()=>setChoosingPath(true)}/>}</>;
+  return <>{recordingError&&<aside className="recording-warning" role="status">Your visit could not be recorded. Your practice still works. <button onClick={()=>tracking.retry()}>Retry recording</button></aside>}{!named&&!preview?<StudentName saveName={firstName=>client.mutation(api.teacher.saveFirstName,{token:sessionToken(),firstName,visitId:tracking.visitId})} onContinue={()=>setNamed(true)}/>:(!pathId||choosingPath)&&!preview?<ChoosePath onChoose={choosePath}/>:!taught&&!preview?(introLoaded?<Teaching saveAnswer={optionIndex=>client.mutation(api.teacher.saveTeachingAnswer,{token:sessionToken(),visitId:tracking.visitId,optionIndex})} onContinue={finishTeaching}/>:<main className="name-step"><p role="status">Loading your introduction…</p></main>):<App tracking={tracking} pathId={pathId} onPathChange={switchMissionPath} onChooseAnother={()=>setChoosingPath(true)}/>}</>;
 }
 createRoot(document.getElementById("root")).render(<Entry/>);

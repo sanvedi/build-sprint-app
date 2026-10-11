@@ -20,6 +20,48 @@ const openFinal=makeFunctionReference("practiceData:openFinal");
 const returnToPractice=makeFunctionReference("practiceData:returnToPractice");
 const token="f".repeat(64);
 
+test("six independent mission points preserve old work and cannot unlock another path's second mission",async()=>{
+ const t=convexTest(schema,modules), priorFinals=process.env.PROMPT_GAME_FINALS_ENABLED;
+ process.env.PROMPT_GAME_FINALS_ENABLED="true";
+ try {
+ const old=await t.run(ctx=>ctx.db.insert("practiceSessions",{token,challengeId:"beginner-01",materialVersion:"quiz-v1",attempts:2,point:true,completed:true}));
+ const original=await t.run(ctx=>ctx.db.get(old));
+ for(const path of ["A","B","C"]){
+   const first=`path-${path}-01`,second=`path-${path}-02`;
+   await assert.rejects(t.mutation(reserve,{token,challengeId:second,materialVersion:"missions-v1",requestId:`locked-${path}`,kind:"generate",input:"{}"}),/PRACTICE_LOCKED/);
+   await assert.rejects(t.mutation(reserve,{token,challengeId:first,requestId:`version-${path}`,kind:"generate",input:"{}"}),/INVALID_SUBMISSION/);
+   for(const challengeId of [first,second]){
+     const answer=await seedAnswer(t,challengeId,"missions-v1");
+     const id=await t.mutation(reserve,{token,challengeId,materialVersion:"missions-v1",requestId:challengeId,kind:"assess",input:input(null,answer)});
+     await t.mutation(finish,{id,result:'{"earned":true}',earned:true});
+     await t.mutation(finish,{id,result:'{"earned":true}',earned:true});
+     await assert.rejects(t.mutation(reserve,{token,challengeId,materialVersion:"missions-v1",requestId:challengeId+'-again',kind:"assess",input:input(null,answer)}),/PRACTICE_FINISHED/);
+   }
+ }
+ const rows=await t.run(ctx=>ctx.db.query("practiceSessions").withIndex("by_token",q=>q.eq("token",token)).take(10));
+ assert.equal(rows.filter(r=>r.challengeId?.startsWith("path-")&&r.point&&r.attempts===1).length,6);
+ assert.deepEqual(await t.run(ctx=>ctx.db.get(old)),original);
+ const completions=await t.run(ctx=>ctx.db.query("practiceCompletions").take(10));
+ assert.equal(completions.length,6);assert.deepEqual(completions.map(r=>r.pathId).sort(),["A","A","B","B","C","C"]);
+ for(const pathId of ["A","B","C"])assert.equal((await t.mutation(openFinal,{token,pathId})).challengeId,"beginner-final-01");
+ }finally{if(priorFinals===undefined)delete process.env.PROMPT_GAME_FINALS_ENABLED;else process.env.PROMPT_GAME_FINALS_ENABLED=priorFinals;}
+});
+
+test("new mission generation reuse stays inside its mission and browser, and all paths share the same daily allowance",async()=>{
+ const t=convexTest(schema,modules),reuse=makeFunctionReference("practiceData:reusableGeneration");
+ const prompt=JSON.stringify({prompt:"Same text"});
+ const first=await t.mutation(reserve,{token,challengeId:"path-A-01",materialVersion:"missions-v1",requestId:"a",kind:"generate",input:prompt});
+ await t.mutation(finish,{id:first,result:"Owned answer"});
+ assert.equal((await t.query(reuse,{token,challengeId:"path-A-01",materialVersion:"missions-v1",input:prompt})).id,first);
+ assert.equal(await t.query(reuse,{token,challengeId:"path-B-01",materialVersion:"missions-v1",input:prompt}),null);
+ assert.equal(await t.query(reuse,{token:"e".repeat(64),challengeId:"path-A-01",materialVersion:"missions-v1",input:prompt}),null);
+ const repeat=await t.mutation(reserve,{token,challengeId:"path-A-01",materialVersion:"missions-v1",requestId:"reuse",kind:"generate",input:prompt});assert.equal(repeat,first);
+ const day=new Date().toISOString().slice(0,10);
+ const usage=await t.run(ctx=>ctx.db.query("playerUsage").withIndex("by_token_day",q=>q.eq("token",token).eq("day",day)).unique());assert.equal(usage.count,1);
+ await t.run(ctx=>ctx.db.patch(usage._id,{count:20}));
+ await assert.rejects(t.mutation(reserve,{token,challengeId:"path-C-01",materialVersion:"missions-v1",requestId:"cap",kind:"generate",input:"other"}),/DAILY_ALLOWANCE_REACHED/);
+});
+
 test("first names are optional device labels, validated and saved without AI usage",async()=>{
  const t=convexTest(schema,modules),save=makeFunctionReference("teacher:saveFirstName");
  await t.mutation(save,{token,firstName:" Test "});await t.mutation(save,{token,firstName:"Other"});
@@ -96,9 +138,10 @@ test("quiz material is pinned to new sessions and cannot replace legacy saved wo
 
 test("quiz corrections and recheck retain their material version and award one point",async()=>{
  const t=convexTest(schema,modules);
- const first=await t.mutation(reserve,{token,requestId:"quiz-first",kind:"assess",input:input(),materialVersion:"quiz-v1"});
+ const answer=await seedAnswer(t,"beginner-01","quiz-v1");
+ const first=await t.mutation(reserve,{token,requestId:"quiz-first",kind:"assess",input:input(null,answer),materialVersion:"quiz-v1"});
  await t.mutation(finish,{id:first,result:JSON.stringify({earned:false}),earned:false});
- const corrected=await t.mutation(reserve,{token,requestId:"quiz-correction",kind:"assess",input:input(first),materialVersion:"quiz-v1"});
+ const corrected=await t.mutation(reserve,{token,requestId:"quiz-correction",kind:"assess",input:input(first,answer),materialVersion:"quiz-v1"});
  await t.mutation(finish,{id:corrected,result:JSON.stringify({earned:true}),earned:true});
  const review=await t.mutation(reserve,{token,requestId:"quiz-recheck",kind:"recheck",assessmentId:corrected,input:"{}",materialVersion:"quiz-v1"});
  await t.mutation(finish,{id:review,result:JSON.stringify({earned:true}),earned:true});
@@ -106,9 +149,13 @@ test("quiz corrections and recheck retain their material version and award one p
  assert.equal(session.attempts,2);assert.equal(session.point,true);assert.equal(session.materialVersion,"quiz-v1");
  await assert.rejects(t.mutation(reserve,{token,requestId:"extra-point",kind:"assess",input:input(corrected),materialVersion:"quiz-v1"}),/PRACTICE_FINISHED/);
 });
-const input=previous=>JSON.stringify({answerId:"synthetic-answer",previousAssessmentId:previous||null});
+const input=(previous,answerId="synthetic-answer",judgment="Checked the answer",explanation="")=>JSON.stringify({answerId,judgment,explanation,previousAssessmentId:previous||null});
+async function seedAnswer(t,challengeId="beginner-01",materialVersion="legacy-v1",prompt="Prepared request",text="Prepared AI answer",owner=token){
+ return t.run(ctx=>ctx.db.insert("practiceJobs",{token:owner,challengeId,materialVersion,requestId:crypto.randomUUID(),kind:"generate",status:"done",input:JSON.stringify({prompt}),result:text}));
+}
 async function attempt(t,challengeId,requestId,earned,previous){
- const id=await t.mutation(reserve,{token,challengeId,requestId,kind:"assess",input:input(previous)});
+ const answer=await seedAnswer(t,challengeId);
+ const id=await t.mutation(reserve,{token,challengeId,requestId,kind:"assess",input:input(previous,answer)});
  await t.mutation(finish,{id,result:JSON.stringify({earned}),earned});return id;
 }
 test("backend blocks practice 2 before completion without reserving AI usage",async()=>{
@@ -205,3 +252,4 @@ test("an old supported-practice recheck cannot complete a new practice replay",a
  await t.mutation(returnToPractice,{token});
  await assert.rejects(t.mutation(reserve,{token,challengeId:"beginner-review-01",requestId:"old-review",kind:"recheck",assessmentId:old,input:"{}"}),/SUBMISSION_UNAVAILABLE/);
 });
+

@@ -1,3 +1,4 @@
+import { pathMissions, missionPath } from "./pathMissions.mjs";
 // Prepared, synthetic learning material. Teacher review is still required before release.
 const practices = {
   "beginner-01": {
@@ -20,6 +21,7 @@ const practices = {
   }
 };
 export const practiceTasks = {
+  ...pathMissions,
   ...practices,
   "beginner-review-01": practices["beginner-01"],
   "beginner-review-02": practices["beginner-02"],
@@ -55,7 +57,7 @@ export function taskFor(id, materialVersion = "legacy-v1") {
 }
 export function taskFacts(id, materialVersion = "legacy-v1", assessment = true) {
   const task = taskFor(id, materialVersion);
-  if (!assessment && task === quizMission) return { referenceFacts: task.referenceFacts };
+  if (!assessment && (task === quizMission || missionPath(id))) return { referenceFacts: task.referenceFacts };
   return { brief: task.brief, requirements: task.requirements,
     ...(task.referenceFacts ? { referenceFacts: task.referenceFacts } : {}),
     ...(assessment && task.assessmentNotes ? { assessmentNotes: task.assessmentNotes } : {}) };

@@ -1,7 +1,8 @@
 import { practiceTasks, taskFor, isFinal, isReview } from "../shared/practiceTasks.mjs";
 export { practiceTasks, taskFor, practiceFinished, isFinal, isReview } from "../shared/practiceTasks.mjs";
+import { missionPath } from "../shared/pathMissions.mjs";
 export const task = taskFor("beginner-01", "quiz-v1");
-export function initialState(challengeId="beginner-01") { const materialVersion=challengeId==="beginner-01"?"quiz-v1":"legacy-v1";return {version:1,materialVersion,mode:isFinal(challengeId)?"final":isReview(challengeId)?"review":"practice",stage:"edit",prompt:taskFor(challengeId,materialVersion).startingPrompt,explanation:"",judgment:"",answer:null,previousAnswer:null,feedback:null,attempts:0,point:false,correcting:false}; }
+export function initialState(challengeId="beginner-01") { const materialVersion=missionPath(challengeId)?"missions-v1":challengeId==="beginner-01"?"quiz-v1":"legacy-v1";return {version:1,materialVersion,mode:isFinal(challengeId)?"final":isReview(challengeId)?"review":"practice",stage:"edit",prompt:taskFor(challengeId,materialVersion).startingPrompt,explanation:"",judgment:"",answer:null,previousAnswer:null,feedback:null,attempts:0,point:false,correcting:false}; }
 export function generated(s, answer) { return {...s,previousAnswer:s.correcting?s.answer:null,answer,judgment:"",stage:s.correcting?"judgeCorrection":"judge"}; }
 export function judged(s, judgment) { return {...s,judgment}; }
 function resultState(s, feedback, attempts){
