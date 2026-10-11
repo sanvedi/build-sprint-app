@@ -5,6 +5,12 @@ import { challengeValidator, materialVersionValidator } from "./challenges";
 // Retired setup-test data only; retained to avoid deleting historical rows.
 // Not game progress. No active scheduling functions use this table.
 export default defineSchema({
+  studentProfiles: defineTable({ token: v.string(), firstName: v.string() }).index("by_token", ["token"]),
+  practiceCompletions: defineTable({
+    token: v.string(), challengeId: v.union(v.literal("beginner-01"), v.literal("beginner-02")),
+    firstName: v.string(), practiceNumber: v.number(), pointsEarned: v.number(),
+    completedAt: v.union(v.number(), v.null()), sortTime: v.number(), completed: v.boolean(),
+  }).index("by_token_challenge", ["token", "challengeId"]).index("by_completed_time", ["completed", "sortTime"]),
   learningAttempts: defineTable({
     token: v.string(), challengeId: challengeValidator, materialVersion: materialVersionValidator,
     attemptNumber: v.number(), previousAttemptId: v.optional(v.id("learningAttempts")),

@@ -14,6 +14,7 @@ import type * as http from "../http.js";
 import type * as learningAttempts from "../learningAttempts.js";
 import type * as practice from "../practice.js";
 import type * as practiceData from "../practiceData.js";
+import type * as teacher from "../teacher.js";
 
 import type {
   ApiFromModules,
@@ -28,6 +29,7 @@ declare const fullApi: ApiFromModules<{
   learningAttempts: typeof learningAttempts;
   practice: typeof practice;
   practiceData: typeof practiceData;
+  teacher: typeof teacher;
 }>;
 
 /**

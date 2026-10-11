@@ -1,5 +1,7 @@
 # PROGRESS.md
 
+- 2026-10-11: Authorized first-name/teacher-list implementation passed 85 development checks, 73 release checks, typecheck/build and local 390px/1280px browser walks. Guest skip sends no AI request; completion recording is atomic with assessment, deduplicated and updated after rechecks. Fresh private production home showed no stuck generation state; regression checks added. Independent UI review passed; production verification follows deployment.
+
 - 2026-10-11: Built the local 12-case feedback-evidence checker and private scoring-file initializer; all 75 automated checks, typecheck and build passed. The real command created a private blank packet and correctly reported incomplete evidence. The checker enforces both 10/12 thresholds, run consistency, reviewed critical errors and repeated-generation evidence. No AI request, student-facing change, deployment or passing reliability result is claimed.
 
 - 2026-10-11: Builder reported the published app works on their mobile. This is a builder confirmation; connection type and exact steps were not supplied. No app change or deployment.

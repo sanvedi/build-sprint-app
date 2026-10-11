@@ -9,7 +9,7 @@ const compiled=await build({entryPoints:["src/main.jsx"],bundle:true,write:false
 const script=compiled.outputFiles[0].text;
 const KEY="prompt-game:beginner-01:v1";
 async function waitFor(fn){for(let i=0;i<100;i++){if(fn())return;await new Promise(r=>setTimeout(r,10));}assert.fail("Screen did not reach expected state");}
-function fixture(responses,seed={},manual=false){const calls=[];const dom=new JSDOM('<div id="root"></div>',{url:"http://localhost",runScripts:"dangerously",pretendToBeVisual:true});const w=dom.window;for(const [key,value] of Object.entries(seed))w.localStorage.setItem(key,JSON.stringify(value));Object.defineProperty(w.crypto,"randomUUID",{value:randomUUID});w.HTMLElement.prototype.scrollIntoView=function(){};w.fetch=async(url,options)=>{const body=JSON.parse(options.body);calls.push(body);const value=await responses.shift();if(value instanceof Error)throw value;return new Response(JSON.stringify(value?.testErrorData?{status:"error",errorMessage:"Server Error",errorData:value.testErrorData}:{status:"success",value}),{status:200,headers:{"Content-Type":"application/json"}});};// Existing rule checks walk through the new view-only steps before their submission.
+function fixture(responses,seed={},manual=false,named=true,url="http://localhost"){const calls=[];const dom=new JSDOM('<div id="root"></div>',{url,runScripts:"dangerously",pretendToBeVisual:true});const w=dom.window;if(named)w.localStorage.setItem("prompt-game:first-name:v1",JSON.stringify({firstName:"Guest"}));for(const [key,value] of Object.entries(seed))w.localStorage.setItem(key,JSON.stringify(value));Object.defineProperty(w.crypto,"randomUUID",{value:randomUUID});w.HTMLElement.prototype.scrollIntoView=function(){};w.fetch=async(url,options)=>{const body=JSON.parse(options.body);calls.push(body);const value=await responses.shift();if(value instanceof Error)throw value;return new Response(JSON.stringify(value?.testErrorData?{status:"error",errorMessage:"Server Error",errorData:value.testErrorData}:{status:"success",value}),{status:200,headers:{"Content-Type":"application/json"}});};// Existing rule checks walk through the new view-only steps before their submission.
 // Manual fixtures below verify each screen and its navigation independently.
 if(!manual){new w.MutationObserver(()=>{const next=[...w.document.querySelectorAll("button")].find(b=>["See the starting prompt","Improve this prompt","Write my judgment"].includes(b.textContent)&&!b.disabled);if(next)next.click();}).observe(w.document.getElementById("root"),{childList:true,subtree:true,attributes:true});}
 w.eval(script);return {dom,w,calls};}
@@ -17,6 +17,27 @@ function button(w,text){const b=[...w.document.querySelectorAll("button")].find(
 function type(w,id,value){const el=w.document.getElementById(id);assert.ok(el,`Missing field ${id}`);Object.getOwnPropertyDescriptor(w.HTMLTextAreaElement.prototype,"value").set.call(el,value);el.dispatchEvent(new w.Event("input",{bubbles:true}));}
 const notYet={id:"assessment1",earned:false,route:"prompt",gap:"Add the event facts",why:"Students need the time",evidence:"Your request omits time"};
 const passed={id:"assessment2",earned:true,route:"none",gap:"",why:"All requirements checked",evidence:"Facts present"};
+
+test("fresh load asks only for a first name and starts no generation",async()=>{
+ const f=fixture([],{},true,false);
+ try{await waitFor(()=>f.w.document.getElementById("first-name"));assert.equal(f.w.document.querySelectorAll("input").length,1);assert.equal(f.calls.length,0);assert.doesNotMatch(f.w.document.body.textContent,/Generating your answer/);}finally{f.dom.window.close();}
+});
+test("skipping saves Guest and opens practice 1 without AI",async()=>{
+ const f=fixture([null],{},true,false);
+ try{await waitFor(()=>f.w.document.getElementById("first-name"));button(f.w,"Skip — use Guest");await waitFor(()=>f.w.document.querySelector(".practice-game")&&f.w.localStorage.getItem(KEY));assert.equal(f.calls.length,1);assert.equal(f.calls[0].path,"teacher:saveFirstName");assert.equal(f.calls[0].args[0].firstName,"Guest");assert.doesNotMatch(f.w.document.body.textContent,/Generating your answer/);assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,0);}finally{f.dom.window.close();}
+});
+test("failed name saving keeps the field and retry sends no AI request",async()=>{
+ const f=fixture([new Error("offline"),null],{},true,false);
+ try{await waitFor(()=>f.w.document.getElementById("first-name"));button(f.w,"Start Practice 1");await waitFor(()=>f.w.document.querySelector('[role="alert"]'));assert.equal(f.w.localStorage.getItem("prompt-game:first-name:v1"),null);button(f.w,"Start Practice 1");await waitFor(()=>f.w.document.querySelector(".practice-game"));assert.ok(f.calls.every(call=>call.path==="teacher:saveFirstName"));}finally{f.dom.window.close();}
+});
+test("fresh practice after a saved name never shows generation or sends an AI request",async()=>{
+ const f=fixture([],{},true);
+ try{await waitFor(()=>f.w.document.querySelector(".practice-game"));assert.doesNotMatch(f.w.document.body.textContent,/Generating your answer/);assert.equal(f.calls.length,0);}finally{f.dom.window.close();}
+});
+test("teacher page loads every page without student tokens or AI calls",async()=>{
+ const f=fixture([{page:[{firstName:"Test",practiceNumber:1,pointsEarned:1,completedAt:1234567890000}],isDone:false,continueCursor:"next"},{page:[{firstName:"Guest",practiceNumber:2,pointsEarned:0,completedAt:null}],isDone:true,continueCursor:"end"}],{},true,false,"http://localhost/teacher/"+"b".repeat(64));
+ try{await waitFor(()=>f.w.document.querySelectorAll("tbody tr").length===2);assert.match(f.w.document.body.textContent,/2 completed practices/);assert.match(f.w.document.body.textContent,/Not recorded/);assert.ok(f.calls.every(call=>call.path==="teacher:listCompletions"));assert.equal(f.calls[1].args[0].paginationOpts.cursor,"next");assert.equal(f.w.localStorage.getItem("prompt-game:session:v1"),null);}finally{f.dom.window.close();}
+});
 
 test("pending judgment shows a disabled checking button and nearby status without consuming an attempt",async()=>{
  let finishAssessment;

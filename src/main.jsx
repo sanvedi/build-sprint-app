@@ -8,6 +8,8 @@ import "@fontsource/nunito-sans/latin-800.css";
 import "./style.css";
 import Answer from "./Answer.jsx";
 import PracticeFlow from "./PracticeFlow.jsx";
+import StudentName, { NAME_KEY } from "./StudentName.jsx";
+import TeacherPage from "./TeacherPage.jsx";
 import { practiceTasks, taskFor, practiceFinished, isFinal, isReview, initialState, generated, judged, assessed, rechecked, correction, saveResult, loadState } from "./practice.mjs";
 
 import { statePreview, previewAction } from "./statePreview.mjs";
@@ -164,4 +166,11 @@ function App(){
     <footer className="save-note"><p>{saveError?"Account backup is not connected. Keep this page open if device saving failed.":"Saved on this device only. Account backup is not available yet."}</p><p>Points reward independent practice. Badges mark final passes.</p></footer></div></main></>;
 }
 
-createRoot(document.getElementById("root")).render(<App/>);
+function Entry(){
+  const [named,setNamed]=useState(()=>{try{return !!JSON.parse(localStorage.getItem(NAME_KEY))?.firstName;}catch{return false;}});
+  const teacherPath=location.pathname.match(/^\/teacher\/([a-f0-9]{64})\/?$/);
+  if(teacherPath)return <TeacherPage client={client} viewToken={teacherPath[1]}/>;
+  if(!named&&!preview)return <StudentName saveName={firstName=>client.mutation(api.teacher.saveFirstName,{token:sessionToken(),firstName})} onContinue={()=>setNamed(true)}/>;
+  return <App/>;
+}
+createRoot(document.getElementById("root")).render(<Entry/>);
