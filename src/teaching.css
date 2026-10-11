@@ -23,4 +23,31 @@
 .teaching-step .primary:hover:not(:disabled) { background: #1937ad; }
 .teaching-step ::selection { color: #20233D; background: #D8F36A; }
 .teaching-step [tabindex="-1"]:focus { outline: none; }
+.answer-excerpt { margin: 16px 0 0; padding-top: 12px; border-top: 1px solid #b8c8df; font-size: 16px; line-height: 1.35; }
+.invitation-choice { border: 0; padding: 0; margin: 0 0 12px; }
+.invitation-choice legend { font-size: 20px; font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+.invitation-choice > div { display: flex; gap: 12px; }
+.invitation-choice label { display: flex; align-items: center; gap: 8px; flex: 1; padding: 10px; min-height: 44px; box-sizing: border-box; border: 1px solid #b8c8df; border-radius: 12px; background: #fff; cursor: pointer; font-size: 16px; line-height: 1.2; }
+.invitation-choice label.chosen { border-color: #2446D8; background: #e3edff; }
+.invitation-choice input { accent-color: #2446D8; width: 18px; height: 18px; margin: 0; flex: 0 0 auto; }
+.invitation-choice label:has(input:focus-visible) { outline: 3px solid #2446D8; outline-offset: 3px; }
+.invitation-detail { margin: 0 0 12px; font-size: 16px; line-height: 1.3; }
 @media (max-width: 600px) { .teaching-step { padding: 24px 20px 40px; } .prompt-comparison { gap: 12px; } .prompt-comparison section { padding: 14px; } .prompt-comparison h2 { font-size: 20px; } .prompt-comparison blockquote { font-size: 16px; } .prompt-comparison dd { font-size: 16px; } }
+@media (max-width: 600px) {
+  .practice-world:has(.invitation-lesson) .game-header { padding-top: 0; padding-bottom: 0; }
+  .invitation-lesson { padding: 8px 20px 16px; }
+  .invitation-lesson h1 { margin-bottom: 8px; }
+  .invitation-lesson > p:first-of-type { font-size: 16px; line-height: 1.3; margin: 0; }
+  .invitation-lesson .prompt-comparison { grid-template-columns: 1fr; gap: 8px; margin: 8px 0; }
+  .invitation-lesson .prompt-comparison section { padding: 8px 12px; }
+  .invitation-lesson .prompt-comparison h2 { font-size: 18px; line-height: 1.2; margin-bottom: 6px; }
+  .invitation-lesson .prompt-comparison blockquote { line-height: 1.3; }
+  .invitation-lesson .answer-excerpt { margin-top: 8px; padding-top: 8px; line-height: 1.25; }
+  .invitation-lesson dl { margin-top: 8px; font-size: 16px; line-height: 1.2; }
+  .invitation-lesson dl div { display: flex; gap: 8px; }
+  .invitation-lesson dl div + div { margin-top: 0; }
+  .invitation-lesson dt { width: 64px; flex: 0 0 auto; }
+  .invitation-lesson dd { font-size: 16px; margin: 0; }
+  .invitation-lesson .invitation-choice label { margin: 0; padding: 2px 8px; }
+  .invitation-lesson button.primary { min-height: 56px; margin: 0; padding-top: 6px; padding-bottom: 6px; }
+}
