@@ -1,0 +1,21 @@
+.path-selection { max-width: 960px; padding: 24px 28px 40px; }
+.path-selection h1 { font-size: 32px; line-height: 1.2; margin: 0 0 24px; }
+.path-selection h1:focus { outline: none; }
+.path-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.path-card { display: block; text-align: left; padding: 24px; background: #fff; color: #20233D; border: 1px solid #b8c8df; border-radius: 16px; font: inherit; }
+.path-card-title { display: block; font-weight: 800; margin: 0 0 12px; font-size: 22px; line-height: 1.25; }
+.path-card-setup { display: block; margin: 0; font-size: 16px; line-height: 1.5; }
+.path-card:hover { background: #e3edff; border-color: #2446D8; }
+.path-card:focus-visible { outline: 3px solid #2446D8; outline-offset: 3px; }
+.path-progress-note { margin: 24px 0 0; font-size: 16px; line-height: 1.5; color: #20233D; }
+.path-label { color: #2446D8; font-size: 16px; font-weight: 800; margin: 0 0 12px; }
+.path-ending { margin: 24px 0 0; padding-top: 16px; border-top: 1px solid #b8c8df; }
+.path-ending p { font-size: 18px; line-height: 1.5; }
+.path-ending button { min-height: 56px; }
+.path-selection ::selection { background: #D8F36A; color: #20233D; }
+@media (max-width: 680px) {
+  .path-selection { padding: 16px 20px 32px; }
+  .path-cards { grid-template-columns: 1fr; gap: 12px; }
+  .path-card { padding: 18px 20px; }
+  .path-card-title { font-size: 20px; margin-bottom: 8px; }
+}

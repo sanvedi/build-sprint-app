@@ -26,7 +26,7 @@ export const saveFirstName = mutation({
 function validateVisit(token: string, visitId: string) {
   if (!/^[a-f0-9]{64}$/.test(token) || !/^[a-f0-9]{64}$/.test(visitId)) throw new ConvexError("VISIT_UNAVAILABLE");
 }
-async function ensureVisit(ctx: MutationCtx, token: string, visitId: string) {
+async function ensureVisit(ctx: MutationCtx, token: string, visitId: string, pathVersion?: "stories-v1") {
   validateVisit(token, visitId);
   const existing = await ctx.db.query("usageVisits").withIndex("by_visit", q => q.eq("visitId", visitId)).unique();
   if (existing) {
@@ -38,12 +38,20 @@ async function ensureVisit(ctx: MutationCtx, token: string, visitId: string) {
     const id = await ctx.db.insert("studentProfiles", { token, firstName: "Guest", nameChosen: false });
     profile = await ctx.db.get(id);
   }
-  const id = await ctx.db.insert("usageVisits", { token, visitId, firstName: profile!.firstName, browserLabel: `Browser ${profile!._id}`, visitedAt: Date.now(), teachingVersion: "picnic-v1" });
+  const id = await ctx.db.insert("usageVisits", { token, visitId, firstName: profile!.firstName, browserLabel: `Browser ${profile!._id}`, visitedAt: Date.now(), teachingVersion: "picnic-v1", ...(pathVersion ? { pathVersion } : {}) });
   return (await ctx.db.get(id))!;
 }
 export const recordVisit = mutation({
-  args: { token: v.string(), visitId: v.string() }, returns: v.null(),
-  handler: async (ctx, args) => { await ensureVisit(ctx, args.token, args.visitId); return null; },
+  args: { token: v.string(), visitId: v.string(), pathVersion: v.optional(v.literal("stories-v1")), pathId: v.optional(v.union(v.literal("A"), v.literal("B"), v.literal("C"))) }, returns: v.null(),
+  handler: async (ctx, args) => {
+    const visit = await ensureVisit(ctx, args.token, args.visitId, args.pathVersion);
+    // Only new story-release visits may receive a choice. No backfill of historical rows.
+    if (args.pathId && visit.pathVersion === "stories-v1") {
+      if (visit.pathId && visit.pathId !== args.pathId) throw new ConvexError("VISIT_PATH_ALREADY_CHOSEN");
+      if (!visit.pathId) await ctx.db.patch(visit._id, { pathId: args.pathId });
+    }
+    return null;
+  },
 });
 export const recordPracticeStart = mutation({
   args: { token: v.string(), visitId: v.string(), challengeId: v.union(v.literal("beginner-01"), v.literal("beginner-02")) }, returns: v.null(),
@@ -77,13 +85,13 @@ export const getTeachingAnswer = query({
 });
 export const listVisits = query({
   args: { viewToken: v.string(), paginationOpts: paginationOptsValidator },
-  returns: v.object({ page: v.array(v.object({ firstName: v.string(), browserLabel: v.string(), visitedAt: v.number(), practice1StartedAt: v.union(v.number(), v.null()), practice2StartedAt: v.union(v.number(), v.null()), teachingAnswer: v.union(teachingResult, v.null()) })), isDone: v.boolean(), continueCursor: v.string() }),
+  returns: v.object({ page: v.array(v.object({ firstName: v.string(), browserLabel: v.string(), visitedAt: v.number(), practice1StartedAt: v.union(v.number(), v.null()), practice2StartedAt: v.union(v.number(), v.null()), teachingAnswer: v.union(teachingResult, v.null()), pathId: v.union(v.literal("A"), v.literal("B"), v.literal("C"), v.null()) })), isDone: v.boolean(), continueCursor: v.string() }),
   handler: async (ctx, args) => {
     if (!process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN || args.viewToken !== process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN) throw new ConvexError("TEACHER_PAGE_UNAVAILABLE");
     const result = await ctx.db.query("usageVisits").withIndex("by_time").order("desc").paginate(args.paginationOpts);
     const page = await Promise.all(result.page.map(async visit => {
       const answer = visit.teachingVersion === "picnic-v1" ? await ctx.db.query("teachingAnswers").withIndex("by_token", q => q.eq("token", visit.token)).unique() : null;
-      return { firstName: visit.firstName, browserLabel: visit.browserLabel, visitedAt: visit.visitedAt, practice1StartedAt: visit.practice1StartedAt ?? null, practice2StartedAt: visit.practice2StartedAt ?? null, teachingAnswer: answer ? { optionIndex: answer.optionIndex, correct: answer.correct, answeredAt: answer.answeredAt } : null };
+      return { firstName: visit.firstName, browserLabel: visit.browserLabel, visitedAt: visit.visitedAt, practice1StartedAt: visit.practice1StartedAt ?? null, practice2StartedAt: visit.practice2StartedAt ?? null, teachingAnswer: answer ? { optionIndex: answer.optionIndex, correct: answer.correct, answeredAt: answer.answeredAt } : null, pathId: visit.pathId ?? null };
     }));
     return { page, isDone: result.isDone, continueCursor: result.continueCursor };
   },
