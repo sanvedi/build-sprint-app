@@ -1,5 +1,9 @@
 # PLAN.md
 
+## Authorized production-readiness work, 11 October 2026
+
+Builder requested implementation after the proposed order: feedback reliability, optional account saving, remaining levels, complete public journey and usage policy. Start with feedback reliability and work on one milestone at a time. Built a local evidence checker for the existing 12-case review packet; real teacher labels, task approval, two actual evaluator runs and repeated-generation reviews are still required. No scoring changes or production deployment are authorized by a passing synthetic checker test. Public usage policy and spending budget remain product decisions; do not invent them. Account saving and Amateur/Pro remain subsequent milestones rather than part of this checker change.
+
 ## Practice display fixes, 7 October 2026
 
 Builder-authorized maths/feedback display fixes published and verified. Both real Beginner practices passed in a fresh private 390px Edge session; final screenshots and deployed hash ready for handoff. Raw generated/saved inputs and marking unchanged; finals unchanged. 63 release checks passed. No further feature work approved; per-device limit remains deferred by builder.

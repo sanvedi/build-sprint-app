@@ -4,6 +4,7 @@
   "description": "A prompting practice game for students.",
   "main": "index.js",
   "scripts": {
+    "feedback:check": "node scripts/feedback-gate.mjs",
     "test": "node --test tests/*.test.mjs",
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",

@@ -2,6 +2,28 @@
 
 Status: draft test material, not teacher-labelled or AI-tested. These are synthetic submissions, not the earlier ten students' work. No test is reported passed.
 
+## Repeatable evidence check, 11 October 2026
+
+The local checker is built and tested; the AI reliability gate remains incomplete. It does not call AI, change the app, award points or invent teacher scores.
+
+Create a private evidence file inside the ignored artifacts folder:
+
+```powershell
+node scripts/feedback-gate.mjs artifacts/feedback-review.json --init
+```
+
+The artifacts folder must exist first. The command refuses to overwrite an existing file. Fill teacherReview and labels before seeing AI responses: finalPass and pointEligible are true or false, and reason explains each decision. Use a reviewer alias rather than a real person's name. Record dated task approval. The Beginner examples below use the preserved invitation task, not the current quiz mission; approving these examples does not review the quiz mission.
+
+After the teacher review, record both real assessment runs with the exact same inputs, instructions and model. instructionsHash and inputsHash are SHA-256 fingerprints computed from the exact saved instruction/input files, so changed content can be detected. Preserve rawResponse and supporting evidence for each decision. Critical-error checks require a separate dated human review for each AI response; an empty criticalErrors list means the human reviewer found none, not that AI checked itself. Record at least two real generated answers plus their corresponding feedback for each lucky-answer and poor-answer check.
+
+Run the report:
+
+```powershell
+npm run feedback:check -- artifacts/feedback-review.json
+```
+
+It reports incomplete, failed or passed, with agreement counts and reasons. Missing evidence returns an unsuccessful command status intentionally. Passing requires both 10/12 thresholds in each run, identical decisions across runs, no reviewed critical errors and both repeated-generation checks. This checks recorded evidence; it cannot authenticate who reviewed it or prove a recorded response actually came from the live evaluator. Use the app's actual assessment instructions and retain model/request evidence. No evaluation run or model accuracy result is claimed by the checker's synthetic tests. Never put keys, real student work or private reviewer identities in Git.
+
 Before AI assessment, the teacher reviews the three tasks and the cases below and records two labels for every case: final pass/not-yet and practice point eligible/not eligible. Final labels judge the submitted prompt plus answer judgment; point labels also judge the correction and explanation where supplied. Reference facts are part of the assessment context, never hidden requirements.
 
 ## Task B: Beginner

@@ -1,5 +1,7 @@
 # PROGRESS.md
 
+- 2026-10-11: Built the local 12-case feedback-evidence checker and private scoring-file initializer; all 75 automated checks, typecheck and build passed. The real command created a private blank packet and correctly reported incomplete evidence. The checker enforces both 10/12 thresholds, run consistency, reviewed critical errors and repeated-generation evidence. No AI request, student-facing change, deployment or passing reliability result is claimed.
+
 - 2026-10-11: Builder reported the published app works on their mobile. This is a builder confirmation; connection type and exact steps were not supplied. No app change or deployment.
 
 - 2026-10-08: Retested published app with all 63 release checks and a fresh private Edge journey at 390x844: real Beginner 1/2 generation/assessment, separate first-attempt points, readable maths, student-focused feedback, Next challenge, and reopening without AI passed. Real Beginner final generation/assessment awarded the badge, retained two practice points and reopened without AI. Six requests used today; no app change or deployment. Evidence in ignored artifacts/retest-2026-10-08; physical-phone and teacher reliability remain separate.
