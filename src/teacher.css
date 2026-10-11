@@ -14,3 +14,9 @@
 .teacher-page button, .name-step button { min-height: 48px; }
 .name-step ::selection, .teacher-page ::selection { color: #20233D; background: #D8F36A; }
 @media (max-width: 600px) { .name-step, .teacher-page { margin: 16px auto; padding: 20px; } .teacher-page h1 { font-size: 28px; } }
+
+.teacher-page h2 { margin-top: 40px; }
+.teacher-table:focus-visible { outline: 3px solid #2446D8; outline-offset: 3px; }
+.browser-label { overflow-wrap: anywhere; min-width: 140px; font-size: 16px; }
+.recording-warning { padding: 12px 20px; border-bottom: 1px solid #b8c8df; background: #e3edff; color: #20233D; }
+.recording-warning button { margin-left: 8px; min-height: 48px; }

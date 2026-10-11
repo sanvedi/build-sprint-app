@@ -1,5 +1,9 @@
 # PLAN.md
 
+## Authorized usage recording, 11 October 2026
+
+Builder approved fixing the gaps that prevented knowing who uses Prompt Gully. This bounded extension records anonymous browser visits before naming and Beginner practice starts, alongside existing confirmed completions. First name remains optional; no passwords, signup/login, mission/scoring/AI/attempt/cap changes. One tab session is one visit; reloads retain it. The teacher page explains browsers are not verified people and prior visits are unknown. Recording failures queue for independent retry without AI. Main 92 checks and production 80 checks, typecheck/build, and real local private Edge visits/start/reload/network-failure recovery passed. Deployment and live proof follow. Other production-readiness milestones remain parked.
+
 ## Authorized first-name and teacher-list release, 11 October 2026
 
 Published and verified as 0a70d1e020a554255ce1226361c8fefde7bc9044. Real private Test session completed Practice 1 with one point; teacher list and reopening passed at the public URL. All 24 current completion rows are shown; earlier unknown names/times are labelled honestly. Keep the teacher link outside public documentation. Teacher-label reliability work remains pending.

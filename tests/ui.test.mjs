@@ -9,10 +9,10 @@ const compiled=await build({entryPoints:["src/main.jsx"],bundle:true,write:false
 const script=compiled.outputFiles[0].text;
 const KEY="prompt-game:beginner-01:v1";
 async function waitFor(fn){for(let i=0;i<100;i++){if(fn())return;await new Promise(r=>setTimeout(r,10));}assert.fail("Screen did not reach expected state");}
-function fixture(responses,seed={},manual=false,named=true,url="http://localhost"){const calls=[];const dom=new JSDOM('<div id="root"></div>',{url,runScripts:"dangerously",pretendToBeVisual:true});const w=dom.window;if(named)w.localStorage.setItem("prompt-game:first-name:v1",JSON.stringify({firstName:"Guest"}));for(const [key,value] of Object.entries(seed))w.localStorage.setItem(key,JSON.stringify(value));Object.defineProperty(w.crypto,"randomUUID",{value:randomUUID});w.HTMLElement.prototype.scrollIntoView=function(){};w.fetch=async(url,options)=>{const body=JSON.parse(options.body);calls.push(body);const value=await responses.shift();if(value instanceof Error)throw value;return new Response(JSON.stringify(value?.testErrorData?{status:"error",errorMessage:"Server Error",errorData:value.testErrorData}:{status:"success",value}),{status:200,headers:{"Content-Type":"application/json"}});};// Existing rule checks walk through the new view-only steps before their submission.
+function fixture(responses,seed={},manual=false,named=true,url="http://localhost"){const calls=[],usageCalls=[];const dom=new JSDOM('<div id="root"></div>',{url,runScripts:"dangerously",pretendToBeVisual:true});const w=dom.window;if(named)w.localStorage.setItem("prompt-game:first-name:v1",JSON.stringify({firstName:"Guest"}));for(const [key,value] of Object.entries(seed))w.localStorage.setItem(key,JSON.stringify(value));Object.defineProperty(w.crypto,"randomUUID",{value:randomUUID});w.HTMLElement.prototype.scrollIntoView=function(){};w.fetch=async(url,options)=>{const body=JSON.parse(options.body);if(["teacher:recordVisit","teacher:recordPracticeStart","teacher:listVisits"].includes(body.path)){usageCalls.push(body);return new Response(JSON.stringify({status:"success",value:body.path==="teacher:listVisits"?{page:[],isDone:true,continueCursor:"end"}:null}),{status:200,headers:{"Content-Type":"application/json"}});}calls.push(body);const value=await responses.shift();if(value instanceof Error)throw value;return new Response(JSON.stringify(value?.testErrorData?{status:"error",errorMessage:"Server Error",errorData:value.testErrorData}:{status:"success",value}),{status:200,headers:{"Content-Type":"application/json"}});};// Existing rule checks walk through the new view-only steps before their submission.
 // Manual fixtures below verify each screen and its navigation independently.
 if(!manual){new w.MutationObserver(()=>{const next=[...w.document.querySelectorAll("button")].find(b=>["See the starting prompt","Improve this prompt","Write my judgment"].includes(b.textContent)&&!b.disabled);if(next)next.click();}).observe(w.document.getElementById("root"),{childList:true,subtree:true,attributes:true});}
-w.eval(script);return {dom,w,calls};}
+w.eval(script);return {dom,w,calls,usageCalls};}
 function button(w,text){const b=[...w.document.querySelectorAll("button")].find(x=>x.textContent===text);assert.ok(b,`Missing button ${text}`);assert.equal(b.disabled,false);b.click();}
 function type(w,id,value){const el=w.document.getElementById(id);assert.ok(el,`Missing field ${id}`);Object.getOwnPropertyDescriptor(w.HTMLTextAreaElement.prototype,"value").set.call(el,value);el.dispatchEvent(new w.Event("input",{bubbles:true}));}
 const notYet={id:"assessment1",earned:false,route:"prompt",gap:"Add the event facts",why:"Students need the time",evidence:"Your request omits time"};
@@ -218,7 +218,7 @@ test("completed-with-help unlocks practice 2 without a point and reopening retai
  try{
   await waitFor(()=>f.w.document.body.textContent.includes("Completed with help"));button(f.w,"Next challenge");
   await waitFor(()=>f.w.document.getElementById("prompt"));type(f.w,"prompt","My second challenge draft");
-  const seed=Object.fromEntries(Object.keys(f.w.localStorage).map(k=>[k,JSON.parse(f.w.localStorage.getItem(k))]));
+  const seed=Object.fromEntries(Object.keys(f.w.localStorage).filter(k=>k!=="prompt-game:session:v1").map(k=>[k,JSON.parse(f.w.localStorage.getItem(k))]));
   reopened=fixture([],seed);await waitFor(()=>reopened.w.document.getElementById("prompt")?.value==="My second challenge draft");
   assert.match(reopened.w.document.body.textContent,/Completed with help/);
   assert.match(reopened.w.document.querySelector(".points").textContent,/0.*6/);
@@ -369,3 +369,14 @@ test("reopening the judgment view keeps its draft, and editing the prompt requir
   button(f.w,"Generate answer");await waitFor(()=>f.w.document.querySelector('[role="progressbar"]').getAttribute("aria-valuenow")==="4");button(f.w,"Write my judgment");await waitFor(()=>f.w.document.getElementById("judgment"));assert.equal(f.w.document.getElementById("judgment").value,"");assert.equal(f.calls.length,1);assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).answer.id,"new-answer");assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,0);
  }finally{f.dom.window.close();}
 });
+
+ test("visitors are recorded before naming, starts after naming, and teacher views are excluded",async()=>{
+ const f=fixture(["Test"],{},true,false);
+ try{await waitFor(()=>f.usageCalls.length===1);assert.equal(f.usageCalls[0].path,"teacher:recordVisit");assert.equal(f.calls.length,0);button(f.w,"Start Practice 1");await waitFor(()=>f.usageCalls.some(c=>c.path==="teacher:recordPracticeStart"));assert.equal(f.usageCalls.find(c=>c.path==="teacher:recordPracticeStart").args[0].challengeId,"beginner-01");assert.ok(f.calls.every(c=>c.path==="teacher:saveFirstName"));}finally{f.dom.window.close();}
+ const teacher=fixture([{page:[],isDone:true,continueCursor:"end"}],{},true,false,"http://localhost/teacher/"+"b".repeat(64));
+ try{await waitFor(()=>teacher.usageCalls.some(c=>c.path==="teacher:listVisits"));assert.ok(teacher.usageCalls.every(c=>c.path==="teacher:listVisits"));}finally{teacher.dom.window.close();}
+ });
+ test("opening a completed practice records a visit without a new practice start",async()=>{
+ const f=fixture([],{[KEY]:{version:1,materialVersion:"quiz-v1",stage:"complete",point:true,attempts:1,prompt:"Saved prompt",answer:{id:"a",text:"Saved answer"},judgment:"Checked",feedback:passed}},true);
+ try{await waitFor(()=>f.usageCalls.length);assert.deepEqual(f.usageCalls.map(c=>c.path),["teacher:recordVisit"]);}finally{f.dom.window.close();}
+ });
