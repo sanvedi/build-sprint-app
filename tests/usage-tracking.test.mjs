@@ -82,3 +82,34 @@ test("teacher quiz column uses the same browser reference and leaves earlier row
   const old=process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN;process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN="e".repeat(64);
   try{const result=await t.query(ref("listVisits"),{viewToken:"e".repeat(64),paginationOpts:{cursor:null,numItems:100}});assert.equal(result.page[0].teachingAnswer.correct,true);assert.ok(result.page[0].teachingAnswer.answeredAt);assert.equal(result.page[1].teachingAnswer,null);assert.doesNotMatch(JSON.stringify(result),new RegExp(token));}finally{if(old===undefined)delete process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN;else process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN=old;}
 });
+
+test("new visit paths are owned and immutable; historical rows stay unchanged and teacher cells are empty",async()=>{
+  const t=convexTest(schema,modules), earlier="d".repeat(64);
+  await t.mutation(ref("recordVisit"),{token,visitId:earlier});
+  const before=await t.run(ctx=>ctx.db.query("usageVisits").withIndex("by_visit",q=>q.eq("visitId",earlier)).unique());
+  await t.mutation(ref("recordVisit"),{token,visitId:earlier,pathVersion:"stories-v1",pathId:"C"});
+  assert.deepEqual(await t.run(ctx=>ctx.db.get(before._id)),before);
+  await t.mutation(ref("recordVisit"),{token,visitId,pathVersion:"stories-v1"});
+  await t.mutation(ref("recordVisit"),{token,visitId,pathVersion:"stories-v1",pathId:"A"});
+  await t.mutation(ref("recordVisit"),{token,visitId,pathVersion:"stories-v1",pathId:"A"});
+  await assert.rejects(t.mutation(ref("recordVisit"),{token,visitId,pathVersion:"stories-v1",pathId:"B"}),/VISIT_PATH_ALREADY_CHOSEN/);
+  await assert.rejects(t.mutation(ref("recordVisit"),{token:"b".repeat(64),visitId,pathVersion:"stories-v1",pathId:"A"}),/VISIT_UNAVAILABLE/);
+  const old=process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN;process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN="e".repeat(64);
+  try { const result=await t.query(ref("listVisits"),{viewToken:"e".repeat(64),paginationOpts:{cursor:null,numItems:100}});assert.deepEqual(result.page.map(r=>r.pathId),["A",null]); }
+  finally { if(old===undefined)delete process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN;else process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN=old; }
+  for(const table of ["playerUsage","practiceUsage","practiceSessions","practiceJobs","practiceCompletions"])assert.equal(await t.run(ctx=>ctx.db.query(table).first()),null);
+});
+
+test("path selection queued during a visit survives offline retry; changing path creates a separate visit",async()=>{
+  const persistent=storage(),tab=storage(),sent=[];let resolveVisit;
+  const tracking=createUsageTracking({token,storage:persistent,tabStorage:tab,send:async event=>{sent.push(event);if(sent.length===1)await new Promise(resolve=>resolveVisit=resolve);}});
+  const initial=tracking.visit(),firstId=tracking.visitId;
+  const selected=tracking.choosePath("A");resolveVisit();await initial;await selected;
+  assert.deepEqual(sent.map(e=>e.pathId),[undefined,"A"]);assert.equal(persistent.length,0);
+  await tracking.choosePath("B");assert.notEqual(tracking.visitId,firstId);assert.equal(sent.at(-1).pathId,"B");
+  const reopened=createUsageTracking({token,initialPath:"B",storage:persistent,tabStorage:tab,send:async event=>sent.push(event)});
+  assert.equal(reopened.visitId,tracking.visitId);await reopened.visit();assert.equal(sent.at(-1).pathId,"B");
+  const differentTabChoice=createUsageTracking({token,initialPath:"C",storage:persistent,tabStorage:tab,send:async()=>{}});assert.notEqual(differentTabChoice.visitId,reopened.visitId);
+  const offline=createUsageTracking({token,initialPath:"C",storage:persistent,tabStorage:tab,send:async()=>{throw Error("offline");}});await offline.visit();await offline.choosePath("A");
+  const recovered=createUsageTracking({token,initialPath:"A",storage:persistent,tabStorage:tab,send:async event=>sent.push(event)});await recovered.retry();assert.equal(persistent.length,0);assert.equal(sent.at(-1).pathId,"A");
+});

@@ -11,6 +11,7 @@ export default defineSchema({
     token: v.string(), visitId: v.string(), firstName: v.string(), browserLabel: v.string(),
     visitedAt: v.number(), practice1StartedAt: v.optional(v.number()), practice2StartedAt: v.optional(v.number()),
     teachingVersion: v.optional(v.literal("picnic-v1")),
+    pathVersion: v.optional(v.literal("stories-v1")), pathId: v.optional(v.union(v.literal("A"), v.literal("B"), v.literal("C"))),
   }).index("by_visit", ["visitId"]).index("by_time", ["visitedAt"]),
   teachingAnswers: defineTable({ token: v.string(), optionIndex: v.union(v.literal(0), v.literal(1), v.literal(2)), correct: v.boolean(), answeredAt: v.number() }).index("by_token", ["token"]),
   practiceCompletions: defineTable({

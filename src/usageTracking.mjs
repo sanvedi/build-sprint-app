@@ -1,15 +1,19 @@
 const PREFIX = "prompt-game:usage-pending:v1:";
 // Start a new visit on the introduction release; earlier rows stay unmodified.
-const VISIT = "prompt-game:visit:picnic-v1";
+const VISIT = "prompt-game:visit:stories-v1";
+const VISIT_PATH = `${VISIT}:path`;
 const randomId = () => Array.from(crypto.getRandomValues(new Uint8Array(32)), n => n.toString(16).padStart(2, "0")).join("");
 
 // Independent of answer/assessment recovery: replaying these events never calls AI.
-export function createUsageTracking({ token, send, storage = localStorage, tabStorage = sessionStorage, status = () => {} }) {
+export function createUsageTracking({ token, send, initialPath = null, storage = localStorage, tabStorage = sessionStorage, status = () => {} }) {
+  let pathId = ["A", "B", "C"].includes(initialPath) ? initialPath : null;
   let visitId;
   try { visitId = tabStorage.getItem(VISIT); } catch {}
+  // A different tab may have changed the shared path since this visit began.
+  try { if ((tabStorage.getItem(VISIT_PATH) || "") !== (pathId || "")) visitId = null; } catch {}
   if (!/^[a-f0-9]{64}$/.test(visitId || "")) {
     visitId = randomId();
-    try { tabStorage.setItem(VISIT, visitId); } catch {}
+    try { tabStorage.setItem(VISIT, visitId); tabStorage.setItem(VISIT_PATH, pathId || ""); } catch {}
   }
   const pending = new Map();
   try {
@@ -40,11 +44,23 @@ export function createUsageTracking({ token, send, storage = localStorage, tabSt
     running = null;
   }
   function queue(challengeId) {
-    const key = `${PREFIX}${visitId}:${challengeId || "visit"}`;
-    const event = { token, visitId, ...(challengeId ? { challengeId } : {}) };
+    const key = `${PREFIX}${visitId}:${challengeId || `visit${pathId ? `:${pathId}` : ""}`}`;
+    const event = { token, visitId, ...(challengeId ? { challengeId } : { pathVersion: "stories-v1", ...(pathId ? { pathId } : {}) }) };
     pending.set(key, event);
     try { storage.setItem(key, JSON.stringify(event)); } catch {}
     return flush();
   }
-  return { visitId, visit: () => queue(), start: id => queue(id), retry: flush };
+  return { get visitId() { return visitId; }, visit: () => queue(), start: id => queue(id), retry: flush,
+    choosePath(id) {
+      if (!["A", "B", "C"].includes(id)) throw new Error("Unknown path");
+      // Each change starts a new visit; old visit choices and practice progress stay intact.
+      if (pathId !== null && pathId !== id) {
+        visitId = randomId();
+        try { tabStorage.setItem(VISIT, visitId); } catch {}
+      }
+      pathId = id;
+      try { tabStorage.setItem(VISIT_PATH, id); } catch {}
+      return queue();
+    },
+  };
 }
