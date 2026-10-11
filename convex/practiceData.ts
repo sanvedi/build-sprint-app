@@ -4,6 +4,7 @@ import type { MutationCtx } from "./_generated/server";
 import { practiceFinished, isFinal, isReview } from "../shared/practiceTasks.mjs";
 
 import { challengeValidator, materialVersionValidator, type Challenge } from "./challenges";
+import { recordPracticeCompletion } from "./teacher";
 function finalsEnabled(){if(process.env.PROMPT_GAME_FINALS_ENABLED!=="true")throw new ConvexError("FINAL_UNAVAILABLE");}
 async function sessionFor(ctx:MutationCtx,token:string,challengeId:Challenge){
   const current=await ctx.db.query("practiceSessions").withIndex("by_token_challenge",q=>q.eq("token",token).eq("challengeId",challengeId)).unique();
@@ -119,6 +120,7 @@ export const finish = internalMutation({
        await ctx.db.patch(progress._id,{badge:!!a.earned,reviewId:a.earned?undefined:route==="judgment"?"beginner-review-02":"beginner-review-01"});
       }
       await ctx.db.patch(session._id,{attempts:session.attempts+1,point:!isFinal(challengeId)&&!isReview(challengeId)&&!!a.earned,completed:!!a.earned||isFinal(challengeId)||session.attempts+1>=3,latestAssessmentId:job._id});
+      await recordPracticeCompletion(ctx,job.token,challengeId,!!a.earned||session.attempts+1>=3,!!a.earned);
     }
     if(job.kind==="recheck"){
       const original=job.assessmentId?await ctx.db.get(job.assessmentId):null;
@@ -132,6 +134,7 @@ export const finish = internalMutation({
       }
       await ctx.db.patch(original._id,{reviewedResult:a.result,rechecked:true});
       await ctx.db.patch(session._id,{point:!isFinal(challengeId)&&!isReview(challengeId)&&!!a.earned,completed:!!a.earned||isFinal(challengeId)||session.attempts>=3,latestAssessmentId:original._id});
+      await recordPracticeCompletion(ctx,job.token,challengeId,!!a.earned||session.attempts>=3,!!a.earned);
     }
     await ctx.db.patch(job._id,{status:"done",result:a.result});return null;
   },

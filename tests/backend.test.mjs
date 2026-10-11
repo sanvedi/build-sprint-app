@@ -12,12 +12,58 @@ async function moduleFor(path){
 }
 const schema=(await moduleFor("convex/schema.ts")).default;
 const data=await moduleFor("convex/practiceData.ts");
-const modules={"./_generated/server.ts":async()=>({}),"./practiceData.ts":async()=>data};
+const teacher=await moduleFor("convex/teacher.ts");
+const modules={"./_generated/server.ts":async()=>({}),"./practiceData.ts":async()=>data,"./teacher.ts":async()=>teacher};
 const reserve=makeFunctionReference("practiceData:reserve");
 const finish=makeFunctionReference("practiceData:finish");
 const openFinal=makeFunctionReference("practiceData:openFinal");
 const returnToPractice=makeFunctionReference("practiceData:returnToPractice");
 const token="f".repeat(64);
+
+test("first names are optional device labels, validated and saved without AI usage",async()=>{
+ const t=convexTest(schema,modules),save=makeFunctionReference("teacher:saveFirstName");
+ await t.mutation(save,{token,firstName:" Test "});await t.mutation(save,{token,firstName:"Other"});
+ const profile=await t.run(ctx=>ctx.db.query("studentProfiles").withIndex("by_token",q=>q.eq("token",token)).unique());
+ assert.equal(profile.firstName,"Test");
+ await t.mutation(save,{token:"e".repeat(64),firstName:""});
+ assert.equal((await t.run(ctx=>ctx.db.query("studentProfiles").withIndex("by_token",q=>q.eq("token","e".repeat(64))).unique())).firstName,"Guest");
+ await assert.rejects(t.mutation(save,{token,firstName:"First Last"}),/FIRST_NAME_ONLY/);
+ assert.equal(await t.run(ctx=>ctx.db.query("practiceUsage").first()),null);
+});
+
+test("confirmed completion is recorded once with its name, number, point and time",async()=>{
+ const t=convexTest(schema,modules);await t.mutation(makeFunctionReference("teacher:saveFirstName"),{token,firstName:"Test"});
+ const id=await attempt(t,"beginner-01","teacher-first",true);
+ await t.mutation(finish,{id,result:'{"earned":true}',earned:true});
+ const rows=await t.run(ctx=>ctx.db.query("practiceCompletions").withIndex("by_token_challenge",q=>q.eq("token",token).eq("challengeId","beginner-01")).take(10));
+ assert.equal(rows.length,1);assert.equal(rows[0].firstName,"Test");assert.equal(rows[0].practiceNumber,1);assert.equal(rows[0].pointsEarned,1);assert.ok(rows[0].completedAt>0);
+ const review=await t.mutation(reserve,{token,requestId:"teacher-recheck",kind:"recheck",assessmentId:id,input:"{}"});
+ await t.mutation(finish,{id:review,result:'{"earned":false}',earned:false});
+ const updated=await t.run(ctx=>ctx.db.get(rows[0]._id));assert.equal(updated.completed,false);assert.equal(updated.pointsEarned,0);
+});
+
+test("supported completion is Guest with zero points and unfinished practices are excluded",async()=>{
+ const t=convexTest(schema,modules);let previous=null;
+ for(let i=1;i<=3;i++){previous=await attempt(t,"beginner-01",`teacher-help-${i}`,false,previous);if(i<3)assert.equal(await t.run(ctx=>ctx.db.query("practiceCompletions").first()),null);}
+ const row=await t.run(ctx=>ctx.db.query("practiceCompletions").first());assert.equal(row.firstName,"Guest");assert.equal(row.pointsEarned,0);assert.equal(row.completed,true);
+});
+
+test("teacher list requires the hidden link, pages newest first, and exposes no device tokens",async()=>{
+ const prior=process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN;process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN="b".repeat(64);
+ try{
+ const t=convexTest(schema,modules),list=makeFunctionReference("teacher:listCompletions");
+ await assert.rejects(t.query(list,{viewToken:"wrong",paginationOpts:{numItems:1,cursor:null}}),/TEACHER_PAGE_UNAVAILABLE/);
+ for(const [index,name] of ["Older","Newer"].entries())await t.run(ctx=>ctx.db.insert("practiceCompletions",{token:`${index}`.repeat(64),challengeId:"beginner-01",firstName:name,practiceNumber:1,pointsEarned:1,completed:true,completedAt:100+index,sortTime:100+index}));
+ const first=await t.query(list,{viewToken:"b".repeat(64),paginationOpts:{numItems:1,cursor:null}});assert.equal(first.page[0].firstName,"Newer");assert.equal(first.page[0].token,undefined);
+ const second=await t.query(list,{viewToken:"b".repeat(64),paginationOpts:{numItems:1,cursor:first.continueCursor}});assert.equal(second.page[0].firstName,"Older");
+ }finally{if(prior===undefined)delete process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN;else process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN=prior;}
+});
+
+test("import preserves earlier completion without inventing names or completion times",async()=>{
+ const t=convexTest(schema,modules);await completedPractices(t);
+ const run=makeFunctionReference("teacher:importEarlierCompletions");await t.mutation(run,{paginationOpts:{numItems:100,cursor:null}});await t.mutation(run,{paginationOpts:{numItems:100,cursor:null}});
+ const rows=await t.run(ctx=>ctx.db.query("practiceCompletions").take(10));assert.equal(rows.length,2);assert.ok(rows.every(row=>row.firstName==="Guest"&&row.completedAt===null));
+});
 
 test("daily cap blocks the next request across devices and failed calls remain counted",async()=>{
  const t=convexTest(schema,modules);

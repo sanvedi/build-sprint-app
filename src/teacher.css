@@ -1,0 +1,16 @@
+.name-step { max-width: 480px; margin: 48px auto; padding: 24px; }
+.name-step h1 { margin-top: 40px; }
+.name-step .primary { min-height: 56px; background: #2446D8; border-color: #2446D8; }
+.name-step .primary:hover:not(:disabled) { background: #1937ad; }
+.name-step input:focus-visible { outline: 3px solid #2446D8; outline-offset: 3px; }
+.name-step form { display: grid; gap: 16px; margin-top: 24px; }
+.name-step input { box-sizing: border-box; width: 100%; min-height: 56px; padding: 16px; border: 1px solid #2446D8; border-radius: 16px; font: inherit; color: #20233D; background: #fff; caret-color: #2446D8; }
+.teacher-page { max-width: 1000px; margin: 32px auto; padding: 24px; }
+.teacher-table { overflow-x: auto; margin-top: 24px; }
+.teacher-table table { width: 100%; border-collapse: collapse; text-align: left; font-variant-numeric: tabular-nums; }
+.teacher-table th, .teacher-table td { padding: 16px 12px; border-bottom: 1px solid #b8c8df; vertical-align: top; }
+.teacher-table th { color: #20233D; background: #e3edff; }
+.teacher-table td:last-child { min-width: 210px; }
+.teacher-page button, .name-step button { min-height: 48px; }
+.name-step ::selection, .teacher-page ::selection { color: #20233D; background: #D8F36A; }
+@media (max-width: 600px) { .name-step, .teacher-page { margin: 16px auto; padding: 20px; } .teacher-page h1 { font-size: 28px; } }

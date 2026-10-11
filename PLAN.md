@@ -1,5 +1,13 @@
 # PLAN.md
 
+## Authorized first-name and teacher-list release, 11 October 2026
+
+Builder explicitly requested this bounded milestone and production deployment: optional first-name-only entry before Practice 1 (Skip saves Guest), server-confirmed practice completion records with first name/number/points/time, and an unlinked hard-to-guess teacher URL. No passwords, signup/login or changes to missions, scoring, AI instructions, attempts or daily request cap. This supersedes feedback-review work as the active task. Earlier completions are preserved as Guest with unknown completion time; the secret URL is kept outside committed source and checked by Convex. Development-only attempt history remains excluded from production. Required final proof: new private browser, name Test, real Practice 1 completion, actual teacher page list verbatim and deployed commit hash.
+
+## Authorized production-readiness work, 11 October 2026
+
+Builder requested implementation after the proposed order: feedback reliability, optional account saving, remaining levels, complete public journey and usage policy. Start with feedback reliability and work on one milestone at a time. Built a local evidence checker for the existing 12-case review packet; real teacher labels, task approval, two actual evaluator runs and repeated-generation reviews are still required. No scoring changes or production deployment are authorized by a passing synthetic checker test. Public usage policy and spending budget remain product decisions; do not invent them. Account saving and Amateur/Pro remain subsequent milestones rather than part of this checker change.
+
 ## Practice display fixes, 7 October 2026
 
 Builder-authorized maths/feedback display fixes published and verified. Both real Beginner practices passed in a fresh private 390px Edge session; final screenshots and deployed hash ready for handoff. Raw generated/saved inputs and marking unchanged; finals unchanged. 63 release checks passed. No further feature work approved; per-device limit remains deferred by builder.
