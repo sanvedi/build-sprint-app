@@ -10,6 +10,7 @@ import Answer from "./Answer.jsx";
 import PracticeFlow from "./PracticeFlow.jsx";
 import StudentName, { NAME_KEY } from "./StudentName.jsx";
 import TeacherPage from "./TeacherPage.jsx";
+import { createUsageTracking } from "./usageTracking.mjs";
 import { practiceTasks, taskFor, practiceFinished, isFinal, isReview, initialState, generated, judged, assessed, rechecked, correction, saveResult, loadState } from "./practice.mjs";
 
 import { statePreview, previewAction } from "./statePreview.mjs";
@@ -31,7 +32,8 @@ function startingPractice(){
 }
 const TOKEN="prompt-game:session:v1";
 const client=__CONVEX_URL__?new ConvexHttpClient(__CONVEX_URL__):null;
-function sessionToken(){let token=localStorage.getItem(TOKEN);if(!token){token=Array.from(crypto.getRandomValues(new Uint8Array(32)),n=>n.toString(16).padStart(2,"0")).join("");localStorage.setItem(TOKEN,token);}return token;}
+let memoryToken;
+function sessionToken(){if(memoryToken)return memoryToken;for(const storage of [localStorage,sessionStorage]){try{const token=storage.getItem(TOKEN);if(token){memoryToken=token;return token;}}catch{}}memoryToken=Array.from(crypto.getRandomValues(new Uint8Array(32)),n=>n.toString(16).padStart(2,"0")).join("");for(const storage of [localStorage,sessionStorage]){try{storage.setItem(TOKEN,memoryToken);}catch{}}return memoryToken;}
 function errorText(error){return typeof error?.data==="string"?error.data:String(error?.message||error);}
 function message(error){const text=errorText(error);if(text.includes("TASK_VERSION_CHANGED"))return "Your saved practice uses the earlier invitation task. Keep this edit and reopen the browser where you started that practice to continue it.";if(text.includes("FINAL_PRACTICE_REQUIRED"))return "Not yet. Review the feedback and return to practice.";if(text.includes("FINAL_VARIANTS_EXHAUSTED"))return "Keep practising. Another fresh final challenge is needed to unlock the next level.";if(text.includes("FINAL_UNAVAILABLE"))return "Answers and feedback are unavailable right now. Your work is still here.";if(text.includes("AI_UNAVAILABLE"))return "Answers and feedback are unavailable right now. Your work is still here.";if(text.includes("DAILY_ALLOWANCE"))return allowanceMessage;if(text.includes("REQUEST_PENDING"))return "This request is still processing. Wait a moment, then retry.";if(text.includes("PRACTICE_FINISHED"))return "This practice has already been assessed. Keep your confirmed result.";return "This request could not be completed. Your work is still here. Try again.";}
 function requestError(error,kind){
@@ -62,11 +64,12 @@ function Answers({state,task}){
   function switchTab(next){if(body.current)positions.current[tab]=body.current.scrollTop;setTab(next);requestAnimationFrame(()=>{if(body.current)body.current.scrollTop=positions.current[next]||0;});}
   return <section aria-label="Answer comparison" className="answer-section" id="answer-view"><div className="comparison-tools"><div className="answer-tabs" role="tablist" aria-label="Compare answers"><button type="button" role="tab" aria-selected={tab==="old"} onClick={()=>switchTab("old")} aria-controls="phone-answer" id="tab-old">{state.previousAnswer?"Previous answer":"Original answer"}</button><button type="button" role="tab" aria-selected={tab==="new"} onClick={()=>switchTab("new")} aria-controls="phone-answer" id="tab-new">{state.previousAnswer?"Revised answer":"Your answer"}</button></div><a href="#judgment" onClick={()=>requestAnimationFrame(()=>document.getElementById("judgment")?.focus())}>Write my judgment</a></div><div className="answer-grid"><article className="desktop-answer"><h3>{state.previousAnswer?"Previous answer":"Original example"}</h3><Answer text={old}/></article><article className="desktop-answer"><h3>{state.previousAnswer?"Revised answer":"Your answer"}</h3><Answer text={state.answer.text}/></article></div><article className="phone-answer" id="phone-answer" role="tabpanel" aria-labelledby={tab==="old"?"tab-old":"tab-new"} ref={body}><h3>{tab==="old"?(state.previousAnswer?"Previous answer":"Original example"):(state.previousAnswer?"Revised answer":"Your answer")}</h3><Answer text={tab==="old"?old:state.answer.text}/></article></section>;
 }
-function App(){
+function App({tracking}){
   const [challengeId,setChallengeId]=useState(startingPractice);
   const final=isFinal(challengeId);const review=isReview(challengeId);
   const [records,setRecords]=useState(()=>preview?preview.records||{}:Object.fromEntries(Object.keys(practiceTasks).map(id=>[id,savedPractice(id)])));
   const [s,setS]=useState(()=>preview?.state||storedRecovery()?.next||storedRecovery()?.before||savedPractice(startingPractice()));
+  useEffect(()=>{if(!preview&&["beginner-01","beginner-02"].includes(challengeId)&&!practiceFinished(s))tracking?.start(challengeId);},[challengeId,tracking]);
   const task=taskFor(challengeId,s.materialVersion);const mission=challengeId==="beginner-01"&&s.materialVersion==="quiz-v1";
   const [allowanceResetAt,setAllowanceResetAt]=useState(()=>preview?null:savedAllowanceReset());
   const allowanceReached=allowanceResetAt!==null;
@@ -169,8 +172,10 @@ function App(){
 function Entry(){
   const [named,setNamed]=useState(()=>{try{return !!JSON.parse(localStorage.getItem(NAME_KEY))?.firstName;}catch{return false;}});
   const teacherPath=location.pathname.match(/^\/teacher\/([a-f0-9]{64})\/?$/);
+  const [recordingError,setRecordingError]=useState(false);
+  const [tracking]=useState(()=>teacherPath||preview?null:createUsageTracking({token:sessionToken(),status:setRecordingError,send:event=>event.challengeId?client.mutation(api.teacher.recordPracticeStart,event):client.mutation(api.teacher.recordVisit,event)}));
+  useEffect(()=>{if(!tracking)return;tracking.visit();const retry=()=>tracking.retry();window.addEventListener("online",retry);return()=>window.removeEventListener("online",retry);},[tracking]);
   if(teacherPath)return <TeacherPage client={client} viewToken={teacherPath[1]}/>;
-  if(!named&&!preview)return <StudentName saveName={firstName=>client.mutation(api.teacher.saveFirstName,{token:sessionToken(),firstName})} onContinue={()=>setNamed(true)}/>;
-  return <App/>;
+  return <>{recordingError&&<aside className="recording-warning" role="status">Your visit could not be recorded. Your practice still works. <button onClick={()=>tracking.retry()}>Retry recording</button></aside>}{!named&&!preview?<StudentName saveName={firstName=>client.mutation(api.teacher.saveFirstName,{token:sessionToken(),firstName,visitId:tracking.visitId})} onContinue={()=>setNamed(true)}/>:<App tracking={tracking}/>}</>;
 }
 createRoot(document.getElementById("root")).render(<Entry/>);

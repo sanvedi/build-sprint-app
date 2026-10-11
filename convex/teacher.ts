@@ -4,14 +4,63 @@ import { paginationOptsValidator } from "convex/server";
 import { v, ConvexError } from "convex/values";
 
 export const saveFirstName = mutation({
-  args: { token: v.string(), firstName: v.string() }, returns: v.null(),
+  args: { token: v.string(), firstName: v.string(), visitId: v.optional(v.string()) }, returns: v.string(),
   handler: async (ctx, args) => {
     const firstName = args.firstName.trim() || "Guest";
     if (!/^[a-f0-9]{64}$/.test(args.token) || !/^[\p{L}][\p{L}\p{M}'’\-]{0,39}$/u.test(firstName)) throw new ConvexError("FIRST_NAME_ONLY");
     const profile = await ctx.db.query("studentProfiles").withIndex("by_token", q => q.eq("token", args.token)).unique();
     // A retry keeps the original choice. This is a device label, not an identity.
-    if (!profile) await ctx.db.insert("studentProfiles", { token: args.token, firstName });
+    if (!profile) await ctx.db.insert("studentProfiles", { token: args.token, firstName, nameChosen: true });
+    else if (profile.nameChosen === false) await ctx.db.patch(profile._id, { firstName, nameChosen: true });
+    const chosen = profile && profile.nameChosen !== false ? profile.firstName : firstName;
+    if (args.visitId) {
+      validateVisit(args.token, args.visitId);
+      const visit = await ctx.db.query("usageVisits").withIndex("by_visit", q => q.eq("visitId", args.visitId!)).unique();
+      if (visit && visit.token !== args.token) throw new ConvexError("VISIT_UNAVAILABLE");
+      if (visit) await ctx.db.patch(visit._id, { firstName: chosen });
+    }
+    return chosen;
+  },
+});
+
+function validateVisit(token: string, visitId: string) {
+  if (!/^[a-f0-9]{64}$/.test(token) || !/^[a-f0-9]{64}$/.test(visitId)) throw new ConvexError("VISIT_UNAVAILABLE");
+}
+async function ensureVisit(ctx: MutationCtx, token: string, visitId: string) {
+  validateVisit(token, visitId);
+  const existing = await ctx.db.query("usageVisits").withIndex("by_visit", q => q.eq("visitId", visitId)).unique();
+  if (existing) {
+    if (existing.token !== token) throw new ConvexError("VISIT_UNAVAILABLE");
+    return existing;
+  }
+  let profile = await ctx.db.query("studentProfiles").withIndex("by_token", q => q.eq("token", token)).unique();
+  if (!profile) {
+    const id = await ctx.db.insert("studentProfiles", { token, firstName: "Guest", nameChosen: false });
+    profile = await ctx.db.get(id);
+  }
+  const id = await ctx.db.insert("usageVisits", { token, visitId, firstName: profile!.firstName, browserLabel: `Browser ${profile!._id}`, visitedAt: Date.now() });
+  return (await ctx.db.get(id))!;
+}
+export const recordVisit = mutation({
+  args: { token: v.string(), visitId: v.string() }, returns: v.null(),
+  handler: async (ctx, args) => { await ensureVisit(ctx, args.token, args.visitId); return null; },
+});
+export const recordPracticeStart = mutation({
+  args: { token: v.string(), visitId: v.string(), challengeId: v.union(v.literal("beginner-01"), v.literal("beginner-02")) }, returns: v.null(),
+  handler: async (ctx, args) => {
+    const visit = await ensureVisit(ctx, args.token, args.visitId);
+    const field = args.challengeId === "beginner-01" ? "practice1StartedAt" : "practice2StartedAt";
+    if (visit[field] === undefined) await ctx.db.patch(visit._id, { [field]: Date.now() });
     return null;
+  },
+});
+export const listVisits = query({
+  args: { viewToken: v.string(), paginationOpts: paginationOptsValidator },
+  returns: v.object({ page: v.array(v.object({ firstName: v.string(), browserLabel: v.string(), visitedAt: v.number(), practice1StartedAt: v.union(v.number(), v.null()), practice2StartedAt: v.union(v.number(), v.null()) })), isDone: v.boolean(), continueCursor: v.string() }),
+  handler: async (ctx, args) => {
+    if (!process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN || args.viewToken !== process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN) throw new ConvexError("TEACHER_PAGE_UNAVAILABLE");
+    const result = await ctx.db.query("usageVisits").withIndex("by_time").order("desc").paginate(args.paginationOpts);
+    return { page: result.page.map(({ firstName, browserLabel, visitedAt, practice1StartedAt, practice2StartedAt }) => ({ firstName, browserLabel, visitedAt, practice1StartedAt: practice1StartedAt ?? null, practice2StartedAt: practice2StartedAt ?? null })), isDone: result.isDone, continueCursor: result.continueCursor };
   },
 });
 
