@@ -1,5 +1,7 @@
 # PROGRESS.md
 
+- 2026-10-11: Builder reported the published app works on their mobile. This is a builder confirmation; connection type and exact steps were not supplied. No app change or deployment.
+
 - 2026-10-08: Retested published app with all 63 release checks and a fresh private Edge journey at 390x844: real Beginner 1/2 generation/assessment, separate first-attempt points, readable maths, student-focused feedback, Next challenge, and reopening without AI passed. Real Beginner final generation/assessment awarded the badge, retained two practice points and reopened without AI. Six requests used today; no app change or deployment. Evidence in ignored artifacts/retest-2026-10-08; physical-phone and teacher reliability remain separate.
 
 - 2026-10-07: Published authorized practice-only maths/feedback display fixes as fcba83cf14d268f2d9bd4cef87accc664aad1875 via npm run deploy. All 63 release checks, typecheck/build, local 390/1280px checks and real fresh-private live 390px Beginner 1/2 journeys passed. Each earned one point on attempt one; raw saved answers/assessments retained, four screenshots captured, reopening used no AI. Four AI requests; usage 15/20. Backend/AI instructions/scoring/attempts/cap/finals unchanged; no secret printed or committed.
