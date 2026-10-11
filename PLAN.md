@@ -2,6 +2,8 @@
 
 ## Authorized first-name and teacher-list release, 11 October 2026
 
+Published and verified as 0a70d1e020a554255ce1226361c8fefde7bc9044. Real private Test session completed Practice 1 with one point; teacher list and reopening passed at the public URL. All 24 current completion rows are shown; earlier unknown names/times are labelled honestly. Keep the teacher link outside public documentation. Teacher-label reliability work remains pending.
+
 Builder explicitly requested this bounded milestone and production deployment: optional first-name-only entry before Practice 1 (Skip saves Guest), server-confirmed practice completion records with first name/number/points/time, and an unlinked hard-to-guess teacher URL. No passwords, signup/login or changes to missions, scoring, AI instructions, attempts or daily request cap. This supersedes feedback-review work as the active task. Earlier completions are preserved as Guest with unknown completion time; the secret URL is kept outside committed source and checked by Convex. Development-only attempt history remains excluded from production. Required final proof: new private browser, name Test, real Practice 1 completion, actual teacher page list verbatim and deployed commit hash.
 
 ## Authorized production-readiness work, 11 October 2026
