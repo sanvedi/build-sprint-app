@@ -11,6 +11,7 @@ import PracticeFlow from "./PracticeFlow.jsx";
 import StudentName, { NAME_KEY } from "./StudentName.jsx";
 import TeacherPage from "./TeacherPage.jsx";
 import { createUsageTracking } from "./usageTracking.mjs";
+import Teaching, { TEACHING_KEY } from "./Teaching.jsx";
 import { practiceTasks, taskFor, practiceFinished, isFinal, isReview, initialState, generated, judged, assessed, rechecked, correction, saveResult, loadState } from "./practice.mjs";
 
 import { statePreview, previewAction } from "./statePreview.mjs";
@@ -173,9 +174,17 @@ function Entry(){
   const [named,setNamed]=useState(()=>{try{return !!JSON.parse(localStorage.getItem(NAME_KEY))?.firstName;}catch{return false;}});
   const teacherPath=location.pathname.match(/^\/teacher\/([a-f0-9]{64})\/?$/);
   const [recordingError,setRecordingError]=useState(false);
+  const [taught,setTaught]=useState(()=>{try{return !!JSON.parse(localStorage.getItem(TEACHING_KEY))?.answeredAt;}catch{return false;}});
+  const [introLoaded,setIntroLoaded]=useState(false);
   const [tracking]=useState(()=>teacherPath||preview?null:createUsageTracking({token:sessionToken(),status:setRecordingError,send:event=>event.challengeId?client.mutation(api.teacher.recordPracticeStart,event):client.mutation(api.teacher.recordVisit,event)}));
   useEffect(()=>{if(!tracking)return;tracking.visit();const retry=()=>tracking.retry();window.addEventListener("online",retry);return()=>window.removeEventListener("online",retry);},[tracking]);
+  useEffect(()=>{if(!named||taught||teacherPath||preview)return;let active=true;client.query(api.teacher.getTeachingAnswer,{token:sessionToken()}).then(answer=>{if(!active)return;if(answer){try{localStorage.setItem(TEACHING_KEY,JSON.stringify(answer));}catch{}setTaught(true);}setIntroLoaded(true);}).catch(()=>{if(active)setIntroLoaded(true);});return()=>{active=false;};},[named,taught]);
+  function finishTeaching(){
+    // Open the existing editor for a fresh practice; never reset saved work or recovery.
+    if(!storedRecovery())try{localStorage.setItem(ACTIVE,JSON.stringify("beginner-01"));const first=savedPractice("beginner-01");if(first.stage==="edit"&&!first.answer)localStorage.setItem("prompt-game:beginner-01:view:v1",JSON.stringify({stage:"edit",step:3}));}catch{}
+    setTaught(true);
+  }
   if(teacherPath)return <TeacherPage client={client} viewToken={teacherPath[1]}/>;
-  return <>{recordingError&&<aside className="recording-warning" role="status">Your visit could not be recorded. Your practice still works. <button onClick={()=>tracking.retry()}>Retry recording</button></aside>}{!named&&!preview?<StudentName saveName={firstName=>client.mutation(api.teacher.saveFirstName,{token:sessionToken(),firstName,visitId:tracking.visitId})} onContinue={()=>setNamed(true)}/>:<App tracking={tracking}/>}</>;
+  return <>{recordingError&&<aside className="recording-warning" role="status">Your visit could not be recorded. Your practice still works. <button onClick={()=>tracking.retry()}>Retry recording</button></aside>}{!named&&!preview?<StudentName saveName={firstName=>client.mutation(api.teacher.saveFirstName,{token:sessionToken(),firstName,visitId:tracking.visitId})} onContinue={()=>setNamed(true)}/>:!taught&&!preview?(introLoaded?<Teaching saveAnswer={optionIndex=>client.mutation(api.teacher.saveTeachingAnswer,{token:sessionToken(),visitId:tracking.visitId,optionIndex})} onContinue={finishTeaching}/>:<main className="name-step"><p role="status">Loading your introduction…</p></main>):<App tracking={tracking}/>}</>;
 }
 createRoot(document.getElementById("root")).render(<Entry/>);
