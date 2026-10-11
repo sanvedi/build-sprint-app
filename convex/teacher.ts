@@ -1,5 +1,7 @@
 import { mutation, query, internalMutation } from "./_generated/server";
 import type { MutationCtx } from "./_generated/server";
+import { practiceValidator, type Practice } from "./challenges";
+import { isPractice, missionPath, practiceNumber } from "../shared/pathMissions.mjs";
 import { paginationOptsValidator } from "convex/server";
 import { v, ConvexError } from "convex/values";
 
@@ -54,10 +56,10 @@ export const recordVisit = mutation({
   },
 });
 export const recordPracticeStart = mutation({
-  args: { token: v.string(), visitId: v.string(), challengeId: v.union(v.literal("beginner-01"), v.literal("beginner-02")) }, returns: v.null(),
+  args: { token: v.string(), visitId: v.string(), challengeId: practiceValidator }, returns: v.null(),
   handler: async (ctx, args) => {
     const visit = await ensureVisit(ctx, args.token, args.visitId);
-    const field = args.challengeId === "beginner-01" ? "practice1StartedAt" : "practice2StartedAt";
+    const field = practiceNumber(args.challengeId) === 1 ? "practice1StartedAt" : "practice2StartedAt";
     if (visit[field] === undefined) await ctx.db.patch(visit._id, { [field]: Date.now() });
     return null;
   },
@@ -98,15 +100,15 @@ export const listVisits = query({
 });
 
 export async function recordPracticeCompletion(ctx: MutationCtx, token: string, challengeId: string, completed: boolean, point: boolean, historicalTime?: number) {
-  if (challengeId !== "beginner-01" && challengeId !== "beginner-02") return;
-  const existing = await ctx.db.query("practiceCompletions").withIndex("by_token_challenge", q => q.eq("token", token).eq("challengeId", challengeId)).unique();
+  if (!isPractice(challengeId)) return;
+  const existing = await ctx.db.query("practiceCompletions").withIndex("by_token_challenge", q => q.eq("token", token).eq("challengeId", challengeId as Practice)).unique();
   if (!completed && !existing) return;
   const profile = await ctx.db.query("studentProfiles").withIndex("by_token", q => q.eq("token", token)).unique();
   const newlyCompleted = completed && !existing?.completed;
   const now = Date.now();
   const data = {
-    token, challengeId: challengeId as "beginner-01" | "beginner-02", firstName: existing?.firstName || profile?.firstName || "Guest",
-    practiceNumber: challengeId === "beginner-01" ? 1 : 2,
+    token, challengeId: challengeId as Practice, ...(missionPath(challengeId) ? { pathId: missionPath(challengeId) as "A" | "B" | "C" } : {}), firstName: existing?.firstName || profile?.firstName || "Guest",
+    practiceNumber: practiceNumber(challengeId),
     pointsEarned: point ? 1 : 0, completed,
     completedAt: newlyCompleted ? (historicalTime === undefined ? now : null) : existing?.completedAt ?? null,
     sortTime: newlyCompleted ? historicalTime ?? now : existing?.sortTime ?? now,
@@ -115,14 +117,14 @@ export async function recordPracticeCompletion(ctx: MutationCtx, token: string, 
   else await ctx.db.insert("practiceCompletions", data);
 }
 
-const row = v.object({ firstName: v.string(), practiceNumber: v.number(), pointsEarned: v.number(), completedAt: v.union(v.number(), v.null()) });
+const row = v.object({ pathId: v.union(v.literal("A"), v.literal("B"), v.literal("C"), v.null()), firstName: v.string(), practiceNumber: v.number(), pointsEarned: v.number(), completedAt: v.union(v.number(), v.null()) });
 export const listCompletions = query({
   args: { viewToken: v.string(), paginationOpts: paginationOptsValidator },
   returns: v.object({ page: v.array(row), isDone: v.boolean(), continueCursor: v.string() }),
   handler: async (ctx, args) => {
     if (!process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN || args.viewToken !== process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN) throw new ConvexError("TEACHER_PAGE_UNAVAILABLE");
     const result = await ctx.db.query("practiceCompletions").withIndex("by_completed_time", q => q.eq("completed", true)).order("desc").paginate(args.paginationOpts);
-    return { page: result.page.map(({ firstName, practiceNumber, pointsEarned, completedAt }) => ({ firstName, practiceNumber, pointsEarned, completedAt })), isDone: result.isDone, continueCursor: result.continueCursor };
+    return { page: result.page.map(({ firstName, practiceNumber, pointsEarned, completedAt, pathId }) => ({ firstName, practiceNumber, pointsEarned, completedAt, pathId: pathId ?? null })), isDone: result.isDone, continueCursor: result.continueCursor };
   },
 });
 

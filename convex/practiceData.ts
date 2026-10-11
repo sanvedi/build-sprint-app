@@ -6,6 +6,7 @@ import { practiceFinished, isFinal, isReview } from "../shared/practiceTasks.mjs
 
 import { challengeValidator, materialVersionValidator, type Challenge } from "./challenges";
 import { recordLearningAttempt } from "./learningAttempts";
+import { missionPath, practicePair, isPractice } from "../shared/pathMissions.mjs";
 import { recordPracticeCompletion } from "./teacher";
 function finalsEnabled(){if(process.env.PROMPT_GAME_FINALS_ENABLED!=="true")throw new ConvexError("FINAL_UNAVAILABLE");}
 async function sessionFor(ctx:MutationCtx|QueryCtx,token:string,challengeId:Challenge){
@@ -19,11 +20,12 @@ async function latestFor(ctx:MutationCtx,token:string,challengeId:Challenge){
 }
 
 export const openFinal=mutation({
- args:{token:v.string()},returns:v.object({challengeId:challengeValidator,seen:v.array(challengeValidator),badge:v.boolean(),reviewId:v.union(challengeValidator,v.null())}),
+ args:{token:v.string(),pathId:v.optional(v.union(v.literal("A"),v.literal("B"),v.literal("C")))},returns:v.object({challengeId:challengeValidator,seen:v.array(challengeValidator),badge:v.boolean(),reviewId:v.union(challengeValidator,v.null())}),
  handler:async(ctx,a)=>{
   if(!/^[a-f0-9]{64}$/.test(a.token))throw new ConvexError("INVALID_SUBMISSION");
   finalsEnabled();
-  if(!practiceFinished(await sessionFor(ctx,a.token,"beginner-01"))||!practiceFinished(await sessionFor(ctx,a.token,"beginner-02")))throw new ConvexError("PRACTICE_LOCKED");
+  const [first,second]=practicePair(a.pathId?`path-${a.pathId}-01`:"beginner-01") as [Challenge,Challenge];
+  if(!practiceFinished(await sessionFor(ctx,a.token,first))||!practiceFinished(await sessionFor(ctx,a.token,second)))throw new ConvexError("PRACTICE_LOCKED");
   const progress=await ctx.db.query("finalProgress").withIndex("by_token",q=>q.eq("token",a.token)).unique();
   if(progress){
    const current=await sessionFor(ctx,a.token,progress.currentId);
@@ -77,12 +79,14 @@ export const reserve = internalMutation({
     if(existing){if(existing.input!==a.input||existing.kind!==a.kind||(existing.challengeId||"beginner-01")!==challengeId)throw new ConvexError("SUBMISSION_CHANGED");if(existing.status!=="failed")throw new ConvexError("REQUEST_PENDING");}
     const session=await sessionFor(ctx,a.token,challengeId);
     const materialVersion=a.materialVersion||"legacy-v1";
+    if(Boolean(missionPath(challengeId))!==(materialVersion==="missions-v1"))throw new ConvexError("INVALID_SUBMISSION");
     if(materialVersion==="quiz-v1"&&challengeId!=="beginner-01")throw new ConvexError("INVALID_SUBMISSION");
     if(session&&(session.materialVersion||"legacy-v1")!==materialVersion)throw new ConvexError("TASK_VERSION_CHANGED");
     if(existing&&(existing.materialVersion||"legacy-v1")!==materialVersion)throw new ConvexError("SUBMISSION_CHANGED");
     if(isFinal(challengeId)||isReview(challengeId))await finalAccess(ctx,a.token,challengeId);
     if(isFinal(challengeId)&&a.kind!=="recheck"&&session?.attempts)throw new ConvexError("PRACTICE_FINISHED");
-    if(challengeId==="beginner-02"&&!practiceFinished(await sessionFor(ctx,a.token,"beginner-01")))throw new ConvexError("PRACTICE_LOCKED");
+    const [first,second]=practicePair(challengeId) as [Challenge,Challenge];
+    if(challengeId===second&&!practiceFinished(await sessionFor(ctx,a.token,first)))throw new ConvexError("PRACTICE_LOCKED");
     if(a.kind==="assess"&&session&&(session.attempts>=3||session.point||session.completed))throw new ConvexError("PRACTICE_FINISHED");
     if(a.kind==="assess"&&session?.attempts){
       const previous=JSON.parse(a.input).previousAssessmentId;
@@ -98,7 +102,7 @@ export const reserve = internalMutation({
       if(assessment.rechecked)throw new ConvexError("PRACTICE_FINISHED");
     }
     // Serialize duplicate generation clicks before reserving any paid request.
-    if(a.kind==="assess"||a.kind==="generate"&&(challengeId==="beginner-01"||challengeId==="beginner-02")){
+    if(a.kind==="assess"||a.kind==="generate"&&isPractice(challengeId)){
       const recent=await ctx.db.query("practiceJobs").withIndex("by_token_challenge_kind",q=>q.eq("token",a.token).eq("challengeId",challengeId).eq("kind",a.kind)).order("desc").take(20);
       const completed=a.kind==="generate"&&recent.find(job=>job.status==="done"&&job.input===a.input&&(job.materialVersion||"legacy-v1")===materialVersion&&job.result?.trim());
       if(completed)return completed._id;
@@ -159,7 +163,7 @@ export const reusableGeneration=internalQuery({
  args:{token:v.string(),challengeId:challengeValidator,materialVersion:materialVersionValidator,input:v.string()},returns:v.any(),
  handler:async(ctx,a)=>{
   if(!/^[a-f0-9]{64}$/.test(a.token))throw new ConvexError("INVALID_SUBMISSION");
-  if(a.challengeId!=="beginner-01"&&a.challengeId!=="beginner-02")return null;
+  if(!isPractice(a.challengeId))return null;
   const session=await sessionFor(ctx,a.token,a.challengeId);
   if(session&&(session.materialVersion||"legacy-v1")!==a.materialVersion)throw new ConvexError("TASK_VERSION_CHANGED");
   const rows=await ctx.db.query("practiceJobs").withIndex("by_token_challenge_kind",q=>q.eq("token",a.token).eq("challengeId",a.challengeId).eq("kind","generate")).order("desc").take(20);

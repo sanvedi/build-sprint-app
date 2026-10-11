@@ -20,6 +20,48 @@ const openFinal=makeFunctionReference("practiceData:openFinal");
 const returnToPractice=makeFunctionReference("practiceData:returnToPractice");
 const token="f".repeat(64);
 
+test("six independent mission points preserve old work and cannot unlock another path's second mission",async()=>{
+ const t=convexTest(schema,modules), priorFinals=process.env.PROMPT_GAME_FINALS_ENABLED;
+ process.env.PROMPT_GAME_FINALS_ENABLED="true";
+ try {
+ const old=await t.run(ctx=>ctx.db.insert("practiceSessions",{token,challengeId:"beginner-01",materialVersion:"quiz-v1",attempts:2,point:true,completed:true}));
+ const original=await t.run(ctx=>ctx.db.get(old));
+ for(const path of ["A","B","C"]){
+   const first=`path-${path}-01`,second=`path-${path}-02`;
+   await assert.rejects(t.mutation(reserve,{token,challengeId:second,materialVersion:"missions-v1",requestId:`locked-${path}`,kind:"generate",input:"{}"}),/PRACTICE_LOCKED/);
+   await assert.rejects(t.mutation(reserve,{token,challengeId:first,requestId:`version-${path}`,kind:"generate",input:"{}"}),/INVALID_SUBMISSION/);
+   for(const challengeId of [first,second]){
+     const answer=await seedAnswer(t,challengeId,"missions-v1");
+     const id=await t.mutation(reserve,{token,challengeId,materialVersion:"missions-v1",requestId:challengeId,kind:"assess",input:input(null,answer)});
+     await t.mutation(finish,{id,result:'{"earned":true}',earned:true});
+     await t.mutation(finish,{id,result:'{"earned":true}',earned:true});
+     await assert.rejects(t.mutation(reserve,{token,challengeId,materialVersion:"missions-v1",requestId:challengeId+'-again',kind:"assess",input:input(null,answer)}),/PRACTICE_FINISHED/);
+   }
+ }
+ const rows=await t.run(ctx=>ctx.db.query("practiceSessions").withIndex("by_token",q=>q.eq("token",token)).take(10));
+ assert.equal(rows.filter(r=>r.challengeId?.startsWith("path-")&&r.point&&r.attempts===1).length,6);
+ assert.deepEqual(await t.run(ctx=>ctx.db.get(old)),original);
+ const completions=await t.run(ctx=>ctx.db.query("practiceCompletions").take(10));
+ assert.equal(completions.length,6);assert.deepEqual(completions.map(r=>r.pathId).sort(),["A","A","B","B","C","C"]);
+ for(const pathId of ["A","B","C"])assert.equal((await t.mutation(openFinal,{token,pathId})).challengeId,"beginner-final-01");
+ }finally{if(priorFinals===undefined)delete process.env.PROMPT_GAME_FINALS_ENABLED;else process.env.PROMPT_GAME_FINALS_ENABLED=priorFinals;}
+});
+
+test("new mission generation reuse stays inside its mission and browser, and all paths share the same daily allowance",async()=>{
+ const t=convexTest(schema,modules),reuse=makeFunctionReference("practiceData:reusableGeneration");
+ const prompt=JSON.stringify({prompt:"Same text"});
+ const first=await t.mutation(reserve,{token,challengeId:"path-A-01",materialVersion:"missions-v1",requestId:"a",kind:"generate",input:prompt});
+ await t.mutation(finish,{id:first,result:"Owned answer"});
+ assert.equal((await t.query(reuse,{token,challengeId:"path-A-01",materialVersion:"missions-v1",input:prompt})).id,first);
+ assert.equal(await t.query(reuse,{token,challengeId:"path-B-01",materialVersion:"missions-v1",input:prompt}),null);
+ assert.equal(await t.query(reuse,{token:"e".repeat(64),challengeId:"path-A-01",materialVersion:"missions-v1",input:prompt}),null);
+ const repeat=await t.mutation(reserve,{token,challengeId:"path-A-01",materialVersion:"missions-v1",requestId:"reuse",kind:"generate",input:prompt});assert.equal(repeat,first);
+ const day=new Date().toISOString().slice(0,10);
+ const usage=await t.run(ctx=>ctx.db.query("playerUsage").withIndex("by_token_day",q=>q.eq("token",token).eq("day",day)).unique());assert.equal(usage.count,1);
+ await t.run(ctx=>ctx.db.patch(usage._id,{count:20}));
+ await assert.rejects(t.mutation(reserve,{token,challengeId:"path-C-01",materialVersion:"missions-v1",requestId:"cap",kind:"generate",input:"other"}),/DAILY_ALLOWANCE_REACHED/);
+});
+
 test("first names are optional device labels, validated and saved without AI usage",async()=>{
  const t=convexTest(schema,modules),save=makeFunctionReference("teacher:saveFirstName");
  await t.mutation(save,{token,firstName:" Test "});await t.mutation(save,{token,firstName:"Other"});
