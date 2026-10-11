@@ -1,13 +1,14 @@
 import { mutation, internalMutation, internalQuery } from "./_generated/server";
 import { v, ConvexError } from "convex/values";
-import type { MutationCtx } from "./_generated/server";
+import { aiUsageValidator } from "./aiUsage";
+import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { practiceFinished, isFinal, isReview } from "../shared/practiceTasks.mjs";
 
 import { challengeValidator, materialVersionValidator, type Challenge } from "./challenges";
 import { recordLearningAttempt } from "./learningAttempts";
 import { recordPracticeCompletion } from "./teacher";
 function finalsEnabled(){if(process.env.PROMPT_GAME_FINALS_ENABLED!=="true")throw new ConvexError("FINAL_UNAVAILABLE");}
-async function sessionFor(ctx:MutationCtx,token:string,challengeId:Challenge){
+async function sessionFor(ctx:MutationCtx|QueryCtx,token:string,challengeId:Challenge){
   const current=await ctx.db.query("practiceSessions").withIndex("by_token_challenge",q=>q.eq("token",token).eq("challengeId",challengeId)).unique();
   // Existing rows belong to practice 1. Keep them and their rewards unchanged.
   return current || (challengeId==="beginner-01" ? await ctx.db.query("practiceSessions").withIndex("by_token_challenge",q=>q.eq("token",token).eq("challengeId",undefined)).unique() : null);
@@ -96,10 +97,20 @@ export const reserve = internalMutation({
       if(review&&review._id!==existing?._id)throw new ConvexError("REQUEST_PENDING");
       if(assessment.rechecked)throw new ConvexError("PRACTICE_FINISHED");
     }
+    // Serialize duplicate generation clicks before reserving any paid request.
+    if(a.kind==="assess"||a.kind==="generate"&&(challengeId==="beginner-01"||challengeId==="beginner-02")){
+      const recent=await ctx.db.query("practiceJobs").withIndex("by_token_challenge_kind",q=>q.eq("token",a.token).eq("challengeId",challengeId).eq("kind",a.kind)).order("desc").take(20);
+      const completed=a.kind==="generate"&&recent.find(job=>job.status==="done"&&job.input===a.input&&(job.materialVersion||"legacy-v1")===materialVersion&&job.result?.trim());
+      if(completed)return completed._id;
+      if(recent.some(job=>job.status==="pending"&&job.input===a.input&&(job.materialVersion||"legacy-v1")===materialVersion))throw new ConvexError("REQUEST_PENDING");
+    }
     const day=new Date().toISOString().slice(0,10);
-    const usage=await ctx.db.query("practiceUsage").withIndex("by_day",q=>q.eq("day",day)).unique();
+    const player=await ctx.db.query("playerUsage").withIndex("by_token_day",q=>q.eq("token",a.token).eq("day",day)).unique();
     const cap=Number(process.env.PROMPT_GAME_DAILY_CALL_LIMIT||"20");
-    if(!Number.isInteger(cap)||cap<1||cap>100||usage&&usage.count>=cap)throw new ConvexError("DAILY_ALLOWANCE_REACHED");
+    if(!Number.isInteger(cap)||cap<1||cap>100||player&&player.count>=cap)throw new ConvexError("DAILY_ALLOWANCE_REACHED");
+    if(player)await ctx.db.patch(player._id,{count:player.count+1});else await ctx.db.insert("playerUsage",{token:a.token,day,count:1});
+    // Keep the old aggregate as a meter, never as a shared player lockout.
+    const usage=await ctx.db.query("practiceUsage").withIndex("by_day",q=>q.eq("day",day)).unique();
     if(usage)await ctx.db.patch(usage._id,{count:usage.count+1});else await ctx.db.insert("practiceUsage",{day,count:1});
     if(!session)await ctx.db.insert("practiceSessions",{token:a.token,challengeId,materialVersion,attempts:0,point:false});
     if(existing){await ctx.db.patch(existing._id,{status:"pending"});return existing._id;}
@@ -142,3 +153,22 @@ export const finish = internalMutation({
   },
 });
 export const failed = internalMutation({args:{id:v.id("practiceJobs")},returns:v.null(),handler:async(ctx,a)=>{const job=await ctx.db.get(a.id);if(job&&job.status!=="done")await ctx.db.patch(a.id,{status:"failed"});return null;}});
+
+// Reuse only this browser's exact practice request and material; finals stay fresh.
+export const reusableGeneration=internalQuery({
+ args:{token:v.string(),challengeId:challengeValidator,materialVersion:materialVersionValidator,input:v.string()},returns:v.any(),
+ handler:async(ctx,a)=>{
+  if(!/^[a-f0-9]{64}$/.test(a.token))throw new ConvexError("INVALID_SUBMISSION");
+  if(a.challengeId!=="beginner-01"&&a.challengeId!=="beginner-02")return null;
+  const session=await sessionFor(ctx,a.token,a.challengeId);
+  if(session&&(session.materialVersion||"legacy-v1")!==a.materialVersion)throw new ConvexError("TASK_VERSION_CHANGED");
+  const rows=await ctx.db.query("practiceJobs").withIndex("by_token_challenge_kind",q=>q.eq("token",a.token).eq("challengeId",a.challengeId).eq("kind","generate")).order("desc").take(20);
+  if(a.challengeId==="beginner-01"&&a.materialVersion==="legacy-v1")rows.push(...await ctx.db.query("practiceJobs").withIndex("by_token_challenge_kind",q=>q.eq("token",a.token).eq("challengeId",undefined).eq("kind","generate")).order("desc").take(20));
+  const job=rows.find(job=>job.status==="done"&&job.input===a.input&&(job.materialVersion||"legacy-v1")===a.materialVersion&&job.result?.trim());
+  return job?{id:job._id,text:job.result!}:null;
+ }
+});
+export const recordUsage=internalMutation({
+ args:{id:v.id("practiceJobs"),aiUsage:aiUsageValidator},returns:v.null(),
+ handler:async(ctx,a)=>{await ctx.db.patch(a.id,{aiUsage:a.aiUsage});return null;}
+});
