@@ -1,5 +1,6 @@
 const PREFIX = "prompt-game:usage-pending:v1:";
-const VISIT = "prompt-game:visit:v1";
+// Start a new visit on the introduction release; earlier rows stay unmodified.
+const VISIT = "prompt-game:visit:picnic-v1";
 const randomId = () => Array.from(crypto.getRandomValues(new Uint8Array(32)), n => n.toString(16).padStart(2, "0")).join("");
 
 // Independent of answer/assessment recovery: replaying these events never calls AI.

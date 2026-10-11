@@ -38,7 +38,7 @@ async function ensureVisit(ctx: MutationCtx, token: string, visitId: string) {
     const id = await ctx.db.insert("studentProfiles", { token, firstName: "Guest", nameChosen: false });
     profile = await ctx.db.get(id);
   }
-  const id = await ctx.db.insert("usageVisits", { token, visitId, firstName: profile!.firstName, browserLabel: `Browser ${profile!._id}`, visitedAt: Date.now() });
+  const id = await ctx.db.insert("usageVisits", { token, visitId, firstName: profile!.firstName, browserLabel: `Browser ${profile!._id}`, visitedAt: Date.now(), teachingVersion: "picnic-v1" });
   return (await ctx.db.get(id))!;
 }
 export const recordVisit = mutation({
@@ -54,13 +54,38 @@ export const recordPracticeStart = mutation({
     return null;
   },
 });
+const teachingResult = v.object({ optionIndex: v.union(v.literal(0), v.literal(1), v.literal(2)), correct: v.boolean(), answeredAt: v.number() });
+export const saveTeachingAnswer = mutation({
+  args: { token: v.string(), visitId: v.string(), optionIndex: v.union(v.literal(0), v.literal(1), v.literal(2)) }, returns: teachingResult,
+  handler: async (ctx, args) => {
+    await ensureVisit(ctx, args.token, args.visitId);
+    const existing = await ctx.db.query("teachingAnswers").withIndex("by_token", q => q.eq("token", args.token)).unique();
+    // The first choice is immutable; a lost response can be retried safely.
+    if (existing) return { optionIndex: existing.optionIndex, correct: existing.correct, answeredAt: existing.answeredAt };
+    const answer = { optionIndex: args.optionIndex, correct: args.optionIndex === 0, answeredAt: Date.now() };
+    await ctx.db.insert("teachingAnswers", { token: args.token, ...answer });
+    return answer;
+  },
+});
+export const getTeachingAnswer = query({
+  args: { token: v.string() }, returns: v.union(teachingResult, v.null()),
+  handler: async (ctx, args) => {
+    if (!/^[a-f0-9]{64}$/.test(args.token)) throw new ConvexError("VISIT_UNAVAILABLE");
+    const result = await ctx.db.query("teachingAnswers").withIndex("by_token", q => q.eq("token", args.token)).unique();
+    return result ? { optionIndex: result.optionIndex, correct: result.correct, answeredAt: result.answeredAt } : null;
+  },
+});
 export const listVisits = query({
   args: { viewToken: v.string(), paginationOpts: paginationOptsValidator },
-  returns: v.object({ page: v.array(v.object({ firstName: v.string(), browserLabel: v.string(), visitedAt: v.number(), practice1StartedAt: v.union(v.number(), v.null()), practice2StartedAt: v.union(v.number(), v.null()) })), isDone: v.boolean(), continueCursor: v.string() }),
+  returns: v.object({ page: v.array(v.object({ firstName: v.string(), browserLabel: v.string(), visitedAt: v.number(), practice1StartedAt: v.union(v.number(), v.null()), practice2StartedAt: v.union(v.number(), v.null()), teachingAnswer: v.union(teachingResult, v.null()) })), isDone: v.boolean(), continueCursor: v.string() }),
   handler: async (ctx, args) => {
     if (!process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN || args.viewToken !== process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN) throw new ConvexError("TEACHER_PAGE_UNAVAILABLE");
     const result = await ctx.db.query("usageVisits").withIndex("by_time").order("desc").paginate(args.paginationOpts);
-    return { page: result.page.map(({ firstName, browserLabel, visitedAt, practice1StartedAt, practice2StartedAt }) => ({ firstName, browserLabel, visitedAt, practice1StartedAt: practice1StartedAt ?? null, practice2StartedAt: practice2StartedAt ?? null })), isDone: result.isDone, continueCursor: result.continueCursor };
+    const page = await Promise.all(result.page.map(async visit => {
+      const answer = visit.teachingVersion === "picnic-v1" ? await ctx.db.query("teachingAnswers").withIndex("by_token", q => q.eq("token", visit.token)).unique() : null;
+      return { firstName: visit.firstName, browserLabel: visit.browserLabel, visitedAt: visit.visitedAt, practice1StartedAt: visit.practice1StartedAt ?? null, practice2StartedAt: visit.practice2StartedAt ?? null, teachingAnswer: answer ? { optionIndex: answer.optionIndex, correct: answer.correct, answeredAt: answer.answeredAt } : null };
+    }));
+    return { page, isDone: result.isDone, continueCursor: result.continueCursor };
   },
 });
 

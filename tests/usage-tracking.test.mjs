@@ -63,3 +63,22 @@ test("unavailable storage still records within the open page",async()=>{
   const tracking=createUsageTracking({token,storage:blocked,tabStorage:blocked,send:async e=>sent.push(e)});
   await tracking.visit();await tracking.start("beginner-01");assert.equal(sent.length,2);assert.equal(sent[0].visitId,sent[1].visitId);
 });
+
+test("teaching answers derive correctness on the server, preserve the first choice and consume no practice resources",async()=>{
+  const t=convexTest(schema,modules);
+  assert.equal(await t.query(ref("getTeachingAnswer"),{token}),null);
+  const first=await t.mutation(ref("saveTeachingAnswer"),{token,visitId,optionIndex:1});
+  assert.equal(first.correct,false);assert.ok(first.answeredAt>0);
+  assert.deepEqual(await t.mutation(ref("saveTeachingAnswer"),{token,visitId,optionIndex:0}),first);
+  assert.deepEqual(await t.query(ref("getTeachingAnswer"),{token}),first);
+  assert.equal((await t.run(ctx=>ctx.db.query("teachingAnswers").take(10))).length,1);
+  const right=await t.mutation(ref("saveTeachingAnswer"),{token:"e".repeat(64),visitId:"b".repeat(64),optionIndex:0});assert.equal(right.correct,true);
+  for(const table of ["practiceUsage","practiceSessions","practiceJobs","practiceCompletions"])assert.equal(await t.run(ctx=>ctx.db.query(table).first()),null);
+});
+test("teacher quiz column uses the same browser reference and leaves earlier rows empty",async()=>{
+  const t=convexTest(schema,modules);
+  await t.run(ctx=>ctx.db.insert("usageVisits",{token,visitId:"d".repeat(64),firstName:"Guest",browserLabel:"Earlier browser",visitedAt:1}));
+  await t.mutation(ref("saveTeachingAnswer"),{token,visitId,optionIndex:0});
+  const old=process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN;process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN="e".repeat(64);
+  try{const result=await t.query(ref("listVisits"),{viewToken:"e".repeat(64),paginationOpts:{cursor:null,numItems:100}});assert.equal(result.page[0].teachingAnswer.correct,true);assert.ok(result.page[0].teachingAnswer.answeredAt);assert.equal(result.page[1].teachingAnswer,null);assert.doesNotMatch(JSON.stringify(result),new RegExp(token));}finally{if(old===undefined)delete process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN;else process.env.PROMPT_GAME_TEACHER_VIEW_TOKEN=old;}
+});

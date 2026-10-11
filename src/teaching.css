@@ -1,0 +1,26 @@
+.teaching-step { max-width: 1000px; padding: 32px 24px 48px; margin: 0 auto; }
+.teaching-step h1 { font-size: clamp(28px, 4vw, 40px); line-height: 1.2; margin: 0 0 24px; }
+.teaching-step h2 { font-size: 24px; margin: 0 0 16px; }
+.teaching-step > p { max-width: 65ch; }
+.prompt-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 32px 0; }
+.prompt-comparison section { padding: 24px; border: 1px solid #b8c8df; border-radius: 16px; background: #fff; }
+.prompt-comparison .strong-example { background: #e3edff; border-color: #2446D8; }
+.prompt-comparison blockquote { margin: 0; padding: 0; border: 0; font-size: 18px; line-height: 1.6; }
+.prompt-comparison dl { margin: 24px 0 0; }
+.prompt-comparison dl div + div { margin-top: 16px; }
+.prompt-comparison dt { font-weight: 800; color: #2446D8; }
+.prompt-comparison dd { margin: 4px 0 0; }
+.teaching-options { border: 0; padding: 0; margin: 32px 0; }
+.teaching-options legend { font-weight: 600; padding: 0; margin-bottom: 16px; }
+.teaching-options label { display: flex; align-items: flex-start; gap: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid #b8c8df; border-radius: 16px; background: #fff; cursor: pointer; }
+.teaching-options label.chosen { border-color: #2446D8; background: #e3edff; }
+.teaching-options input { flex: 0 0 auto; width: 20px; height: 20px; margin: 4px 0 0; accent-color: #2446D8; }
+.teaching-options label:has(input:focus-visible) { outline: 3px solid #2446D8; outline-offset: 3px; }
+.teaching-reason, .story-box { padding: 16px; border: 1px solid #9faf4c; border-radius: 16px; background: #edf6c8; color: #20233D; }
+.story-box { margin: 0 0 24px; font-weight: 600; }
+.teaching-step button { min-height: 56px; }
+.teaching-step .primary { background: #2446D8; border-color: #2446D8; color: #fff; }
+.teaching-step .primary:hover:not(:disabled) { background: #1937ad; }
+.teaching-step ::selection { color: #20233D; background: #D8F36A; }
+.teaching-step [tabindex="-1"]:focus { outline: none; }
+@media (max-width: 600px) { .teaching-step { padding: 24px 20px 40px; } .prompt-comparison { gap: 12px; } .prompt-comparison section { padding: 14px; } .prompt-comparison h2 { font-size: 20px; } .prompt-comparison blockquote { font-size: 16px; } .prompt-comparison dd { font-size: 16px; } }
