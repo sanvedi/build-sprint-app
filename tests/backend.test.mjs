@@ -65,19 +65,18 @@ test("import preserves earlier completion without inventing names or completion 
  const rows=await t.run(ctx=>ctx.db.query("practiceCompletions").take(10));assert.equal(rows.length,2);assert.ok(rows.every(row=>row.firstName==="Guest"&&row.completedAt===null));
 });
 
-test("daily cap blocks the next request across devices and failed calls remain counted",async()=>{
- const t=convexTest(schema,modules);
- const day=new Date().toISOString().slice(0,10);
+test("daily cap is per browser and failed calls remain counted",async()=>{
+ const t=convexTest(schema,modules),day=new Date().toISOString().slice(0,10);
  const cap=Number(process.env.PROMPT_GAME_DAILY_CALL_LIMIT||"20");
- await t.run(ctx=>ctx.db.insert("practiceUsage",{day,count:cap-1}));
+ await t.run(ctx=>ctx.db.insert("practiceUsage",{day,count:cap}));
+ await t.run(ctx=>ctx.db.insert("playerUsage",{token,day,count:cap-1}));
  const id=await t.mutation(reserve,{token,requestId:"last-allowed",kind:"generate",input:"{}"});
  await t.mutation(makeFunctionReference("practiceData:failed"),{id});
- await assert.rejects(t.mutation(reserve,{token:"e".repeat(64),requestId:"other-device",kind:"generate",input:"{}"}),/DAILY_ALLOWANCE_REACHED/);
- const usage=await t.run(ctx=>ctx.db.query("practiceUsage").withIndex("by_day",q=>q.eq("day",day)).unique());
- assert.equal(usage.count,cap);
- const session=await t.run(ctx=>ctx.db.query("practiceSessions").withIndex("by_token",q=>q.eq("token",token)).unique());
- assert.equal(session.attempts,0);assert.equal(session.point,false);
- assert.equal(await t.run(ctx=>ctx.db.query("practiceSessions").withIndex("by_token",q=>q.eq("token","e".repeat(64))).unique()),null);
+ await assert.rejects(t.mutation(reserve,{token,requestId:"same-browser",kind:"generate",input:"{}"}),/DAILY_ALLOWANCE_REACHED/);
+ await t.mutation(reserve,{token:"e".repeat(64),requestId:"other-browser",kind:"generate",input:"{}"});
+ const usage=await t.run(ctx=>ctx.db.query("playerUsage").withIndex("by_token_day",q=>q.eq("token",token).eq("day",day)).unique());assert.equal(usage.count,cap);
+ const session=await t.run(ctx=>ctx.db.query("practiceSessions").withIndex("by_token",q=>q.eq("token",token)).unique());assert.equal(session.attempts,0);assert.equal(session.point,false);
+ assert.equal((await t.run(ctx=>ctx.db.query("practiceUsage").first())).count,cap+2);
 });
 
 test("quiz material is pinned to new sessions and cannot replace legacy saved work",async()=>{

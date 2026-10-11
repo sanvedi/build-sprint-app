@@ -22,8 +22,8 @@ function remember(value){const text=JSON.stringify(value);try{localStorage.setIt
 function forget(){try{localStorage.removeItem(RECOVERY);}catch{}try{sessionStorage.removeItem(RECOVERY);}catch{}}
 function newRequestId(){return crypto.randomUUID?crypto.randomUUID():Array.from(crypto.getRandomValues(new Uint8Array(16)),n=>n.toString(16).padStart(2,"0")).join("");}
 const ACTIVE="prompt-game:active-practice:v1";
-const allowanceMessage="Today's practice limit is used up. It resets at midnight UTC (5:30 AM India time). Your work is still here.";
-function savedAllowanceReset(){const reset=storedRecovery()?.allowanceResetAt;return typeof reset==="number"&&reset>Date.now()?reset:null;}
+const allowanceMessage="Today's practice limit for this browser is used up. It resets at midnight UTC (5:30 AM India time). Your work is still here.";
+function savedAllowanceReset(){const recovery=storedRecovery();const reset=recovery?.allowanceScope==="browser-v1"?recovery.allowanceResetAt:null;return typeof reset==="number"&&reset>Date.now()?reset:null;}
 const practiceKey=id=>`prompt-game:${id}:v1`;
 function savedPractice(id){return loadState(()=>localStorage.getItem(practiceKey(id)),id);}
 function startingPractice(){
@@ -36,10 +36,10 @@ const client=__CONVEX_URL__?new ConvexHttpClient(__CONVEX_URL__):null;
 let memoryToken;
 function sessionToken(){if(memoryToken)return memoryToken;for(const storage of [localStorage,sessionStorage]){try{const token=storage.getItem(TOKEN);if(token){memoryToken=token;return token;}}catch{}}memoryToken=Array.from(crypto.getRandomValues(new Uint8Array(32)),n=>n.toString(16).padStart(2,"0")).join("");for(const storage of [localStorage,sessionStorage]){try{storage.setItem(TOKEN,memoryToken);}catch{}}return memoryToken;}
 function errorText(error){return typeof error?.data==="string"?error.data:String(error?.message||error);}
-function message(error){const text=errorText(error);if(text.includes("TASK_VERSION_CHANGED"))return "Your saved practice uses the earlier invitation task. Keep this edit and reopen the browser where you started that practice to continue it.";if(text.includes("FINAL_PRACTICE_REQUIRED"))return "Not yet. Review the feedback and return to practice.";if(text.includes("FINAL_VARIANTS_EXHAUSTED"))return "Keep practising. Another fresh final challenge is needed to unlock the next level.";if(text.includes("FINAL_UNAVAILABLE"))return "Answers and feedback are unavailable right now. Your work is still here.";if(text.includes("AI_UNAVAILABLE"))return "Answers and feedback are unavailable right now. Your work is still here.";if(text.includes("DAILY_ALLOWANCE"))return allowanceMessage;if(text.includes("REQUEST_PENDING"))return "This request is still processing. Wait a moment, then retry.";if(text.includes("PRACTICE_FINISHED"))return "This practice has already been assessed. Keep your confirmed result.";return "This request could not be completed. Your work is still here. Try again.";}
+function message(error){const text=errorText(error);if(text.includes("ANSWER_TOO_LONG"))return "The answer was too long to finish. Ask for a shorter response and try again. Your prompt is saved.";if(text.includes("TASK_VERSION_CHANGED"))return "Your saved practice uses the earlier invitation task. Keep this edit and reopen the browser where you started that practice to continue it.";if(text.includes("FINAL_PRACTICE_REQUIRED"))return "Not yet. Review the feedback and return to practice.";if(text.includes("FINAL_VARIANTS_EXHAUSTED"))return "Keep practising. Another fresh final challenge is needed to unlock the next level.";if(text.includes("FINAL_UNAVAILABLE"))return "Answers and feedback are unavailable right now. Your work is still here.";if(text.includes("AI_UNAVAILABLE"))return "Answers and feedback are unavailable right now. Your work is still here.";if(text.includes("DAILY_ALLOWANCE"))return allowanceMessage;if(text.includes("REQUEST_PENDING"))return "This request is still processing. Wait a moment, then retry.";if(text.includes("PRACTICE_FINISHED"))return "This practice has already been assessed. Keep your confirmed result.";return "This request could not be completed. Your work is still here. Try again.";}
 function requestError(error,kind){
  const text=errorText(error);
- if(["DAILY_ALLOWANCE","REQUEST_PENDING","PRACTICE_FINISHED","AI_UNAVAILABLE","TASK_VERSION_CHANGED"].some(x=>text.includes(x)))return message(error);
+ if(["ANSWER_TOO_LONG","DAILY_ALLOWANCE","REQUEST_PENDING","PRACTICE_FINISHED","AI_UNAVAILABLE","TASK_VERSION_CHANGED"].some(x=>text.includes(x)))return message(error);
  return kind==="generate"?"The answer could not be generated. Your edit is still here. Try again.":"Assessment is unavailable. Your answer and judgment are still here.";
 }
 function Progress({state,pending,challengeId,records,onOpen,disabled}){
@@ -81,7 +81,7 @@ function App({tracking}){
   function blockAllowance(error){
     if(!errorText(error).includes("DAILY_ALLOWANCE"))return;
     const reset=new Date();reset.setUTCHours(24,0,0,0);setAllowanceResetAt(reset.getTime());
-    try{if(!preview)remember({...storedRecovery(),allowanceResetAt:reset.getTime()});}catch{}
+    try{if(!preview)remember({...storedRecovery(),allowanceResetAt:reset.getTime(),allowanceScope:"browser-v1"});}catch{}
   }
   function persist(next,{confirmed=false}={}){const result=saveResult(next,value=>{if(!preview)localStorage.setItem(practiceKey(challengeId),value);});setS(next);setSaveError(!result.saved);if(result.saved)setRecords(old=>({...old,[challengeId]:next}));if(confirmed){setPending(result.pending);if(!preview){if(result.saved)forget();else try{remember({next,challengeId});}catch{}}}return result.saved;}
   function openPractice(id,provided){
@@ -112,7 +112,7 @@ function App({tracking}){
       setRecords(old=>({...old,[challengeId]:s,[opened.challengeId]:next}));setChallengeId(opened.challengeId);setS(next);request.current=null;
     }catch(e){setError(message(e));}finally{setBusy("");}
   }
-  function edit(field,value){setError(allowanceReached?allowanceMessage:"");setErrorAction("");request.current=null;const next={...s,[field]:value};if(!preview){if(allowanceReached){try{remember({before:next,challengeId,allowanceResetAt});}catch{}}else forget();}persist(next);}
+  function edit(field,value){setError(allowanceReached?allowanceMessage:"");setErrorAction("");request.current=null;const next={...s,[field]:value};if(!preview){if(allowanceReached){try{remember({before:next,challengeId,allowanceResetAt,allowanceScope:"browser-v1"});}catch{}}else forget();}persist(next);}
   async function generate(){
     if(!s.prompt.trim()){setError("Add a prompt before generating an answer.");return;}if(s.correcting&&!s.explanation.trim()){setError("Explain what you changed and why before generating.");return;}
     if(!client&&!preview){setError("Answers are unavailable right now. Your edit is still here.");return;}
