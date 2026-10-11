@@ -1,5 +1,11 @@
 # DESIGN.md
 
+## Components
+
+Distinct mission extension, 11 October 2026: the existing path chooser presents Matchday Rescue, Gully Radio and The Lane Detectives as three labelled white buttons with short setup text. They stack on phones and sit in one row on desktop. The chooser explains six possible points and separate saved work and attempts. Practice retains its narrow six-step workspace, pale-blue page, bundled Nunito Sans, cobalt actions, lime story box and pink step marker. The header displays the confirmed mission-point total out of six; the task scene and title identify the current mission. Path endings retain the existing onward action and Try another path control.
+
+This ordinary extension reuses the established visual system without new colours, typography, assets or motion. Source comparison covered shared/pathMissions.mjs, PracticeFlow.jsx, ChoosePath.jsx and main.jsx. Directly inspected local captures include the 390px Lane Detectives second task and the 1280px chooser in ignored artifacts/distinct-missions/review; the independent UI reviewer reported ship with no required fixes across the phone and desktop set. These are prepared-state layout checks, not production AI or physical-phone proof. Earlier historical palettes and the separately recorded name/teacher screen differences remain preserved; they do not redefine the current practice identity.
+
 ## Approved Prompt Gully rebrand, 6 October 2026
 
 Status: approved explicitly in chat on 6 October 2026. Published on 6 October 2026 with npm run deploy. Real Beginner practice 1 passed at 390px with all six screens, one point on attempt one, the branded celebration, reopening and Next challenge. Live title/header/share text and pre-rebrand progress preservation passed. Physical-phone and teacher-feedback reliability evidence remain separate. The existing six-screen practice flow is already live; this milestone changes its name and visual identity, not its learning mechanics. On approval, this section takes precedence over the earlier practice palette and branding instructions below.

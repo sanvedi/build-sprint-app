@@ -213,6 +213,10 @@ These describe what I must demonstrate. Implemented code and reported test compl
 8. I can deploy with npm run deploy to Convex static hosting and complete the student journey on a phone at the live URL, including retrying a failure and reopening saved progress.
 9. I can observe students making relevant corrections with sound explanations, then completing fresh challenges without hints. I record where they struggle and whether they return voluntarily; I assess retained learning and fewer wasted attempts on their own work separately.
 
+## Published distinct story missions, 11 October 2026
+
+The builder approved two distinct missions per story path and six new possible mission points. Matchday Rescue checks a misleading average and balanced teams; Gully Radio checks a practical announcement and open-ended interview questions; The Lane Detectives separates evidence from accusations and a small poll from a claim about everyone. Prepared material is in shared/pathMissions.mjs. Each mission has a separate saved identity, one possible point and the existing initial-plus-two-retry allowance. Earlier practices, points and records remain intact and accessible from saved history. The first-name/Guest entry, Tara teaching quiz, general assessment instructions, correction/recheck rules, existing final material and 20-request daily limit per anonymous browser remain unchanged. Hints, examples, scenes and endings require no AI requests. Completions show their path on the teacher page; earlier rows leave that column empty. No account or verified-person identity is introduced.
+
 The fixed stack is Codex, GitHub and Convex for database, backend, authentication and hosting. Use the Convex static-hosting workflow for deployment.
 
 IDEA_SCOPE.md, V1_BUILD.md, DESIGN.md and M0_VERIFICATION.md now describe this game. Retired product snapshots in archive/openloops/ are historical only and must not govern the build. Repository safety rules and fixed-stack instructions still apply.
