@@ -1,3 +1,133 @@
+---
+name: Prompt Gully
+description: Phone-first prompt missions with a blue and yellow visual system.
+colors:
+  blue: "#2457e6"
+  blue-edge: "#163ca9"
+  yellow: "#ffd447"
+  page: "#f3f6ff"
+  surface: "#fff"
+  ink: "#192544"
+  muted: "#435476"
+  line: "#ccd7f3"
+  soft: "#edf2ff"
+  disabled: "#e2e8f6"
+  progress-track: "#dce5fa"
+  reward-edge: "#c99e18"
+typography:
+  body:
+    fontFamily: '"Nunito Sans", sans-serif'
+    fontSize: "18px"
+    lineHeight: 1.55
+  welcome:
+    fontFamily: '"Nunito Sans", sans-serif'
+    fontSize: "32px"
+    lineHeight: 1.12
+  practice-heading:
+    fontSize: "28px"
+    lineHeight: 1.15
+  label:
+    fontSize: "16px"
+    fontWeight: 800
+rounded:
+  tag: "9px"
+  track: "12px"
+  step: "14px"
+  control: "18px"
+  card: "20px"
+  workspace: "24px"
+  reward: "30px"
+spacing:
+  tight: "8px"
+  small: "12px"
+  medium: "16px"
+  story: "18px"
+  panel: "20px"
+  large: "24px"
+  page-bottom: "32px"
+components:
+  button-primary:
+    backgroundColor: "{colors.blue}"
+    textColor: "{colors.surface}"
+    rounded: "{rounded.control}"
+    padding: "12px 16px"
+    width: "100%"
+  button-primary-hover:
+    backgroundColor: "{colors.blue-edge}"
+  button-secondary:
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.control}"
+    padding: "12px 16px"
+  story:
+    backgroundColor: "{colors.yellow}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.control}"
+    padding: "18px"
+  workspace:
+    backgroundColor: "{colors.surface}"
+    rounded: "{rounded.workspace}"
+    padding: "20px"
+---
+
+# Design System: Prompt Gully
+
+## Overview
+
+Active system approved 12 October 2026: blue and yellow across every existing screen, bundled Nunito Sans, large rounded actions, screen-position bars and cheerful reactions that match the actual result. This replaces earlier styling directions only, including the previous final-screen styling restriction and recorded name/teacher visual differences.
+
+The implementation is in `src/gameStyle.css`, loaded after existing styles. `src/ScreenProgress.jsx` reports position only. This document records built presentation; it does not establish new learning rules, approval, browser evidence or release proof.
+
+## Colors
+
+Blue is the main action, selected-state and position-fill colour; blue-edge supplies button pressed edges and hover. Yellow highlights stories, explanations, tags and confirmed rewards, always with dark ink. Page is the pale surrounding canvas; white is the reading workspace; soft is the quieter answer/comparison surface. Ink and muted distinguish reading text from supporting labels. Line supplies dividers and field borders. The progress track, disabled fill and reward edge retain their distinct extracted values in the frontmatter.
+
+## Typography
+
+Use the locally bundled Nunito Sans at weights 400, 600 and 800. Body and controls use 18px; supporting labels use 16px. Welcome uses 32px with 1.12 line height; practice headings use 28px with 1.15 line height; teaching headings use 28px with 1.2 line height. Buttons and position labels use weight 800. Reading content must wrap without losing task information.
+
+## Layout
+
+Design for a 390px-wide phone with scrollable long content. Practice has a 536px maximum column and 16px side padding; its white workspace has 20px padding. Name entry caps at 480px with 20px side padding; teaching at 760px; chooser and headers at 960px; finals at 620px. Teacher tables keep their existing wider container and sideways scrolling.
+
+At 680px and below, path cards and the invitation comparison stack, the header wraps, and finals use their existing phone answer presentation. Final editor actions are in normal page flow. Position labels sit above a 12px track, separated by 8px; the screen-progress block has 18px top and 24px bottom margins. Practice position tracks remain 18px tall.
+
+## Elevation & Depth
+
+White and pale-blue layers separate reading from the page. Controls use a 2px border with a 4px bottom edge; pressing moves them down 2px and reduces the bottom edge to 2px. No new shadow token is introduced by gameStyle.css. Keyboard focus uses a 3px blue outline with a 4px offset.
+
+Existing confirmed-point celebration behavior stays intact. Reduced-motion preferences suppress animation, transitions, smooth scrolling and the pressed translation.
+
+## Shapes
+
+Controls, fields, stories and feedback use 18px corners. Path/comparison cards use 20px; welcome/workspaces use 24px. Step markers are upright 44px squares with 14px corners; tags use 9px. Position tracks have rounded ends. Reward markers use 30px corners.
+
+## Components
+
+- Primary actions: full width, at least 56px tall, blue with white text and blue-edge border; hover darkens to blue-edge. General buttons are at least 52px tall. Disabled controls use disabled fill, muted text and line border.
+- Fields: white, 18px text, 2px line border, 18px corners and blue caret/focus treatment. Radio controls use blue.
+- Choices: line borders with a deeper bottom edge; selected choices use blue borders and soft fill. The first path card has a yellow fill and reward-edge border.
+- Reading panels: soft answer/requirement surfaces inside white workspaces. Story and feedback panels use yellow with ink text; errors use white with a blue border and readable error words.
+- Navigation/position: blue wordmark and labelled blue bars. ScreenProgress exposes the supplied label, detail and current position to assistive technology; it never reads or changes learning progress.
+- Reactions: encouraging words must match correct, incorrect, pending or confirmed saved results. Yellow reward styling never implies an additional point.
+- Teacher tables: white surfaces, soft headers, line separators and the existing focusable horizontal-scroll regions.
+
+## Do's and Don'ts
+
+- Do carry this palette, type and rounded actions through welcome, chooser, teaching, practices, finals and teacher views.
+- Do preserve readable long answers, visible focus and reduced-motion behavior.
+- Do treat position bars as location in a flow, not mastery or earned points.
+- Don't restore historical pink/lime or dark-green styling from the retained notes below.
+- Don't change game logic, AI instructions, scoring, attempts, allowance, tasks, saved work or teacher records through visual work.
+- Don't describe a pending save or unsuccessful assessment as a confirmed win.
+
+---
+
+# Historical design record
+
+Everything below is retained verbatim. Earlier visual directions are superseded for styling only by the approved 12 October 2026 system above; factual content, approval history, learning constraints and recorded evidence remain historical records.
+
+
 # DESIGN.md
 
 ## Components

@@ -1,0 +1,149 @@
+/* Approved 390px game identity. These rules only change presentation. */
+:root {
+  --gully-blue: #2457e6;
+  --gully-blue-edge: #163ca9;
+  --gully-yellow: #ffd447;
+  --gully-page: #f3f6ff;
+  --gully-surface: #fff;
+  --gully-ink: #192544;
+  --gully-muted: #435476;
+  --gully-line: #ccd7f3;
+  --gully-soft: #edf2ff;
+}
+body, .practice-world { background: var(--gully-page); color: var(--gully-ink); font-family: "Nunito Sans", sans-serif; }
+body { font-size: 18px; line-height: 1.55; }
+::selection, .practice-world ::selection, .name-step ::selection, .teacher-page ::selection, .teaching-step ::selection, .path-selection ::selection { background: var(--gully-yellow); color: var(--gully-ink); }
+h1, h2, h3 { color: var(--gully-ink); }
+button, input, textarea, select { font-family: inherit; }
+button, .practice-world button {
+  min-height: 52px; padding: 12px 16px; border: 2px solid var(--gully-line);
+  border-bottom-width: 4px; border-radius: 18px; background: var(--gully-surface);
+  color: var(--gully-ink); font-size: 18px; font-weight: 800; line-height: 1.35;
+}
+button:hover:not(:disabled) { background: var(--gully-soft); }
+button:active:not(:disabled), .practice-world button:active:not(:disabled) { transform: translateY(2px); border-bottom-width: 2px; }
+.primary, .practice-world .primary, .name-step .primary, .teaching-step .primary {
+  width: 100%; min-height: 56px; border-radius: 18px; border-color: var(--gully-blue-edge);
+  background: var(--gully-blue); color: var(--gully-surface); font-size: 18px; font-weight: 800;
+}
+.primary:hover:not(:disabled), .practice-world .primary:hover:not(:disabled), .name-step .primary:hover:not(:disabled), .teaching-step .primary:hover:not(:disabled) { background: var(--gully-blue-edge); }
+button:disabled, .practice-world button:disabled, .name-step button:disabled, .teaching-step button:disabled { background: #e2e8f6; color: var(--gully-muted); border-color: var(--gully-line); cursor: not-allowed; }
+button:focus-visible, a:focus-visible, summary:focus-visible, input:focus-visible, textarea:focus-visible, .practice-world button:focus-visible, .practice-world summary:focus-visible, .practice-world a:focus-visible, .teacher-table:focus-visible { outline: 3px solid var(--gully-blue); outline-offset: 4px; }
+input, textarea, .practice-world textarea { border: 2px solid var(--gully-line); border-radius: 18px; background: var(--gully-surface); color: var(--gully-ink); font-size: 18px; caret-color: var(--gully-blue); }
+textarea::placeholder, .practice-world textarea::placeholder { color: var(--gully-muted); }
+input[type="radio"] { accent-color: var(--gully-blue); }
+.wordmark, .game-header .wordmark, .practice-world .game-header .wordmark { font-size: 20px; color: var(--gully-blue); font-weight: 800; letter-spacing: -.02em; }
+.game-header, .site-header { max-width: 960px; padding: 16px 20px; margin: auto; }
+.practice-world .gully-tag, .gully-tag { background: var(--gully-yellow); color: var(--gully-ink); border-radius: 9px; transform: none; }
+.practice-world .spark-mark { color: var(--gully-blue); }
+.game-header .game-points { font-size: 18px; color: var(--gully-ink); }
+.game-points span, .device-save { font-size: 16px; color: var(--gully-muted); }
+.screen-progress { margin: 18px 0 24px; }
+.screen-progress-label { display: flex; justify-content: space-between; gap: 16px; color: var(--gully-muted); font-size: 16px; font-weight: 800; }
+.screen-progress-track { height: 12px; background: #dce5fa; border-radius: 12px; margin-top: 8px; overflow: hidden; }
+.screen-progress-track > span { display: block; height: 100%; background: var(--gully-blue); border-radius: 12px; }
+.name-step { margin: 0 auto; padding: 24px 20px 32px; max-width: 480px; min-height: 100dvh; }
+.name-step .wordmark { font-size: 24px; }
+.name-step .welcome-headline { margin: 20px 0 16px; padding: 24px 20px; background: var(--gully-blue); color: var(--gully-surface); border-radius: 24px; font-size: 32px; line-height: 1.12; text-align: left; text-wrap: initial; }
+.name-step .first-action { font-size: 18px; margin-bottom: 28px; }
+.name-step h2 { font-size: 24px; }
+.name-step form { gap: 12px; margin-top: 20px; }
+.name-step input { border-color: var(--gully-line); border-width: 2px; border-radius: 18px; }
+.name-step .primary { margin-top: 4px; }
+.name-step form > button:last-child { background: transparent; border-color: transparent; }
+.practice-game { padding: 0 16px 32px; max-width: 536px; }
+.lesson-top { padding: 0 4px 20px; }
+.path-label { color: var(--gully-blue); font-weight: 800; }
+.lesson-progress { height: 18px; background: #dce5fa; border-radius: 12px; }
+.lesson-progress > span { background: var(--gully-blue); border-radius: 12px; }
+.step-meta { color: var(--gully-muted); }
+.lesson-workspace { padding: 20px; border: 0; border-radius: 24px; background: var(--gully-surface); }
+.story-box { padding: 18px; background: var(--gully-yellow); color: var(--gully-ink); border: 0; border-radius: 18px; font-size: 18px; line-height: 1.5; margin: 0 0 24px; }
+.step-heading { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.practice-world .step-token { width: 44px; height: 44px; flex-shrink: 0; background: var(--gully-blue); color: var(--gully-surface); border-radius: 14px; transform: none; font-size: 22px; }
+.step-heading h1 { margin: 0; font-size: 28px; line-height: 1.15; text-align: left; }
+.mission-title, .practice-world .evidence, .practice-world .save-note, .practice-world .editor > p, .practice-world .judgment > p, .practice-world .assessment-status { color: var(--gully-muted); }
+.practice-world .mission-start blockquote, .practice-world .requirements, .requirements, .practice-world .phone-answer, .phone-answer, .answer-grid article, .practice-world .weak-answer { background: var(--gully-soft); border-radius: 18px; color: var(--gully-ink); }
+.practice-world .read-answer, .practice-world .assessment-details { border-color: var(--gully-line); }
+.practice-world .feedback, .feedback, .teaching-reason { background: var(--gully-yellow); color: var(--gully-ink); border: 0; border-radius: 18px; }
+.practice-world .busy, .busy { background: var(--gully-soft); color: var(--gully-muted); }
+.practice-world .error, .error { background: var(--gully-surface); border: 2px solid var(--gully-blue); color: var(--gully-ink); }
+.practice-world .answer-tabs button[aria-selected="true"], .answer-tabs button[aria-selected="true"] { background: var(--gully-blue); color: var(--gully-surface); border-color: var(--gully-blue-edge); }
+.practice-world .back-action { border: 0; background: transparent; color: var(--gully-muted); }
+.practice-world:has(.result) .step-heading { justify-content: center; }
+.practice-world:has(.result) .step-token { margin: 0; background: var(--gully-yellow); color: var(--gully-ink); }
+.practice-world:has(.result) .step-heading h1 { text-align: left; }
+.point-medallion, .practice-world .point-medallion { background: var(--gully-yellow); border-color: #c99e18; color: var(--gully-ink); border-radius: 30px; }
+.confetti, .confetti:nth-child(odd) { color: var(--gully-blue); }
+.practice-world .level-menu[open] > .progress { border-color: var(--gully-line); border-radius: 18px; }
+.current .level-symbol { background: var(--gully-blue); border-color: var(--gully-blue); }
+.path-selection { max-width: 960px; padding: 0 20px 32px; }
+.path-card, .practice-world .path-card { padding: 20px; border-radius: 20px; text-align: left; }
+.path-card-title { color: var(--gully-blue); font-size: 22px; }
+.path-card-setup { font-size: 18px; }
+.path-card:hover, .practice-world .path-card:hover { background: var(--gully-soft); border-color: var(--gully-blue); }
+.path-card:first-child { background: var(--gully-yellow); border-color: #c99e18; }
+.path-card:first-child .path-card-title { color: var(--gully-ink); }
+.path-progress-note { color: var(--gully-muted); }
+.teaching-step { max-width: 760px; padding: 0 20px 32px; }
+.teaching-step h1 { font-size: 28px; line-height: 1.2; margin-bottom: 16px; }
+.prompt-comparison { gap: 16px; }
+.prompt-comparison section { background: var(--gully-surface); border: 0; border-radius: 20px; padding: 20px; }
+.prompt-comparison .strong-example { background: var(--gully-soft); border-color: var(--gully-blue); }
+.prompt-comparison dt { color: var(--gully-blue); }
+.teaching-options label, .invitation-choice label { border: 2px solid var(--gully-line); border-bottom-width: 4px; border-radius: 18px; padding: 16px; font-size: 18px; line-height: 1.4; }
+.teaching-options label.chosen, .invitation-choice label.chosen { border-color: var(--gully-blue); background: var(--gully-soft); }
+.teaching-options input, .invitation-choice input { accent-color: var(--gully-blue); }
+.teaching-reaction { font-weight: 800; font-size: 22px; color: var(--gully-blue); margin: 20px 0 8px; }
+.invitation-detail { color: var(--gully-muted); }
+.final-screen { max-width: 620px; padding: 0 20px 32px; }
+.final-screen > .workspace { margin-top: 24px; background: var(--gully-surface); padding: 24px; border-radius: 24px; }
+.final-screen > .progress { border-color: var(--gully-line); }
+.final-screen .progress { display: flex; flex-direction: column; gap: 16px; }
+.final-screen .progress .level { flex: none; width: 100%; }
+.final-screen .progress .level > div { flex: 1; }
+.final-screen .progress .points { align-self: flex-start; }
+.final-screen .editor > .primary { position: static; width: 100%; margin-top: 24px; }
+.final-screen .editor { padding-bottom: 0; }
+.final-screen .points { grid-column: 1 / -1; grid-row: auto; align-items: flex-start; flex-direction: row; gap: 8px; }
+.final-screen .level { min-width: 0; align-items: flex-start; }
+.final-screen .level span:not(.level-symbol), .final-screen .intro > p, .final-screen .practice-label, .final-screen .attempts, .final-screen .evidence { color: var(--gully-muted); }
+.final-screen .intro h1 { font-size: 28px; }
+.badge { background: var(--gully-yellow); color: var(--gully-ink); border-color: #c99e18; }
+.teacher-page { margin: 0 auto; padding: 24px 20px 40px; }
+.teacher-page h1 { background: var(--gully-blue); color: var(--gully-surface); padding: 24px; border-radius: 24px; font-size: 28px; }
+.teacher-table { background: var(--gully-surface); border-radius: 18px; }
+.teacher-table th { background: var(--gully-soft); color: var(--gully-ink); }
+.teacher-table th, .teacher-table td { border-color: var(--gully-line); }
+.teacher-page h2 { color: var(--gully-blue); }
+.recording-warning { background: var(--gully-yellow); color: var(--gully-ink); border-color: #c99e18; }
+.save-note, .practice-world .save-note, .path-ending { border-color: var(--gully-line); }
+::-webkit-scrollbar-thumb, .practice-world ::-webkit-scrollbar-thumb { background: #97ace0; border-color: var(--gully-page); }
+::-webkit-scrollbar-track, .practice-world ::-webkit-scrollbar-track { background: var(--gully-page); }
+@media (max-width: 680px) {
+  .site-header { flex-direction: row; flex-wrap: wrap; align-items: center; }
+  .site-header .device-save { width: 100%; }
+  .path-cards { grid-template-columns: 1fr; }
+  .invitation-lesson .prompt-comparison { grid-template-columns: 1fr; gap: 12px; margin: 20px 0; }
+  .invitation-lesson .prompt-comparison section { padding: 16px; }
+  .invitation-lesson .prompt-comparison h2 { font-size: 22px; margin-bottom: 12px; }
+  .invitation-lesson .prompt-comparison blockquote, .prompt-comparison dd { font-size: 18px; line-height: 1.5; }
+  .invitation-lesson > p:first-of-type { font-size: 18px; line-height: 1.5; }
+  .invitation-lesson dl { font-size: 18px; line-height: 1.4; margin-top: 16px; }
+  .invitation-lesson dl div { display: block; }
+  .invitation-lesson dl div + div { margin-top: 12px; }
+  .invitation-lesson dt { width: auto; }
+  .invitation-lesson dd { font-size: 18px; margin-top: 4px; }
+  .invitation-choice > div { flex-direction: column; gap: 12px; }
+  .invitation-lesson .invitation-choice label { min-height: 56px; padding: 12px 16px; }
+  .invitation-lesson .primary { margin-top: 24px; }
+  .practice-world:has(.invitation-lesson) .game-header { padding-top: 16px; padding-bottom: 16px; }
+  .final-screen > .workspace { padding: 20px; }
+  .final-screen .answer-grid { display: none; }
+  .final-screen .progress { display: flex; flex-direction: column; gap: 16px; }
+  .final-screen .level.current { grid-column: 1 / -1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  button:active:not(:disabled), .practice-world button:active:not(:disabled) { transform: none; }
+}

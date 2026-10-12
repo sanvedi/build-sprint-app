@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { weakPrompt, strongPrompt, teachingOptions, teachingReasons } from "../shared/teaching.mjs";
 import "./teaching.css";
+import ScreenProgress from "./ScreenProgress.jsx";
 
 export const TEACHING_KEY = "prompt-game:teaching:picnic-v1";
 const DRAFT_KEY = `${TEACHING_KEY}:choice`;
@@ -36,6 +37,7 @@ export default function Teaching({ saveAnswer, onContinue }) {
     onContinue(result);
   }
   return <div className="practice-world"><header className="game-header"><a className="wordmark" href="/" aria-label="Prompt Gully"><span>Prompt</span><span className="gully-tag">Gully</span></a></header><main className={`teaching-step${screen === 1 ? " invitation-lesson" : ""}`}>
+    <ScreenProgress label="Warm-up" detail={`Screen ${screen} of 2`} step={screen} total={2} />
     {screen === 1 ? <>
       <h1 ref={heading} tabIndex={-1}>Tara’s invitation</h1>
       <p>The picnic is coming up. I asked AI for an invitation, but I didn’t tell it enough. Compare these two prompts.</p>
@@ -46,7 +48,7 @@ export default function Teaching({ saveAnswer, onContinue }) {
     </> : <>
       <h1 ref={heading} tabIndex={-1}>Which prompt is better, and why?</h1>
       <fieldset className="teaching-options"><legend>Choose one answer.</legend>{teachingOptions.map((option, index) => <label key={index} className={choice === index ? "chosen" : ""}><input type="radio" name="teaching-choice" checked={choice === index} disabled={choice !== null} onChange={() => choose(index)}/><span>{option}</span></label>)}</fieldset>
-      {choice !== null && <><p className="teaching-reason" role="status">{teachingReasons[choice]}</p>{busy && <p role="status">Saving your choice…</p>}{error && <div role="alert"><p>{error}</p><button onClick={() => persist(choice)}>Retry saving</button></div>}<button className="primary" disabled={!result || busy} onClick={finish}>Continue</button></>}
+      {choice !== null && <>{result && <p className="teaching-reaction">{result.correct ? "Nice catch!" : "Keep going. Every check helps."}</p>}<p className="teaching-reason" role="status">{teachingReasons[choice]}</p>{busy && <p role="status">Saving your choice…</p>}{error && <div role="alert"><p>{error}</p><button onClick={() => persist(choice)}>Retry saving</button></div>}<button className="primary" disabled={!result || busy} onClick={finish}>Continue</button></>}
     </>}
   </main></div>;
 }

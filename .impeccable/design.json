@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-12T15:32:10.438Z",
+  "title": "Design System: Prompt Gully",
+  "extensions": {
+    "colorMeta": {
+      "blue": {
+        "role": "primary",
+        "displayName": "Gully blue"
+      },
+      "yellow": {
+        "role": "secondary",
+        "displayName": "Gully yellow"
+      },
+      "page": {
+        "role": "neutral",
+        "displayName": "Pale blue page"
+      }
+    },
+    "typographyMeta": {
+      "body": {
+        "displayName": "Body",
+        "purpose": "Reading and controls."
+      },
+      "welcome": {
+        "displayName": "Welcome",
+        "purpose": "First-screen headline."
+      },
+      "practice-heading": {
+        "displayName": "Practice heading",
+        "purpose": "Current practice step."
+      },
+      "label": {
+        "displayName": "Position label",
+        "purpose": "Flow location and supporting labels."
+      }
+    },
+    "breakpoints": [
+      {
+        "name": "phone-layout",
+        "value": "680px"
+      }
+    ],
+    "motion": [
+      {
+        "name": "pressed-translation",
+        "value": "translateY(2px)",
+        "purpose": "Button press; suppressed with reduced motion."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main action; minimum height is 56px.",
+      "html": "<button class=\"ds-primary\">Continue</button>",
+      "css": ".ds-primary{font-family:\"Nunito Sans\",sans-serif;font-size:18px;font-weight:800;line-height:1.35;width:100%;min-height:56px;padding:12px 16px;border:2px solid #163ca9;border-bottom-width:4px;border-radius:18px;background:#2457e6;color:#fff}.ds-primary:hover:not(:disabled){background:#163ca9}.ds-primary:active:not(:disabled){transform:translateY(2px);border-bottom-width:2px}.ds-primary:focus-visible{outline:3px solid #2457e6;outline-offset:4px}.ds-primary:disabled{background:#e2e8f6;color:#435476;border-color:#ccd7f3;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-primary:active{transform:none}}"
+    },
+    {
+      "name": "Secondary button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Other actions use a white surface and deeper bottom border.",
+      "html": "<button class=\"ds-secondary\">Back</button>",
+      "css": ".ds-secondary{font-family:\"Nunito Sans\",sans-serif;font-size:18px;font-weight:800;line-height:1.35;min-height:52px;padding:12px 16px;border:2px solid #ccd7f3;border-bottom-width:4px;border-radius:18px;background:#fff;color:#192544}.ds-secondary:hover:not(:disabled){background:#edf2ff}.ds-secondary:active:not(:disabled){transform:translateY(2px);border-bottom-width:2px}.ds-secondary:focus-visible{outline:3px solid #2457e6;outline-offset:4px}@media(prefers-reduced-motion:reduce){.ds-secondary:active{transform:none}}"
+    },
+    {
+      "name": "Text field",
+      "kind": "input",
+      "description": "Readable white field with a blue keyboard-focus outline.",
+      "html": "<label class=\"ds-field\">First name<input aria-label=\"First name\" placeholder=\"Your first name\"></label>",
+      "css": ".ds-field{display:block;font-family:\"Nunito Sans\",sans-serif;color:#192544;font-size:18px}.ds-field input{display:block;font-family:inherit;font-size:18px;padding:12px 16px;border:2px solid #ccd7f3;border-radius:18px;background:#fff;color:#192544;caret-color:#2457e6}.ds-field input:focus-visible{outline:3px solid #2457e6;outline-offset:4px}"
+    },
+    {
+      "name": "Story panel",
+      "kind": "card",
+      "refersTo": "story",
+      "description": "Yellow mission-story reading panel.",
+      "html": "<div class=\"ds-story\">Help make the request clearer, then check the answer.</div>",
+      "css": ".ds-story{font-family:\"Nunito Sans\",sans-serif;background:#ffd447;color:#192544;border:0;border-radius:18px;padding:18px;font-size:18px;line-height:1.5;margin-bottom:24px}"
+    },
+    {
+      "name": "Screen position",
+      "kind": "nav",
+      "description": "Labelled position indicator; independent of scoring.",
+      "html": "<div class=\"ds-position\"><div class=\"ds-position-label\"><span>Teaching</span><span>1 of 2</span></div><div class=\"ds-track\" role=\"progressbar\" aria-label=\"Teaching\" aria-valuemin=\"0\" aria-valuemax=\"2\" aria-valuenow=\"1\" aria-valuetext=\"1 of 2\"><span></span></div></div>",
+      "css": ".ds-position{font-family:\"Nunito Sans\",sans-serif;margin:18px 0 24px}.ds-position-label{display:flex;justify-content:space-between;gap:16px;color:#435476;font-size:16px;font-weight:800}.ds-track{height:12px;background:#dce5fa;border-radius:12px;margin-top:8px;overflow:hidden}.ds-track>span{display:block;width:50%;height:100%;background:#2457e6;border-radius:12px}"
+    },
+    {
+      "name": "Gully tag",
+      "kind": "chip",
+      "description": "Small flat yellow brand accent.",
+      "html": "<span class=\"ds-tag\">Gully</span>",
+      "css": ".ds-tag{font-family:\"Nunito Sans\",sans-serif;background:#ffd447;color:#192544;border-radius:9px;font-weight:800;padding:2px 7px}"
+    }
+  ],
+  "narrative": {
+    "overview": "Approved blue and yellow styling across existing Prompt Gully screens. Large rounded actions and labelled position bars support phone reading; cheerful reactions report actual results.",
+    "keyCharacteristics": [
+      "Blue main actions",
+      "Yellow story and feedback panels",
+      "Bundled Nunito Sans",
+      "390px phone layout",
+      "Truthful result reactions"
+    ],
+    "rules": [
+      {
+        "name": "Position is location",
+        "body": "Position bars never represent mastery or points.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Do preserve visible focus and reduced-motion behavior.",
+      "Do keep long task and answer content readable."
+    ],
+    "donts": [
+      "Don't change learning rules through styling.",
+      "Don't show a pending or unsuccessful result as a confirmed win."
+    ]
+  }
+}

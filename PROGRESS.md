@@ -1,3 +1,5 @@
+- 2026-10-12: Builder-approved every-screen blue/yellow restyle implemented with one bundled font, large rounded controls, position bars and truthful teaching reactions. Main108/release96 checks, typecheck/build and 390px/1280px prepared six-mission plus 34-state walks passed. Independent review identified one desktop-final layout issue, corrected and scored resolved. Presentation files only; backend, task/story text, scoring, AI/cap and storage untouched. Production deployment and fresh Codex-check live capture follow.
+
 # PROGRESS.md
 
 Published distinct-mission app commit: 0256f68028a8d005db1ef331c9ad3294de6b9ec0. Main also preserves the previously approved development-only learningAttempts work; that work is excluded from the release checkout.
