@@ -437,3 +437,21 @@ test("all six missions open with one short intro, original requirements and edit
   }finally{f.dom.window.close();}
  }
 });
+
+test("answer paragraphs preserve supplied line breaks without changing saved text or Markdown lists",async()=>{
+ const {initialState}=await import("../src/practice.mjs");
+ const id="path-C-01",key=`prompt-game:${id}:v1`;
+ const raw="Facts: A bag was left by the gate.\nUnknown: Who moved it.\nNext check: Ask the caretaker.\n\n- First check\n- **Second check**";
+ const state={...initialState(id),stage:"judge",answer:{id:"line-break-example",text:raw}};
+ const f=fixture([],{"prompt-game:active-practice:v1":id,[key]:state},true);
+ try{
+  await waitFor(()=>f.w.document.querySelector(".answer-content p"));
+  const answer=f.w.document.querySelector(".answer-content");
+  assert.equal(answer.querySelector("p").style.whiteSpace,"pre-line");
+  assert.equal(answer.querySelector("p").textContent,raw.split("\n\n")[0]);
+  assert.equal(answer.querySelectorAll("ul li").length,2);
+  assert.equal(answer.querySelector("strong").textContent,"Second check");
+  assert.equal(JSON.parse(f.w.localStorage.getItem(key)).answer.text,raw);
+  assert.equal(f.calls.length,0);
+ }finally{f.dom.window.close();}
+});
