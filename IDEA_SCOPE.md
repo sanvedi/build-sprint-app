@@ -1,3 +1,5 @@
+Approved scope extension, 13 October 2026: one Advanced Practice 1 and manual paid access through teacher-issued personal codes are now published. No checkout or login; codes restore Convex progress across phones. Four prompt constraints and spotting one deliberately planted unsupported claim form the task. Free practices and story paths remain intact; all other advanced levels remain parked. See PROGRESS.md for live evidence.
+
 # IDEA_SCOPE.md
 
 Latest release, 5 October 2026: the builder explicitly authorized publishing the quiz mission. GitHub push and npm run deploy succeeded. Real production generation/assessment, one point on attempt one, reopening and Next challenge passed in Edge at 390px; legacy saved invitation state and desktop opening passed. Both deployments use Gemini 3.5 Flash-Lite with the existing 20-request daily allowance. The quiz mission is now published; other challenge material and billing are unchanged. This supersedes earlier unpublished/blocked statements below. Teacher content review, quantitative feedback reliability and physical-phone/mobile-data confirmation remain pending.

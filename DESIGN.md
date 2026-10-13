@@ -1,3 +1,5 @@
+Advanced practice, 13 October 2026: reuses the existing blue/yellow Nunito Sans cards, buttons and four-step practice flow. The Advanced card follows the free path cards and appears below free practice; code entry is a separate locked screen. Teacher code creation and completion list reuse existing form/table styles. No CSS changes.
+
 ---
 name: Prompt Gully
 description: Phone-first prompt missions with a blue and yellow visual system.
