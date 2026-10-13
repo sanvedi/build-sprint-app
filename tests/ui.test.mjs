@@ -384,11 +384,11 @@ test("reopening the judgment view keeps its draft, and editing the prompt requir
 
 async function completeIntro(f,index=0){
  await waitFor(()=>f.w.document.querySelector(".path-card"));f.w.document.querySelector(".path-card").click();
- await waitFor(()=>f.w.document.querySelector(".prompt-comparison"));f.w.document.querySelectorAll('input[name="invitation-choice"]')[1].click();button(f.w,"Try a quick question");await waitFor(()=>f.w.document.querySelector('input[name="teaching-choice"]'));f.w.document.querySelectorAll('input[name="teaching-choice"]')[index].click();await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Continue"&&!b.disabled));button(f.w,"Continue");
+ await waitFor(()=>f.w.document.querySelector(".prompt-comparison"));await waitFor(()=>f.w.document.querySelector('input[name="teaching-choice"]'));f.w.document.querySelectorAll('input[name="teaching-choice"]')[index].click();await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Continue"&&!b.disabled));button(f.w,"Continue");
 }
 test("new players see both picnic prompts and three labels; a wrong choice continues into the first mission task without AI",async()=>{
  const f=fixture(["Test"],{},true,false);
- try{await waitFor(()=>f.w.document.getElementById("first-name"));button(f.w,"Start Practice 1");await waitFor(()=>f.w.document.querySelector(".path-card"));f.w.document.querySelector(".path-card").click();await waitFor(()=>f.w.document.querySelector(".prompt-comparison"));assert.match(f.w.document.body.textContent,/Write an invitation\./);assert.match(f.w.document.body.textContent,/Invite our neighbours to a picnic at Gully Park/);assert.deepEqual([...f.w.document.querySelectorAll("dt")].map(e=>e.textContent),["Goal","Context","Format"]);const savedBefore=f.teachingCalls.filter(c=>c.path==="teacher:saveTeachingAnswer").length;f.w.document.querySelectorAll('input[name="invitation-choice"]')[0].click();assert.match(f.w.document.body.textContent,/The weak prompt was missing the picnic/);assert.equal(f.teachingCalls.filter(c=>c.path==="teacher:saveTeachingAnswer").length,savedBefore);f.w.document.querySelectorAll('input[name="invitation-choice"]')[1].click();button(f.w,"Try a quick question");await waitFor(()=>f.w.document.querySelectorAll('input[type="radio"]').length===3);f.w.document.querySelectorAll('input[type="radio"]')[1].click();await waitFor(()=>f.w.document.body.textContent.includes("Not quite. Useful details matter more than length."));await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Continue"&&!b.disabled));button(f.w,"Continue");await waitFor(()=>f.w.document.querySelector(".task-screen"));assert.match(f.w.document.querySelector(".story-box").textContent,/^Kabir says the team usually scores six goals/);assert.equal(JSON.parse(f.w.localStorage.getItem(NEW_KEY)).attempts,0);assert.ok(f.calls.every(c=>c.path==="teacher:saveFirstName"));assert.equal(f.teachingCalls.find(c=>c.path==="teacher:saveTeachingAnswer").args[0].optionIndex,1);}finally{f.dom.window.close();}
+ try{await waitFor(()=>f.w.document.getElementById("first-name"));button(f.w,"Start Practice 1");await waitFor(()=>f.w.document.querySelector(".path-card"));f.w.document.querySelector(".path-card").click();await waitFor(()=>f.w.document.querySelector(".prompt-comparison"));assert.match(f.w.document.body.textContent,/Write an invitation\./);assert.match(f.w.document.body.textContent,/Invite our neighbours to a picnic at Gully Park/);assert.deepEqual([...f.w.document.querySelectorAll("dt")].map(e=>e.textContent),["Goal","Context","Format"]);assert.equal(f.w.document.querySelector('input[name="invitation-choice"]'),null);await waitFor(()=>f.w.document.querySelectorAll('input[type="radio"]').length===3);f.w.document.querySelectorAll('input[type="radio"]')[1].click();await waitFor(()=>f.w.document.body.textContent.includes("Not quite. Useful details matter more than length."));await waitFor(()=>[...f.w.document.querySelectorAll("button")].some(b=>b.textContent==="Continue"&&!b.disabled));button(f.w,"Continue");await waitFor(()=>f.w.document.getElementById("prompt"));assert.match(f.w.document.querySelector(".story-box").textContent,/^Help Kabir check/);assert.equal(JSON.parse(f.w.localStorage.getItem(NEW_KEY)).attempts,0);assert.ok(f.calls.every(c=>c.path==="teacher:saveFirstName"));assert.equal(f.teachingCalls.find(c=>c.path==="teacher:saveTeachingAnswer").args[0].optionIndex,1);}finally{f.dom.window.close();}
 });
 test("path changes retain confirmed points, attempts and saved work, create a new visit and reopen without AI",async()=>{
  const complete={version:1,materialVersion:"quiz-v1",stage:"complete",point:true,attempts:1,prompt:"Original saved request",answer:{id:"a",text:"Saved answer"},judgment:"Saved judgment",explanation:"",feedback:passed};
@@ -398,7 +398,7 @@ test("path changes retain confirmed points, attempts and saved work, create a ne
   await waitFor(()=>f.w.document.querySelector(".path-ending"));assert.match(f.w.document.querySelector(".path-ending").textContent,/Matchday Rescue is complete/);
   await waitFor(()=>f.usageCalls.length);const firstVisit=f.usageCalls[0].args[0].visitId;
   button(f.w,"Try another path");await waitFor(()=>f.w.document.querySelectorAll(".path-card").length===3);f.w.document.querySelectorAll(".path-card")[1].click();
-  await waitFor(()=>f.w.document.querySelector(".path-label")?.textContent==="Gully Radio");assert.match(f.w.document.querySelector(".story-box").textContent,/Meera has an enthusiastic announcement/);
+  await waitFor(()=>f.w.document.querySelector(".path-label")?.textContent==="Gully Radio");assert.match(f.w.document.querySelector(".story-box").textContent,/Help Meera fix the vague clean-up announcement/);
   assert.equal(f.w.document.querySelector(".path-ending"),null);assert.equal(JSON.parse(f.w.localStorage.getItem("prompt-game:path-B-01:v1")).point,false);assert.equal(JSON.parse(f.w.localStorage.getItem("prompt-game:path-B-01:v1")).attempts,0);
   assert.deepEqual(JSON.parse(f.w.localStorage.getItem(KEY)),complete);assert.deepEqual(JSON.parse(f.w.localStorage.getItem("prompt-game:beginner-02:v1")),second);assert.equal(f.calls.length,0);
   await waitFor(()=>f.usageCalls.some(c=>c.path==="teacher:recordVisit"&&c.args[0].pathId==="B"));assert.notEqual(f.usageCalls.find(c=>c.args[0].pathId==="B").args[0].visitId,firstVisit);
@@ -412,4 +412,28 @@ test("an old shared-cap marker no longer blocks this browser and its interrupted
 });
 test("a cut-off answer asks for a shorter response while retaining the editable prompt and attempts",async()=>{
  const f=fixture([{testErrorData:"ANSWER_TOO_LONG"}]);try{await waitFor(()=>f.w.document.getElementById("prompt"));type(f.w,"prompt","My longer request");button(f.w,"Generate answer");await waitFor(()=>f.w.document.querySelector('[role="alert"]'));assert.match(f.w.document.querySelector('[role="alert"]').textContent,/too long to finish.*shorter response/);assert.equal(f.w.document.getElementById("prompt").value,"My longer request");assert.equal(f.w.document.getElementById("prompt").disabled,false);assert.equal(JSON.parse(f.w.localStorage.getItem(KEY)).attempts,0);assert.equal(f.calls.length,1);}finally{f.dom.window.close();}
+});
+
+test("all six missions open with one short intro, original requirements and editable saved drafts",async()=>{
+ const {pathMissions,practicePair}=await import("../shared/pathMissions.mjs");
+ const {initialState}=await import("../src/practice.mjs");
+ for(const [id,task] of Object.entries(pathMissions)){
+  const [first]=practicePair(id),key=`prompt-game:${id}:v1`;
+  const saved={...initialState(id),prompt:"My existing draft"};
+  const seed={"prompt-game:active-practice:v1":id,[`prompt-game:${first}:v1`]:{...initialState(first),stage:"complete",point:true,attempts:1},[key]:saved,[`prompt-game:${id}:view:v1`]:{stage:"edit",step:2}};
+  const f=fixture([],seed,true);
+  try{
+   await waitFor(()=>f.w.document.getElementById("prompt"));
+   assert.equal(f.w.document.getElementById("prompt").value,"My existing draft");
+   assert.equal(f.w.document.querySelector('label[for="prompt"]').textContent,"Improve this prompt");
+   const intro=f.w.document.querySelector(".story-box").textContent;
+   assert.ok(intro.trim().split(/\s+/).length<=25);
+   assert.equal((intro.match(/[.!?]/g)||[]).length,1);
+   assert.deepEqual([...f.w.document.querySelectorAll(".editor .requirements li")].map(el=>el.textContent),task.requirements);
+   assert.equal(f.w.document.querySelector(".editor blockquote").textContent,task.startingPrompt);
+   assert.equal(f.w.document.querySelector('[role="progressbar"]').getAttribute("aria-valuenow"),"1");
+   assert.equal(f.calls.length,0);
+   assert.deepEqual(JSON.parse(f.w.localStorage.getItem(key)),saved);
+  }finally{f.dom.window.close();}
+ }
 });
