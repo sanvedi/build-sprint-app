@@ -12,6 +12,7 @@ import AdvancedPractice, { AdvancedCard } from "./AdvancedPractice.jsx";
 import StudentName, { NAME_KEY } from "./StudentName.jsx";
 import TeacherPage from "./TeacherPage.jsx";
 import ChoosePath from "./ChoosePath.jsx";
+import FirstFix, { needsFirstFix } from "./FirstFix.jsx";
 import { missionPath, missionPaths, missionIds, practicePair, practiceNumber, isPractice } from "../shared/pathMissions.mjs";
 import { PATH_KEY, savedPath, storyPaths } from "../shared/storyPaths.mjs";
 import { createUsageTracking } from "./usageTracking.mjs";
@@ -182,6 +183,7 @@ function Entry(){
   const [named,setNamed]=useState(()=>{try{return !!JSON.parse(localStorage.getItem(NAME_KEY))?.firstName;}catch{return false;}});
   const [pathId,setPathId]=useState(savedPath);
   const [choosingPath,setChoosingPath]=useState(false);
+  const [firstFixDone,setFirstFixDone]=useState({});
   const teacherPath=location.pathname.match(/^\/teacher\/([a-f0-9]{64})\/?$/);
   const [recordingError,setRecordingError]=useState(false);
   const [taught,setTaught]=useState(()=>{try{return !!JSON.parse(localStorage.getItem(TEACHING_KEY))?.answeredAt;}catch{return false;}});
@@ -204,6 +206,6 @@ function Entry(){
   }
   if(teacherPath)return <TeacherPage client={client} viewToken={teacherPath[1]}/>;
   if(advancedOpen&&!preview)return <AdvancedPractice client={client} token={sessionToken()} onBack={closeAdvanced}/>;
-  return <>{recordingError&&<aside className="recording-warning" role="status">Your visit could not be recorded. Your practice still works. <button onClick={()=>tracking.retry()}>Retry recording</button></aside>}{!named&&!preview?<StudentName saveName={firstName=>client.mutation(api.teacher.saveFirstName,{token:sessionToken(),firstName,visitId:tracking.visitId})} onContinue={()=>setNamed(true)}/>:(!pathId||choosingPath)&&!preview?<ChoosePath onChoose={choosePath} onAdvanced={openAdvanced}/>:!taught&&!preview?(introLoaded?<Teaching saveAnswer={optionIndex=>client.mutation(api.teacher.saveTeachingAnswer,{token:sessionToken(),visitId:tracking.visitId,optionIndex})} onContinue={finishTeaching}/>:<main className="name-step"><p role="status">Loading your introduction…</p></main>):<App onAdvanced={openAdvanced} tracking={tracking} pathId={pathId} onPathChange={switchMissionPath} onChooseAnother={()=>setChoosingPath(true)}/>}</>;
+  return <>{recordingError&&<aside className="recording-warning" role="status">Your visit could not be recorded. Your practice still works. <button onClick={()=>tracking.retry()}>Retry recording</button></aside>}{!named&&!preview?<StudentName saveName={firstName=>client.mutation(api.teacher.saveFirstName,{token:sessionToken(),firstName,visitId:tracking.visitId})} onContinue={()=>setNamed(true)}/>:(!pathId||choosingPath)&&!preview?<ChoosePath onChoose={choosePath} onAdvanced={openAdvanced}/>:!taught&&!preview?(introLoaded?<Teaching saveAnswer={optionIndex=>client.mutation(api.teacher.saveTeachingAnswer,{token:sessionToken(),visitId:tracking.visitId,optionIndex})} onContinue={finishTeaching}/>:<main className="name-step"><p role="status">Loading your introduction…</p></main>):!preview&&!storedRecovery()&&!firstFixDone[pathId]&&needsFirstFix(pathId)?<FirstFix key={pathId} path={pathId} client={client} token={sessionToken()} onContinue={()=>setFirstFixDone(old=>({...old,[pathId]:true}))}/>:<App onAdvanced={openAdvanced} tracking={tracking} pathId={pathId} onPathChange={switchMissionPath} onChooseAnother={()=>setChoosingPath(true)}/>}</>;
 }
 createRoot(document.getElementById("root")).render(<Entry/>);

@@ -15,6 +15,7 @@ import type * as aiUsage from "../aiUsage.js";
 import type * as allowance from "../allowance.js";
 import type * as assessmentRules from "../assessmentRules.js";
 import type * as challenges from "../challenges.js";
+import type * as firstFix from "../firstFix.js";
 import type * as http from "../http.js";
 import type * as learningAttempts from "../learningAttempts.js";
 import type * as practice from "../practice.js";
@@ -36,6 +37,7 @@ declare const fullApi: ApiFromModules<{
   allowance: typeof allowance;
   assessmentRules: typeof assessmentRules;
   challenges: typeof challenges;
+  firstFix: typeof firstFix;
   http: typeof http;
   learningAttempts: typeof learningAttempts;
   practice: typeof practice;
