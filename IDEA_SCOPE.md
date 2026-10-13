@@ -1,3 +1,5 @@
+Approved and published 13 October 2026: one free Practice 0 First fix precedes Practice1 for each new path journey after the existing introduction. It uses two screens: choose the missing place, then edit a prefilled prompt, generate a real answer and see whether the place is named. It awards no points. Existing saved practices resume, and all later practices, advanced access, teacher data and story text remain intact. See PROGRESS.md for evidence.
+
 Approved scope extension, 13 October 2026: one Advanced Practice 1 and manual paid access through teacher-issued personal codes are now published. No checkout or login; codes restore Convex progress across phones. Four prompt constraints and spotting one deliberately planted unsupported claim form the task. Free practices and story paths remain intact; all other advanced levels remain parked. See PROGRESS.md for live evidence.
 
 # IDEA_SCOPE.md
