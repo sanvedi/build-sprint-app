@@ -88,6 +88,8 @@ Use the locally bundled Nunito Sans at weights 400, 600 and 800. Body and contro
 
 ## Layout
 
+13 October 2026: All six path practices combine the mission sentence (at most25 words), unchanged requirements, starting prompt and editor on the first practice page. Path practice position labels now show four steps: Mission and prompt, AI answer, Your judgment, Feedback. The warm-up keeps one recorded question beside the comparison; it is followed directly by the editable mission. Existing typography, colors and CSS remain unchanged.
+
 Design for a 390px-wide phone with scrollable long content. Practice has a 536px maximum column and 16px side padding; its white workspace has 20px padding. Name entry caps at 480px with 20px side padding; teaching at 760px; chooser and headers at 960px; finals at 620px. Teacher tables keep their existing wider container and sideways scrolling.
 
 At 680px and below, path cards and the invitation comparison stack, the header wraps, and finals use their existing phone answer presentation. Final editor actions are in normal page flow. Position labels sit above a 12px track, separated by 8px; the screen-progress block has 18px top and 24px bottom margins. Practice position tracks remain 18px tall.
