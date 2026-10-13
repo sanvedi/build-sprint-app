@@ -8,12 +8,17 @@
  * @module
  */
 
+import type * as advanced from "../advanced.js";
+import type * as advancedActions from "../advancedActions.js";
+import type * as advancedValidators from "../advancedValidators.js";
 import type * as aiUsage from "../aiUsage.js";
+import type * as allowance from "../allowance.js";
 import type * as assessmentRules from "../assessmentRules.js";
 import type * as challenges from "../challenges.js";
 import type * as http from "../http.js";
 import type * as learningAttempts from "../learningAttempts.js";
 import type * as practice from "../practice.js";
+import type * as practiceAI from "../practiceAI.js";
 import type * as practiceData from "../practiceData.js";
 import type * as teacher from "../teacher.js";
 
@@ -24,12 +29,17 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  advanced: typeof advanced;
+  advancedActions: typeof advancedActions;
+  advancedValidators: typeof advancedValidators;
   aiUsage: typeof aiUsage;
+  allowance: typeof allowance;
   assessmentRules: typeof assessmentRules;
   challenges: typeof challenges;
   http: typeof http;
   learningAttempts: typeof learningAttempts;
   practice: typeof practice;
+  practiceAI: typeof practiceAI;
   practiceData: typeof practiceData;
   teacher: typeof teacher;
 }>;

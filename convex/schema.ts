@@ -1,3 +1,4 @@
+import { advancedKind } from "./advancedValidators";
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 import { aiUsageValidator } from "./aiUsage";
@@ -6,6 +7,11 @@ import { challengeValidator, materialVersionValidator, practiceValidator } from 
 // Retired setup-test data only; retained to avoid deleting historical rows.
 // Not game progress. No active scheduling functions use this table.
 export default defineSchema({
+  advancedUnlocks: defineTable({code:v.string(),playerName:v.string(),createdAt:v.number(),requestId:v.string()}).index("by_code",["code"]).index("by_request",["requestId"]).index("by_created",["createdAt"]),
+  advancedProgress: defineTable({unlockId:v.id("advancedUnlocks"),state:v.string(),revision:v.number(),pendingJobId:v.optional(v.id("advancedJobs")),completedAt:v.optional(v.number())}).index("by_unlock",["unlockId"]),
+  advancedAccess: defineTable({token:v.string(),unlockId:v.id("advancedUnlocks")}).index("by_token",["token"]),
+  advancedCodeAttempts: defineTable({token:v.string(),hour:v.string(),count:v.number()}).index("by_token_hour",["token","hour"]),
+  advancedJobs: defineTable({unlockId:v.id("advancedUnlocks"),requestId:v.string(),kind:advancedKind,input:v.string(),status:v.union(v.literal("pending"),v.literal("done"),v.literal("failed")),result:v.optional(v.string()),aiUsage:v.optional(aiUsageValidator)}).index("by_unlock_request",["unlockId","requestId"]),
   studentProfiles: defineTable({ token: v.string(), firstName: v.string(), nameChosen: v.optional(v.boolean()) }).index("by_token", ["token"]),
   usageVisits: defineTable({
     token: v.string(), visitId: v.string(), firstName: v.string(), browserLabel: v.string(),

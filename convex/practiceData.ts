@@ -1,3 +1,4 @@
+import { reserveAllowance } from "./allowance";
 import { mutation, internalMutation, internalQuery } from "./_generated/server";
 import { v, ConvexError } from "convex/values";
 import { aiUsageValidator } from "./aiUsage";
@@ -108,14 +109,7 @@ export const reserve = internalMutation({
       if(completed)return completed._id;
       if(recent.some(job=>job.status==="pending"&&job.input===a.input&&(job.materialVersion||"legacy-v1")===materialVersion))throw new ConvexError("REQUEST_PENDING");
     }
-    const day=new Date().toISOString().slice(0,10);
-    const player=await ctx.db.query("playerUsage").withIndex("by_token_day",q=>q.eq("token",a.token).eq("day",day)).unique();
-    const cap=Number(process.env.PROMPT_GAME_DAILY_CALL_LIMIT||"20");
-    if(!Number.isInteger(cap)||cap<1||cap>100||player&&player.count>=cap)throw new ConvexError("DAILY_ALLOWANCE_REACHED");
-    if(player)await ctx.db.patch(player._id,{count:player.count+1});else await ctx.db.insert("playerUsage",{token:a.token,day,count:1});
-    // Keep the old aggregate as a meter, never as a shared player lockout.
-    const usage=await ctx.db.query("practiceUsage").withIndex("by_day",q=>q.eq("day",day)).unique();
-    if(usage)await ctx.db.patch(usage._id,{count:usage.count+1});else await ctx.db.insert("practiceUsage",{day,count:1});
+    await reserveAllowance(ctx,a.token);
     if(!session)await ctx.db.insert("practiceSessions",{token:a.token,challengeId,materialVersion,attempts:0,point:false});
     if(existing){await ctx.db.patch(existing._id,{status:"pending"});return existing._id;}
     return ctx.db.insert("practiceJobs",{...a,challengeId,materialVersion,status:"pending"});
