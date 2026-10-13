@@ -33,5 +33,5 @@ test('failed First fix calls count but never create practice attempts; retry reu
  assert.equal((await t.run(ctx=>ctx.db.query('practiceSessions').take(10))).length,0);
 });
 test('each First fix has exactly one correct detail and reports only the place actually named in the answer',()=>{
- for(const path of ['A','B','C']){const t=firstFixTasks[path];assert.equal(t.options.length,3);assert.equal(t.options.filter(o=>o==='Place').length,1);assert.equal(t.options[t.correct],'Place');assert.match(detailCheck(path,'Come soon!'),/still does not/);assert.match(detailCheck(path,t.place.toUpperCase()),/now mentions/);assert.match(detailCheck(path,'Gully Parkside'),/still does not/);}
+ for(const path of ['A','B','C']){const t=firstFixTasks[path];assert.equal(t.options.length,3);assert.equal(t.options.filter(o=>o==='Place').length,1);assert.equal(t.options[t.correct],'Place');assert.match(detailCheck(path,'Come soon!'),/still missing/);assert.match(detailCheck(path,t.place.toUpperCase()),/answer names/);assert.match(detailCheck(path,'Gully Parkside'),/still missing/);}
 });

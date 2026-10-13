@@ -6,12 +6,12 @@ export const firstFixTasks = {
 export const firstFixKey = path => `prompt-game:first-fix:${path}:v1`;
 export function firstFixReason(path, index) {
   const t = firstFixTasks[path];
-  return index === t.correct ? `Yes! Add ${t.place} so everyone knows where to go.` : `${t.options[index] === "Emoji" ? "An emoji" : "A rhyme"} adds style, but leaves the place unclear.`;
+  return index === t.correct ? "Yes, people need a place." : "Style does not give a place.";
 }
 export function detailCheck(path, answer) {
   const place = firstFixTasks[path].place;
   const words = answer.toLowerCase().replace(/[^a-z0-9]+/g, " ");
   return (` ${words} `).includes(` ${place.toLowerCase()} `)
-    ? `The answer now mentions ${place}.`
-    : `The answer still does not name ${place}; add it to your prompt and try again.`;
+    ? `The answer names ${place}.`
+    : `${place} is still missing.`;
 }

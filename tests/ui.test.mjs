@@ -461,14 +461,14 @@ test("First fix gives a reason for every choice, restores its prefilled edit and
  const f=fixture([{id:"first-fix-answer",text:"Join the match at Gully Park."}],{"prompt-game:first-fix:A:v1":null,"prompt-game:active-practice:v1":"path-A-01"},true);
  try{
  await waitFor(()=>f.w.document.querySelector('.first-fix'));
- button(f.w,'Emoji');await waitFor(()=>f.w.document.querySelector('.teaching-reason'));assert.match(f.w.document.body.textContent,/leaves the place unclear/);
+ button(f.w,'Emoji');await waitFor(()=>f.w.document.querySelector('.teaching-reason'));assert.match(f.w.document.body.textContent,/Style does not give a place/);
  assert.equal([...f.w.document.querySelectorAll('button')].some(b=>b.textContent==='Improve the prompt'),false);
- button(f.w,'Rhyme');await waitFor(()=>f.w.document.body.textContent.includes('A rhyme'));assert.match(f.w.document.body.textContent,/A rhyme/);
- button(f.w,'Place');await waitFor(()=>f.w.document.body.textContent.includes('Add Gully Park'));assert.match(f.w.document.body.textContent,/Add Gully Park/);
+ button(f.w,'Rhyme');await waitFor(()=>f.w.document.body.textContent.includes('Style does not give a place'));assert.match(f.w.document.body.textContent,/Style does not give a place/);
+ button(f.w,'Place');await waitFor(()=>f.w.document.body.textContent.includes('Yes, people need a place'));assert.match(f.w.document.body.textContent,/Yes, people need a place/);
  button(f.w,'Improve the prompt');await waitFor(()=>f.w.document.getElementById('first-fix-prompt'));assert.equal(f.w.document.getElementById('first-fix-prompt').value,'Announce our match.');
  type(f.w,'first-fix-prompt','Announce our match at Gully Park.');button(f.w,'Generate answer');
  await waitFor(()=>f.w.document.querySelector('.answer-content'));
- assert.match(f.w.document.body.textContent,/The answer now mentions Gully Park/);
+ assert.match(f.w.document.body.textContent,/The answer names Gully Park/);
  assert.equal(f.calls.length,1);assert.equal(f.calls[0].path,'firstFix:generate');
  const saved=JSON.parse(f.w.localStorage.getItem('prompt-game:first-fix:A:v1'));
  assert.equal(saved.answer.text,'Join the match at Gully Park.');assert.equal(saved.step,2);
