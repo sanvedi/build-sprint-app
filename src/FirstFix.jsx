@@ -22,7 +22,7 @@ export default function FirstFix({ path, client, token, onContinue }) {
     if(!save({...s,requestId}))return;
     setBusy(true);setError("");
     try{const answer=await client.action(api.firstFix.generate,{token,path,requestId,prompt:s.prompt});save({...s,requestId,answer});}
-    catch(e){const text=String(e?.data||e?.message||e);setError(text.includes("DAILY_ALLOWANCE")?"Today's AI allowance is used up. Try after 5:30 AM India time; your prompt is saved.":text.includes("REQUEST_PENDING")?"Your answer is still processing. Wait a moment, then retry.":"Your answer could not load. Your prompt is here; try again.");}
+    catch(e){const text=String(e?.data||e?.message||e);setError(text.includes("DAILY_ALLOWANCE")?"You used today's AI call limit. Try again after 5:30 AM India time. Your prompt is saved.":text.includes("REQUEST_PENDING")?"AI is still writing. Wait a moment. Then tap Get AI answer again.":"The answer did not load. Your prompt is still here. Tap Get AI answer again.");}
     finally{setBusy(false);}
   }
   function next(){if(save({...s,done:true}))onContinue();}
@@ -33,19 +33,19 @@ export default function FirstFix({ path, client, token, onContinue }) {
       {s.step===1?<>
         <p><strong>Prompt:</strong> {task.weak}</p>
         <p><strong>Answer:</strong> {task.vague}</p>
-        <h2>What’s missing?</h2>
+        <h2>Tap the missing detail.</h2>
         <div className="teaching-options">{task.options.map((option,i)=><button key={option} aria-pressed={s.choice===i} onClick={()=>save({...s,choice:i})}>{option}</button>)}</div>
         {s.choice!==null&&<p className="teaching-reason" role="status">{firstFixReason(path,s.choice)}</p>}
-        {s.choice===task.correct&&<button className="primary" onClick={()=>{save({...s,step:2});window.scrollTo(0,0);}}>Improve the prompt</button>}
+        {s.choice===task.correct&&<button className="primary" onClick={()=>{save({...s,step:2});window.scrollTo(0,0);}}>Edit the prompt</button>}
       </>:<>
         <p>Add the place: <strong>{task.place}</strong>.</p>
-        <label htmlFor="first-fix-prompt">Improve this prompt</label>
+        <label htmlFor="first-fix-prompt">Add the missing details</label>
         <textarea id="first-fix-prompt" rows={3} maxLength={6000} value={s.prompt} disabled={busy} onChange={e=>{setError("");save({...s,prompt:e.target.value,answer:null,requestId:null});}}/>
-        <button className="primary" onClick={generate} disabled={busy||!s.prompt.trim()||!!s.answer||saveError}>{busy?"Generating answer…":"Generate answer"}</button>
+        <button className="primary" onClick={generate} disabled={busy||!s.prompt.trim()||!!s.answer||saveError}>{busy?"AI is writing…":"Get AI answer"}</button>
         {s.answer&&<><h2>Your AI answer</h2><Answer text={s.answer.text}/><p className="teaching-reason" role="status">{detailCheck(path,s.answer.text)}</p><button className="primary" disabled={saveError} onClick={next}>Start Practice 1</button></>}
       </>}
       {error&&<p className="error" role="alert">{error}</p>}
-      {saveError&&<div role="alert"><p>Your work could not save on this device. Keep this page open.</p><button onClick={()=>save(s)}>Retry saving</button></div>}
+      {saveError&&<div role="alert"><p>Your work did not save on this device. Keep this page open. Tap Save again.</p><button onClick={()=>save(s)}>Save again</button></div>}
     </section>
   </main></div>;
 }
