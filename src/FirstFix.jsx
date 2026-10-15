@@ -12,7 +12,7 @@ export function needsFirstFix(path) {
     return !JSON.parse(localStorage.getItem(firstFixKey(path)))?.done && !localStorage.getItem(`prompt-game:path-${path}-01:v1`);
   } catch { return true; }
 }
-export default function FirstFix({ path, client, token, onContinue }) {
+export default function FirstFix({ path, client, token, onContinue, nextLabel = "Start Practice 1" }) {
   const task=firstFixTasks[path];
   const [s,setS]=useState(()=>{try{return JSON.parse(localStorage.getItem(firstFixKey(path)))||{step:1,choice:null,prompt:task.weak};}catch{return {step:1,choice:null,prompt:task.weak};}});
   const [busy,setBusy]=useState(false),[error,setError]=useState(""),[saveError,setSaveError]=useState(false);
@@ -42,7 +42,7 @@ export default function FirstFix({ path, client, token, onContinue }) {
         <label htmlFor="first-fix-prompt">Add the missing details</label>
         <textarea id="first-fix-prompt" rows={3} maxLength={6000} value={s.prompt} disabled={busy} onChange={e=>{setError("");save({...s,prompt:e.target.value,answer:null,requestId:null});}}/>
         <button className="primary" onClick={generate} disabled={busy||!s.prompt.trim()||!!s.answer||saveError}>{busy?"AI is writing…":"Get AI answer"}</button>
-        {s.answer&&<><h2>Your AI answer</h2><Answer text={s.answer.text}/><p className="teaching-reason" role="status">{detailCheck(path,s.answer.text)}</p><button className="primary" disabled={saveError} onClick={next}>Start Practice 1</button></>}
+        {s.answer&&<><h2>Your AI answer</h2><Answer text={s.answer.text}/><p className="teaching-reason" role="status">{detailCheck(path,s.answer.text)}</p><button className="primary" disabled={saveError} onClick={next}>{nextLabel}</button></>}
       </>}
       {error&&<p className="error" role="alert">{error}</p>}
       {saveError&&<div role="alert"><p>Your work did not save on this device. Keep this page open. Tap Save again.</p><button onClick={()=>save(s)}>Save again</button></div>}
