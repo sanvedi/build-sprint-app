@@ -10,6 +10,7 @@ import "./style.css";
 import Answer from "./Answer.jsx";
 import PracticeFlow from "./PracticeFlow.jsx";
 import AdvancedPractice, { AdvancedCard } from "./AdvancedPractice.jsx";
+const QuickGame=React.lazy(()=>import("./QuickGame.jsx"));
 const Levels=React.lazy(()=>import("./Levels.jsx"));
 import StudentName, { NAME_KEY } from "./StudentName.jsx";
 import TeacherPage from "./TeacherPage.jsx";
@@ -191,6 +192,7 @@ function Entry(){
   const [named,setNamed]=useState(()=>{try{return !!JSON.parse(localStorage.getItem(NAME_KEY))?.firstName;}catch{return false;}});
   const [pathId,setPathId]=useState(savedPath);
   const [choosingPath,setChoosingPath]=useState(false);
+  const [quickPath,setQuickPath]=useState(null);
   const [firstFixDone,setFirstFixDone]=useState({});
   const [,refreshBeginner]=useState(0);
   let beginnerKind=null;
@@ -216,8 +218,9 @@ function Entry(){
     tracking.choosePath(id);setPathId(id);
   }
   if(teacherPath)return <TeacherPage client={client} viewToken={teacherPath[1]}/>;
+  if(quickPath&&!preview)return <React.Suspense fallback={<main className="name-step">Loading your round...</main>}><QuickGame key={quickPath} path={quickPath} onBack={()=>{setQuickPath(null);setChoosingPath(true);}} onMission={id=>{setQuickPath(null);choosePath(id);}}/></React.Suspense>;
   if(levelsOpen&&!preview)return <React.Suspense fallback={<main className="name-step"><p role="status">Loading your levels...</p></main>}><Levels client={client} token={sessionToken()} onBack={closeLevels} onBonus={openBonus}/></React.Suspense>;
   if(advancedOpen&&!preview)return <AdvancedPractice client={client} token={sessionToken()} onBack={closeAdvanced}/>;
-  return <>{recordingError&&<aside className="recording-warning" role="status">Your visit did not save. Your practice still works. Tap Save visit again. <button onClick={()=>tracking.retry()}>Save visit again</button></aside>}{!named&&!preview?<StudentName saveName={firstName=>client.mutation(api.teacher.saveFirstName,{token:sessionToken(),firstName,visitId:tracking.visitId})} onContinue={()=>setNamed(true)}/>:(!pathId||choosingPath)&&!preview?<ChoosePath onChoose={choosePath} onAdvanced={openLevels}/>:!taught&&!preview?(introLoaded?<Teaching saveAnswer={optionIndex=>client.mutation(api.teacher.saveTeachingAnswer,{token:sessionToken(),visitId:tracking.visitId,optionIndex})} onContinue={finishTeaching}/>:<main className="name-step"><p role="status">Loading your introduction…</p></main>):!preview&&!storedRecovery()&&!firstFixDone[pathId]&&needsFirstFix(pathId)?<FirstFix nextLabel={beginnerKind?"Start Beginner A":"Start Practice 1"} key={pathId} path={pathId} client={client} token={sessionToken()} onContinue={()=>setFirstFixDone(old=>({...old,[pathId]:true}))}/>:!preview&&!storedRecovery()&&beginnerKind?<BeginnerDetail key={`${pathId}-${beginnerKind}`} path={pathId} kind={beginnerKind} client={client} token={sessionToken()} onContinue={()=>{refreshBeginner(n=>n+1);window.scrollTo(0,0);}}/>:<App onAdvanced={openLevels} tracking={tracking} pathId={pathId} onPathChange={switchMissionPath} onChooseAnother={()=>setChoosingPath(true)}/>}</>;
+  return <>{recordingError&&<aside className="recording-warning" role="status">Your visit did not save. Your practice still works. Tap Save visit again. <button onClick={()=>tracking.retry()}>Save visit again</button></aside>}{!named&&!preview?<StudentName saveName={firstName=>client.mutation(api.teacher.saveFirstName,{token:sessionToken(),firstName,visitId:tracking.visitId})} onContinue={()=>setNamed(true)}/>:(!pathId||choosingPath)&&!preview?<ChoosePath onQuickPlay={setQuickPath} onChoose={choosePath} onAdvanced={openLevels}/>:!taught&&!preview?(introLoaded?<Teaching saveAnswer={optionIndex=>client.mutation(api.teacher.saveTeachingAnswer,{token:sessionToken(),visitId:tracking.visitId,optionIndex})} onContinue={finishTeaching}/>:<main className="name-step"><p role="status">Loading your introduction…</p></main>):!preview&&!storedRecovery()&&!firstFixDone[pathId]&&needsFirstFix(pathId)?<FirstFix nextLabel={beginnerKind?"Start Beginner A":"Start Practice 1"} key={pathId} path={pathId} client={client} token={sessionToken()} onContinue={()=>setFirstFixDone(old=>({...old,[pathId]:true}))}/>:!preview&&!storedRecovery()&&beginnerKind?<BeginnerDetail key={`${pathId}-${beginnerKind}`} path={pathId} kind={beginnerKind} client={client} token={sessionToken()} onContinue={()=>{refreshBeginner(n=>n+1);window.scrollTo(0,0);}}/>:<App onAdvanced={openLevels} tracking={tracking} pathId={pathId} onPathChange={switchMissionPath} onChooseAnother={()=>setChoosingPath(true)}/>}</>;
 }
 createRoot(document.getElementById("root")).render(<Entry/>);
