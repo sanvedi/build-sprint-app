@@ -21,6 +21,12 @@ function type(w,id,value){const el=w.document.getElementById(id);assert.ok(el,`M
 const notYet={id:"assessment1",earned:false,route:"prompt",gap:"Add the event facts",why:"Students need the time",evidence:"Your request omits time"};
 const passed={id:"assessment2",earned:true,route:"none",gap:"",why:"All requirements checked",evidence:"Facts present"};
 
+test("a path learner reopens the saved Beginner final without legacy practice prerequisites",async()=>{
+ const final={version:1,mode:"final",stage:"finalPass",prompt:"My final prompt",judgment:"Checked",explanation:"",answer:{id:"answer",text:"Saved answer"},feedback:passed,attempts:1,point:false,passed:true,completed:true,correcting:false};
+ const f=fixture([],{"prompt-game:active-practice:v1":"beginner-final-01","prompt-game:beginner-final-01:v1":final},true);
+ try{await waitFor(()=>f.w.document.body.textContent.includes("Beginner badge earned"));assert.ok(f.w.document.body.textContent.includes("Continue to Amateur"));assert.equal(f.calls.length,0);assert.deepEqual(JSON.parse(f.w.localStorage.getItem("prompt-game:beginner-final-01:v1")),final);}finally{f.dom.window.close();}
+});
+
 test("fresh load asks only for a first name and starts no generation",async()=>{
  const f=fixture([],{},true,false);
  try{await waitFor(()=>f.w.document.getElementById("first-name"));assert.equal(f.w.document.querySelectorAll("input").length,1);assert.equal(f.calls.length,0);assert.doesNotMatch(f.w.document.body.textContent,/Generating your answer/);}finally{f.dom.window.close();}

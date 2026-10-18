@@ -18,6 +18,8 @@ import type * as challenges from "../challenges.js";
 import type * as firstFix from "../firstFix.js";
 import type * as http from "../http.js";
 import type * as learningAttempts from "../learningAttempts.js";
+import type * as levelActions from "../levelActions.js";
+import type * as levelProgress from "../levelProgress.js";
 import type * as practice from "../practice.js";
 import type * as practiceAI from "../practiceAI.js";
 import type * as practiceData from "../practiceData.js";
@@ -40,6 +42,8 @@ declare const fullApi: ApiFromModules<{
   firstFix: typeof firstFix;
   http: typeof http;
   learningAttempts: typeof learningAttempts;
+  levelActions: typeof levelActions;
+  levelProgress: typeof levelProgress;
   practice: typeof practice;
   practiceAI: typeof practiceAI;
   practiceData: typeof practiceData;

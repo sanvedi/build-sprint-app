@@ -323,3 +323,27 @@ test("an answer belonging to another student cannot create history or change poi
  assert.equal(session.attempts,0);assert.equal(session.point,false);
  assert.equal((await t.run(ctx=>ctx.db.get(id))).status,"pending");
 });
+test("path learner resumes final after supported review without legacy practice prerequisites",async()=>{
+ const t=convexTest(schema,modules),oldFlag=process.env.PROMPT_GAME_FINALS_ENABLED;
+ process.env.PROMPT_GAME_FINALS_ENABLED="true";
+ try{
+ const ids=await t.run(async ctx=>{const rows=[];for(const challengeId of ["path-A-01","path-A-02"])rows.push(await ctx.db.insert("practiceSessions",{token,challengeId,materialVersion:"missions-v1",attempts:1,point:true,completed:true}));return rows;});
+ const prior=await t.run(async ctx=>Promise.all(ids.map(id=>ctx.db.get(id))));
+ const first=await t.mutation(openFinal,{token,pathId:"A"});
+ assert.equal(first.challengeId,"beginner-final-01");
+ assert.deepEqual(await t.mutation(openFinal,{token}),first);
+ await attempt(t,first.challengeId,"path-final-failure",false);
+ await assert.rejects(t.mutation(openFinal,{token}),/FINAL_PRACTICE_REQUIRED/);
+ const returned=await t.mutation(returnToPractice,{token});
+ await attempt(t,returned.challengeId,"path-supported-review",true);
+ const alternate=await t.mutation(openFinal,{token});
+ assert.equal(alternate.challengeId,"beginner-final-02");
+ assert.deepEqual(alternate.seen,["beginner-final-01","beginner-final-02"]);
+ assert.deepEqual(await t.mutation(openFinal,{token}),alternate);
+ assert.deepEqual(await t.run(async ctx=>Promise.all(ids.map(id=>ctx.db.get(id)))),prior);
+ assert.equal(await t.run(ctx=>ctx.db.query("practiceSessions").withIndex("by_token_challenge",q=>q.eq("token",token).eq("challengeId","beginner-01")).unique()),null);
+ await attempt(t,alternate.challengeId,"path-alternate-failure",false);
+ await assert.rejects(t.mutation(openFinal,{token}),/FINAL_VARIANTS_EXHAUSTED/);
+ await assert.rejects(t.mutation(openFinal,{token:"e".repeat(64)}),/PRACTICE_LOCKED/);
+ }finally{if(oldFlag===undefined)delete process.env.PROMPT_GAME_FINALS_ENABLED;else process.env.PROMPT_GAME_FINALS_ENABLED=oldFlag;}
+});

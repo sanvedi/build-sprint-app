@@ -25,8 +25,6 @@ export const openFinal=mutation({
  handler:async(ctx,a)=>{
   if(!/^[a-f0-9]{64}$/.test(a.token))throw new ConvexError("INVALID_SUBMISSION");
   finalsEnabled();
-  const [first,second]=practicePair(a.pathId?`path-${a.pathId}-01`:"beginner-01") as [Challenge,Challenge];
-  if(!practiceFinished(await sessionFor(ctx,a.token,first))||!practiceFinished(await sessionFor(ctx,a.token,second)))throw new ConvexError("PRACTICE_LOCKED");
   const progress=await ctx.db.query("finalProgress").withIndex("by_token",q=>q.eq("token",a.token)).unique();
   if(progress){
    const current=await sessionFor(ctx,a.token,progress.currentId);
@@ -38,6 +36,9 @@ export const openFinal=mutation({
    await ctx.db.patch(progress._id,{currentId:challengeId,seen});
    return {challengeId,seen,badge:false,reviewId:progress.reviewId};
   }
+  // Existing final progress already proved access, including for path learners.
+  const [first,second]=practicePair(a.pathId?`path-${a.pathId}-01`:"beginner-01") as [Challenge,Challenge];
+  if(!practiceFinished(await sessionFor(ctx,a.token,first))||!practiceFinished(await sessionFor(ctx,a.token,second)))throw new ConvexError("PRACTICE_LOCKED");
   const challengeId="beginner-final-01" as const;const seen=[challengeId];
   await ctx.db.insert("finalProgress",{token:a.token,currentId:challengeId,seen,badge:false});
   return {challengeId,seen,badge:false,reviewId:null};

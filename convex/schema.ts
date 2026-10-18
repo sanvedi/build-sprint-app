@@ -7,6 +7,9 @@ import { challengeValidator, materialVersionValidator, practiceValidator } from 
 // Retired setup-test data only; retained to avoid deleting historical rows.
 // Not game progress. No active scheduling functions use this table.
 export default defineSchema({
+  levelAccess: defineTable({unlockId:v.id("advancedUnlocks"),beginnerPassedAt:v.number()}).index("by_unlock",["unlockId"]),
+  levelStates: defineTable({unlockId:v.id("advancedUnlocks"),taskId:v.string(),state:v.string(),revision:v.number(),pendingJobId:v.optional(v.id("levelJobs")),completedAt:v.optional(v.number())}).index("by_unlock_task",["unlockId","taskId"]),
+  levelJobs: defineTable({unlockId:v.id("advancedUnlocks"),taskId:v.string(),requestId:v.string(),kind:advancedKind,input:v.string(),status:v.union(v.literal("pending"),v.literal("done"),v.literal("failed")),result:v.optional(v.string()),aiUsage:v.optional(aiUsageValidator)}).index("by_unlock_request",["unlockId","requestId"]),
   firstFixJobs: defineTable({token:v.string(),path:v.union(v.literal("A"),v.literal("B"),v.literal("C")),requestId:v.string(),prompt:v.string(),status:v.union(v.literal("pending"),v.literal("done"),v.literal("failed")),answer:v.optional(v.string()),aiUsage:v.optional(aiUsageValidator)}).index("by_request",["token","requestId"]).index("by_pending",["token","path","status"]),
   advancedUnlocks: defineTable({code:v.string(),playerName:v.string(),createdAt:v.number(),requestId:v.string()}).index("by_code",["code"]).index("by_request",["requestId"]).index("by_created",["createdAt"]),
   advancedProgress: defineTable({unlockId:v.id("advancedUnlocks"),state:v.string(),revision:v.number(),pendingJobId:v.optional(v.id("advancedJobs")),completedAt:v.optional(v.number())}).index("by_unlock",["unlockId"]),
